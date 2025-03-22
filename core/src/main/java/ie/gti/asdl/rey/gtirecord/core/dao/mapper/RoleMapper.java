@@ -1,6 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.mapper;
 
-import ie.gti.recordsystem.model.Role;
+import ie.gti.asdl.rey.gtirecord.model.Role;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

@@ -1,7 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.core.service;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.PersonDao;
-import ie.gti.recordsystem.model.Person;
+import ie.gti.asdl.rey.gtirecord.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

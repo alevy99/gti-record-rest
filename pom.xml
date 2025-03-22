@@ -37,7 +37,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
-        <exec.mainClass>ie.gti.recordsystem.GtiRecordDesktopGuiApp</exec.mainClass>
+        <exec.mainClass>ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp</exec.mainClass>
         <spring.version>6.2.3</spring.version>
         <log4j.version>2.24.3</log4j.version>
         <java.version>21</java.version>

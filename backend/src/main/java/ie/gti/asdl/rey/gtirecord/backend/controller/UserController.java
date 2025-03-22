@@ -1,7 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.backend.controller;
 
-import ie.gti.recordsystem.model.User;
-import ie.gti.recordsystem.service.UserService;
+import ie.gti.asdl.rey.gtirecord.model.User;
+import ie.gti.asdl.rey.gtirecord.core.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;

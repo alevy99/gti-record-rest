@@ -1,6 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.core.dao;
 
-import ie.gti.recordsystem.model.User;
+import ie.gti.asdl.rey.gtirecord.model.User;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 

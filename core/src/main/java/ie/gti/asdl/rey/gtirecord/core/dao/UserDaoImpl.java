@@ -2,7 +2,7 @@ package ie.gti.asdl.rey.gtirecord.core.dao;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.RoleMapper;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.UserMapper;
-import ie.gti.recordsystem.model.User;
+import ie.gti.asdl.rey.gtirecord.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.*;
