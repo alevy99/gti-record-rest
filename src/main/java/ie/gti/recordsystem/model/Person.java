@@ -16,6 +16,8 @@ public class Person {
 
     private String phoneNum;
 
+    private Address address;
+
     public String getfName() {
         return fName;
     }
@@ -64,5 +66,12 @@ public class Person {
         this.phoneNum = phoneNum;
     }
 
-    
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 }

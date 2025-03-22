@@ -13,7 +13,7 @@ public class User {
 
     private final List<Role> roles;
 
-//    private Person person;
+    private Person person;
 
     public User() {
         roles = new ArrayList<>();
@@ -35,14 +35,6 @@ public class User {
         this.password = password;
     }
 
-//    public Person getPerson() {
-//        return person;
-//    }
-//
-//    public void setPerson(Person person) {
-//        this.person = person;
-//    }
-
     public long getId() {
         return id;
     }
@@ -53,6 +45,14 @@ public class User {
 
     public List<Role> getRoles() {
         return roles;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     @Override

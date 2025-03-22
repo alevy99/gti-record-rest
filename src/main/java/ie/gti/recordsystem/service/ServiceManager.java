@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServiceManager {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public ServiceManager(UserService userService) {
