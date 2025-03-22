@@ -9,7 +9,7 @@ import java.util.Optional;
 @Service
 public interface UserService {
 
-    int insertUser(User user);
+    Optional<Integer> insertUser(User user);
 
     void updateUser(User user);
 

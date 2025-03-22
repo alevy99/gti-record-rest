@@ -8,12 +8,10 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.*;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 @Repository
@@ -23,6 +21,23 @@ public class UserDaoImpl implements UserDao {
 
     private final static UserMapper userMapper = new UserMapper();
     public final static RoleMapper roleMapper = new RoleMapper();
+
+    private final static ResultSetExtractor<User> rsExtractor = new ResultSetExtractor<User>() {
+        @Override
+        public User extractData(ResultSet rs) throws SQLException, DataAccessException {
+            User user = null;
+            int row = 0;
+            while (rs.next()) {
+                if (user == null) {
+                    user = userMapper.mapRow(rs, row);
+                }
+                assert user != null;
+                user.getRoles().add(roleMapper.mapRow(rs, row));
+                row++;
+            }
+            return user;
+        }
+    };
 
     @Autowired
     public UserDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -41,23 +56,7 @@ public class UserDaoImpl implements UserDao {
                         LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id\s
                         LEFT OUTER JOIN role r ON r.id = ur.role_id
                         WHERE u.id=?""";
-        return Optional.ofNullable(jdbcTemplate.query(SQL_GET_USER_BY_ID, new ResultSetExtractor<User>() {
-
-            @Override
-            public User extractData(ResultSet rs) throws SQLException, DataAccessException {
-                User user = null;
-                int row = 0;
-                while (rs.next()) {
-                    if (user == null) {
-                        user = userMapper.mapRow(rs, row);
-                    }
-                    assert user != null;
-                    user.getRoles().add(roleMapper.mapRow(rs, row));
-                    row++;
-                }
-                return user;
-            }
-        }, id));
+        return Optional.ofNullable(jdbcTemplate.query(SQL_GET_USER_BY_ID, rsExtractor, id));
     }
 
     @Override
@@ -69,23 +68,7 @@ public class UserDaoImpl implements UserDao {
                         LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id\s
                         LEFT OUTER JOIN role r ON r.id = ur.role_id
                         WHERE u.username=?""";
-        return Optional.ofNullable(jdbcTemplate.query(SQL_GET_USER_BY_NAME, new ResultSetExtractor<User>() {
-
-            @Override
-            public User extractData(ResultSet rs) throws SQLException, DataAccessException {
-                User user = null;
-                int row = 0;
-                while (rs.next()) {
-                    if (user == null) {
-                        user = userMapper.mapRow(rs, row);
-                    }
-                    assert user != null;
-                    user.getRoles().add(roleMapper.mapRow(rs, row));
-                    row++;
-                }
-                return user;
-            }
-        }, username));
+        return Optional.ofNullable(jdbcTemplate.query(SQL_GET_USER_BY_NAME, rsExtractor, username));
     }
 
     @Override
@@ -99,7 +82,7 @@ public class UserDaoImpl implements UserDao {
         return jdbcTemplate.query(SQL_GET_USER_BY_NAME, new ResultSetExtractor<List<User>>() {
 
             @Override
-            public List<User> extractData(ResultSet rs) throws SQLException, DataAccessException {
+            public List<User> extractData(@NonNull ResultSet rs) throws SQLException, DataAccessException {
                 Map<Long, User> userMap = new HashMap<>();
 
                 int row = 0;
@@ -120,29 +103,27 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public int insertUser(User user) {
+    public Optional<Integer> insertUser(User user) {
         final String INSERT_USER_SQL = "INSERT INTO user (username, password) VALUES (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-//        jdbcTemplate.update(INSERT_USER_SQL, user.getUsername(), user.getPassword());
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
-            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                PreparedStatement ps = connection.prepareStatement(INSERT_USER_SQL, new String[]{"id"});
+            @NonNull
+            public PreparedStatement createPreparedStatement(@NonNull Connection connection) throws SQLException {
+                PreparedStatement ps = connection.prepareStatement(INSERT_USER_SQL, Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1, user.getUsername());
                 ps.setString(2, user.getPassword());
                 return ps;
             }
         }, keyHolder);
 
-        return keyHolder.getKey().intValue();
+        return Optional.ofNullable((Integer) keyHolder.getKey());
     }
 
     @Override
     public void deleteUserById(int id) {
-        final String DELETE_USER_BY_ID =
-                "DELETE FROM user\n" +
-                "WHERE user.id = ?";
+        final String DELETE_USER_BY_ID = "DELETE FROM user WHERE user.id = ?";
         jdbcTemplate.update(DELETE_USER_BY_ID, id);
     }
 
@@ -153,7 +134,7 @@ public class UserDaoImpl implements UserDao {
                 "WHERE user.id = ?";
         jdbcTemplate.batchUpdate(DELETE_USERS_BY_ID, ids, ids.size(), new ParameterizedPreparedStatementSetter<Integer>() {
             @Override
-            public void setValues(PreparedStatement ps, Integer id) throws SQLException {
+            public void setValues(@NonNull PreparedStatement ps, @NonNull Integer id) throws SQLException {
                 ps.setInt(1, id);
             }
         });

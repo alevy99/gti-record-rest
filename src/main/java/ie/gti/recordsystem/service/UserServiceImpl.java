@@ -34,11 +34,14 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public int insertUser(User user) {
-        int id = userDao.insertUser(user);
-        user.setId(id);
+    public Optional<Integer> insertUser(User user) {
+        Optional<Integer> newId = userDao.insertUser(user);
+        if (newId.isEmpty()) {
+            return newId;
+        }
+        user.setId(newId.get());
         userRolesDao.insertUserRoles(user.getId(), user.getRoles());
-        return id;
+        return newId;
     }
 
     @Transactional

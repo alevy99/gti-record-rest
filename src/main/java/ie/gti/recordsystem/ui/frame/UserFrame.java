@@ -23,10 +23,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ie.gti.recordsystem.ui.FrameManager.FrameType.MAIN;
@@ -466,6 +463,7 @@ public class UserFrame extends AbstractFrame {
     }//GEN-LAST:event_jAddCancelBtnActionPerformed
 
     private void jAddSaveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddSaveBtnActionPerformed
+        List<String> errorUsers = new ArrayList<>();
         rowsInserting.forEach(row -> {
             User newUser = new User();
             newUser.setUsername(jUserTable.getValueAt(row, USERNAME_COLUMN).toString());
@@ -473,9 +471,16 @@ public class UserFrame extends AbstractFrame {
 
             fillUserRoles(row, newUser);
 
-            long newId = userService.insertUser(newUser);
-            jUserTable.setValueAt(newId, row, 0);
+            Optional<Integer> newId = userService.insertUser(newUser);
+            if (newId.isEmpty()) {
+                errorUsers.add(newUser.getUsername());
+            } else {
+                jUserTable.setValueAt(newId.get(), row, 0);
+            }
         });
+        if (!errorUsers.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Error while inserting users: " + String.join(", ", errorUsers), "Error", JOptionPane.ERROR_MESSAGE);
+        }
         stopInserting();
     }//GEN-LAST:event_jAddSaveBtnActionPerformed
 

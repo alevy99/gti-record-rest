@@ -2,7 +2,7 @@ package ie.gti.recordsystem.model;
 
 public class Address {
 
-    private String id;
+    private String personId;
 
     private String line1;
 
@@ -15,14 +15,6 @@ public class Address {
     private String country;
 
     private String eirCode;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getLine1() {
         return line1;
@@ -70,5 +62,13 @@ public class Address {
 
     public void setEirCode(String eirCode) {
         this.eirCode = eirCode;
+    }
+
+    public String getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(String personId) {
+        this.personId = personId;
     }
 }

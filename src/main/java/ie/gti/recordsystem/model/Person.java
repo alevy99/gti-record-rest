@@ -1,14 +1,16 @@
 package ie.gti.recordsystem.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Person {
 
-    private String fName;
+    private int id;
 
-    private String lName;
+    private String firstName;
 
-    private Date dateOfBirth;
+    private String lastName;
+
+    private LocalDate dateOfBirth;
 
     private String ppsn;
 
@@ -18,27 +20,11 @@ public class Person {
 
     private Address address;
 
-    public String getfName() {
-        return fName;
-    }
-
-    public void setfName(String fName) {
-        this.fName = fName;
-    }
-
-    public String getlName() {
-        return lName;
-    }
-
-    public void setlName(String lName) {
-        this.lName = lName;
-    }
-
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -73,5 +59,29 @@ public class Person {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -16,7 +16,7 @@ public interface UserDao {
 
     List<User> getAllUsers();
 
-    int insertUser(User user);
+    Optional<Integer> insertUser(User user);
 
     void deleteUserById(int id);
 
