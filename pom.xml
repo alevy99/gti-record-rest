@@ -7,12 +7,19 @@
         <version>3.4.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+    <modules>
+        <module>model</module>
+        <module>backend</module>
+        <module>core</module>
+        <module>desktop-app</module>
+        <module>android-app</module>
+    </modules>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>ie.gti</groupId>
-    <artifactId>gti-record-rest</artifactId>
+    <groupId>ie.gti.asdl.rey.gtirecord</groupId>
+    <artifactId>gti-record</artifactId>
     <version>1.0</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <url/>
     <licenses>
@@ -39,31 +46,6 @@
     
     <dependencies>
     
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-
-        
-        <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <version>9.2.0</version>
-        </dependency>
-
         <!-- Log4j 2 Core -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -85,41 +67,7 @@
             <version>${log4j.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jdbc -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>ie.gti.recordsystem.GtiRecordRestServer</mainClass>  <!-- Укажите свой основной класс здесь -->
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-    
-    <name>GtiRecord_REY</name>
+    <name>gti-record</name>
 </project>
