@@ -15,7 +15,7 @@ import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.LOGIN;
  *
  * @author Andrei
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "ie.gti.asdl.rey.gtirecord")
 public class GtiRecordDesktopGuiApp {
 
 //    @Autowired
