@@ -2,7 +2,7 @@
 
 
 # Используем официальный образ OpenJDK как базовый
-FROM openjdk:24-slim
+FROM openjdk:21-slim
 #VOLUME /tmp
 
 #ENV MYSQL_HOST=localhost

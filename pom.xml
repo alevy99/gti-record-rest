@@ -33,7 +33,7 @@
         <exec.mainClass>ie.gti.recordsystem.GtiRecordDesktopGuiApp</exec.mainClass>
         <spring.version>6.2.3</spring.version>
         <log4j.version>2.24.3</log4j.version>
-        <java.version>24</java.version>
+        <java.version>21</java.version>
     </properties>
     
     <dependencies>
