@@ -5,6 +5,7 @@
 package ie.gti.recordsystem;
 
 import ie.gti.recordsystem.ui.FrameManager;
+import ie.gti.recordsystem.util.SpringGuiRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -32,14 +33,16 @@ public class GtiRecordDesktopGuiApp {
         System.setProperty("java.awt.headless", "false");
 //        ApplicationContext context = SpringApplication.run(GtiRecordDesktopGuiApp.class, args);
 
-        SpringApplication app = new SpringApplication(GtiRecordDesktopGuiApp.class);
-        // Disable Tomcat based on active profile
-        if (Arrays.asList(args).contains("web")) {
-            app.setWebApplicationType(WebApplicationType.SERVLET);
-        } else {
-            app.setWebApplicationType(WebApplicationType.NONE);
-        }
-        ApplicationContext context = app.run(args);
+        ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, args);
+
+//        SpringApplication app = new SpringApplication(GtiRecordDesktopGuiApp.class);
+//        // Disable Tomcat based on active profile
+//        if (Arrays.asList(args).contains("web")) {
+//            app.setWebApplicationType(WebApplicationType.SERVLET);
+//        } else {
+//            app.setWebApplicationType(WebApplicationType.NONE);
+//        }
+//        ApplicationContext context = app.run(args);
 
 //        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
 //                ApplicationConfig.class

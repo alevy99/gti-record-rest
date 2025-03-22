@@ -2,25 +2,25 @@ package ie.gti.recordsystem.dao;
 
 import ie.gti.recordsystem.model.User;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Repository
 public interface UserDao {
 
-    Optional<User> getUserById(long id);
+    Optional<User> getUserById(int id);
 
     Optional<User> getUserByUsername(String username);
 
     List<User> getAllUsers();
 
-    long insertUser(User user);
+    int insertUser(User user);
 
-    boolean deleteUserById(long id);
+    void deleteUserById(int id);
 
-
-    void deleteUsersById(List<Long> ids);
+    void deleteUsersById(List<Integer> ids);
 
     void updateUser(User user);
 

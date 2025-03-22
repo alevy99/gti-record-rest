@@ -1,18 +1,17 @@
-package ie.gti.recordsystem.ui.frame;
+package ie.gti.recordsystem.ui.comp;
 
 import javax.swing.*;
-import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 // ButtonEditor: Custom cell editor for handling button clicks
-public class ButtonEditor extends DefaultCellEditor {
+public class ButtonCellEditor extends DefaultCellEditor {
     private String label;
-    private JButton button;
+    private final JButton button;
     private boolean isPushed;
 
-    public ButtonEditor(JCheckBox checkBox) {
+    public ButtonCellEditor(JCheckBox checkBox) {
         super(checkBox);
         button = new JButton();
         button.setOpaque(true);

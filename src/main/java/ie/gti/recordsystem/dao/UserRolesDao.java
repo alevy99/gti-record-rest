@@ -10,9 +10,9 @@ import java.util.List;
 @Repository
 public interface UserRolesDao {
 
-    void insertUserRoles(long userID, List<Role> roles);
+    void insertUserRoles(int userID, List<Role> roles);
 
-    void deleteUserRoles(long userID, List<Role> roles);
+    void deleteUserRoles(int userID, List<Role> roles);
 
-    void deleteUserRoles(long userID);
+    void deleteUserRoles(int userID);
 }

@@ -11,11 +11,12 @@ import ie.gti.recordsystem.service.ServiceManager;
 import ie.gti.recordsystem.service.UserService;
 import ie.gti.recordsystem.ui.AbstractFrame;
 import ie.gti.recordsystem.ui.FrameManager;
+import ie.gti.recordsystem.ui.comp.ButtonCellEditor;
+import ie.gti.recordsystem.ui.comp.ButtonCellRenderer;
+import ie.gti.recordsystem.ui.comp.PaddedJTable;
+import ie.gti.recordsystem.util.SpringGuiRunner;
 import ie.gti.recordsystem.util.UserUtils;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Profile;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -35,8 +36,7 @@ import static ie.gti.recordsystem.ui.FrameManager.FrameType.USER;
  * @author Andrei
  */
 /// Do not apply SpringBootApp, if we use 'web' profile
-@Profile("!web")
-@SpringBootApplication
+//@Profile("!web")
 public class UserFrame extends AbstractFrame {
 
     private static final int ID_COLUMN = 0;
@@ -76,12 +76,12 @@ public class UserFrame extends AbstractFrame {
 
         TableColumnModel columnModel = jUserTable.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(20);
-        columnModel.getColumn(1).setPreferredWidth(100);
-        columnModel.getColumn(2).setPreferredWidth(100);
+        columnModel.getColumn(1).setPreferredWidth(60);
+        columnModel.getColumn(2).setPreferredWidth(60);
         columnModel.getColumn(3).setPreferredWidth(30);
         columnModel.getColumn(4).setPreferredWidth(30);
         columnModel.getColumn(5).setPreferredWidth(30);
-//        columnModel.getColumn(6).setPreferredWidth(40);
+        columnModel.getColumn(6).setPreferredWidth(50);
 
         // Add selection listener
         jUserTable.getSelectionModel().addListSelectionListener(this::updateUI);
@@ -105,8 +105,8 @@ public class UserFrame extends AbstractFrame {
 //        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(jUserTable.getModel());
 //        jUserTable.setRowSorter(sorter);
 
-//        jUserTable.getColumnModel().getColumn(6).setCellRenderer(new ButtonRenderer());
-//        jUserTable.getColumnModel().getColumn(6).setCellEditor(new ButtonEditor(new JCheckBox()));
+        jUserTable.getColumnModel().getColumn(6).setCellRenderer(new ButtonCellRenderer());
+        jUserTable.getColumnModel().getColumn(6).setCellEditor(new ButtonCellEditor(new JCheckBox()));
     }
 
     private void updateUI(ListSelectionEvent listSelectionEvent) {
@@ -140,7 +140,7 @@ public class UserFrame extends AbstractFrame {
         jPanel1 = new javax.swing.JPanel();
         jPasswordField1 = new javax.swing.JPasswordField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jUserTable = new javax.swing.JTable();
+        jUserTable = new PaddedJTable();
         jCloseBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jButtonsPanel = new javax.swing.JPanel();
@@ -184,11 +184,11 @@ public class UserFrame extends AbstractFrame {
                         {null, null, null, null, null, null, null}
                 },
                 new String[]{
-                        "ID", "Username", "Password", "Student", "Teacher", "Admin", "Person"
+                        "ID", "Username", "Password", "Student", "Teacher", "Admin", "Details"
                 }
         ) {
             Class[] types = new Class[]{
-                    java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Object.class
+                    java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -406,7 +406,7 @@ public class UserFrame extends AbstractFrame {
         if (!confirmBatchTableAction("Confirm delete", "Are you sure want to delete users:")) return;
 
         Arrays.stream(jUserTable.getSelectedRows()).forEach(row -> {
-            userService.deleteUser((Long) jUserTable.getModel().getValueAt(row, 0));
+            userService.deleteUser((Integer) jUserTable.getModel().getValueAt(row, 0));
 //            ((DefaultTableModel) jUserTable.getModel()).removeRow(row);
 //            ids.add((Long) jUserTable.getModel().getValueAt(row, 0));
         });
@@ -445,7 +445,7 @@ public class UserFrame extends AbstractFrame {
         } else {
             Arrays.stream(jUserTable.getSelectedRows()).forEach(row -> {
                 User user = new User();
-                user.setId((Long) jUserTable.getValueAt(row, 0));
+                user.setId((Integer) jUserTable.getValueAt(row, 0));
                 user.setUsername(jUserTable.getValueAt(row, 1).toString());
                 user.setPassword(jUserTable.getValueAt(row, 2).toString());
 
@@ -557,8 +557,9 @@ public class UserFrame extends AbstractFrame {
 //                AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
 //                        ApplicationConfig.class
 //                );
-                ApplicationContext context = SpringApplication.run(GtiRecordDesktopGuiApp.class, args);
+//                ApplicationContext context = SpringApplication.run(GtiRecordDesktopGuiApp.class, args);
 //                ApplicationContext context = SpringApplication.run(UserFrame.class, args);
+                ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, args);
                 FrameManager manager = context.getBean(FrameManager.class);
                 manager.showFrame(USER);
             }

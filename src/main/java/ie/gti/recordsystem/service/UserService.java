@@ -9,15 +9,15 @@ import java.util.Optional;
 @Service
 public interface UserService {
 
-    long insertUser(User user);
+    int insertUser(User user);
 
     void updateUser(User user);
 
-    void deleteUser(long id);
+    void deleteUser(int id);
 
     List<User> getAllUsers();
 
     Optional<User> getUserByUsername(String username);
 
-    Optional<User> getUserById(long id);
+    Optional<User> getUserById(int id);
 }

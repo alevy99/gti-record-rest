@@ -34,8 +34,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public long insertUser(User user) {
-        long id = userDao.insertUser(user);
+    public int insertUser(User user) {
+        int id = userDao.insertUser(user);
         user.setId(id);
         userRolesDao.insertUserRoles(user.getId(), user.getRoles());
         return id;
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void deleteUser(long id) {
+    public void deleteUser(int id) {
         // Roles are deleted first
         userRolesDao.deleteUserRoles(id);
         userDao.deleteUserById(id);
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getUserById(long id) {
+    public Optional<User> getUserById(int id) {
         return userDao.getUserById(id);
     }
 }

@@ -1,0 +1,22 @@
+package ie.gti.recordsystem.service;
+
+import ie.gti.recordsystem.model.Person;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public interface PersonService {
+
+    List<Person> getAllPersons();
+
+    Optional<Person> getPersonById(int id);
+
+    int insertPerson(Person person);
+
+    void updatePerson(Person person);
+
+    void deletePerson(Person person);
+
+}

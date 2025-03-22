@@ -17,8 +17,8 @@ public class PaddedJTable extends JTable {
 //        java.awt.EventQueue.invokeLater(() -> {
             setRowHeight(25); // Increase row height for better spacing
             setDefaultRenderer(Object.class, new PaddedCellRenderer());
-            setDefaultRenderer(Long.class, new PaddedCellRenderer());
-//            setDefaultRenderer(Boolean.class, new BooleanCellRenderer());
+            setDefaultRenderer(Integer.class, new PaddedCellRenderer());
+            setDefaultRenderer(Boolean.class, new BooleanCellRenderer());
             setDefaultEditor(Object.class, new PaddedCellEditor());
             // Add sorter to the table
             if (getRowSorter() == null) {

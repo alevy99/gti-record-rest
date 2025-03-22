@@ -33,7 +33,7 @@ public class UserDaoImpl implements UserDao {
 //    private
 
     @Override
-    public Optional<User> getUserById(long id) {
+    public Optional<User> getUserById(int id) {
         final String SQL_GET_USER_BY_ID =
                 """
                         SELECT u.id, u.username, u.password, r.id as role_id, r.name as role_name
@@ -120,7 +120,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public long insertUser(User user) {
+    public int insertUser(User user) {
         final String INSERT_USER_SQL = "INSERT INTO user (username, password) VALUES (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -128,33 +128,33 @@ public class UserDaoImpl implements UserDao {
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                PreparedStatement ps = connection.prepareStatement(INSERT_USER_SQL, new String[]{"ID"});
+                PreparedStatement ps = connection.prepareStatement(INSERT_USER_SQL, new String[]{"id"});
                 ps.setString(1, user.getUsername());
                 ps.setString(2, user.getPassword());
                 return ps;
             }
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        return keyHolder.getKey().intValue();
     }
 
     @Override
-    public boolean deleteUserById(long id) {
+    public void deleteUserById(int id) {
         final String DELETE_USER_BY_ID =
                 "DELETE FROM user\n" +
                 "WHERE user.id = ?";
-        return jdbcTemplate.update(DELETE_USER_BY_ID, id) > 0;
+        jdbcTemplate.update(DELETE_USER_BY_ID, id);
     }
 
     @Override
-    public void deleteUsersById(List<Long> ids) {
+    public void deleteUsersById(List<Integer> ids) {
         final String DELETE_USERS_BY_ID =
                 "DELETE FROM user\n" +
                 "WHERE user.id = ?";
-        jdbcTemplate.batchUpdate(DELETE_USERS_BY_ID, ids, ids.size(), new ParameterizedPreparedStatementSetter<Long>() {
+        jdbcTemplate.batchUpdate(DELETE_USERS_BY_ID, ids, ids.size(), new ParameterizedPreparedStatementSetter<Integer>() {
             @Override
-            public void setValues(PreparedStatement ps, Long id) throws SQLException {
-                ps.setLong(1, id);
+            public void setValues(PreparedStatement ps, Integer id) throws SQLException {
+                ps.setInt(1, id);
             }
         });
     }
