@@ -61,7 +61,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>ie.gti.asdl.rey.GtiRecordRestServer</mainClass>  <!-- Main class -->
+                    <mainClass>ie.gti.asdl.rey.gtirecord.backend.GtiRecordRestServer</mainClass>  <!-- Main class -->
                 </configuration>
             </plugin>
         </plugins>
