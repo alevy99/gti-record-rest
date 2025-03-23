@@ -6,14 +6,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="gti-record-desktop-app" />
-        <module name="gti-record-android-app" />
-        <module name="gti-record-backend" />
         <module name="gti-record-model" />
         <module name="gti-record-core" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="gti-record-android-app" target="21" />
+      <module name="gti-record-backend" target="21" />
+      <module name="gti-record-desktop-app" target="21" />
       <module name="gti-record-persistence" target="21" />
       <module name="model" target="21" />
       <module name="persistence" target="21" />

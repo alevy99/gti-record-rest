@@ -10,9 +10,9 @@
     <modules>
         <module>model</module>
         <module>core</module>
-        <module>backend</module>
-        <module>desktop-app</module>
-        <module>android-app</module>
+<!--        <module>backend</module>-->
+<!--        <module>desktop-app</module>-->
+<!--        <module>android-app</module>-->
     </modules>
 
     <modelVersion>4.0.0</modelVersion>
@@ -73,7 +73,7 @@
 
     <profiles>
         <profile>
-            <id>heroku</id>
+            <id>all</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
@@ -81,7 +81,31 @@
                 <module>model</module>
                 <module>core</module>
                 <module>backend</module>
-                <!-- <module>desktop-app</module> EXCLUDES desktop-app -->
+                <module>desktop-app</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>desktop</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>model</module>
+                <module>core</module>
+                <module>desktop-app</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>backend</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>model</module>
+                <module>core</module>
+                <module>backend</module>
             </modules>
         </profile>
     </profiles>
