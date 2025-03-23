@@ -9,8 +9,8 @@
     </parent>
     <modules>
         <module>model</module>
-        <module>backend</module>
         <module>core</module>
+        <module>backend</module>
         <module>desktop-app</module>
         <module>android-app</module>
     </modules>
@@ -70,6 +70,21 @@
 
         </dependencies>
     </dependencyManagement>
+
+    <profiles>
+        <profile>
+            <id>heroku</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>model</module>
+                <module>core</module>
+                <module>backend</module>
+                <!-- <module>desktop-app</module> EXCLUDES desktop-app -->
+            </modules>
+        </profile>
+    </profiles>
 
     <name>gti-record</name>
 </project>
