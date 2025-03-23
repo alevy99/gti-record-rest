@@ -10,9 +10,9 @@
     <modules>
         <module>model</module>
         <module>core</module>
-<!--        <module>backend</module>-->
-<!--        <module>desktop-app</module>-->
-<!--        <module>android-app</module>-->
+        <module>backend</module>
+        <module>desktop-app</module>
+        <module>android-app</module>
     </modules>
 
     <modelVersion>4.0.0</modelVersion>
@@ -73,19 +73,6 @@
 
     <profiles>
         <profile>
-            <id>all</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <modules>
-                <module>model</module>
-                <module>core</module>
-                <module>backend</module>
-                <module>desktop-app</module>
-            </modules>
-        </profile>
-
-        <profile>
             <id>desktop</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -106,6 +93,19 @@
                 <module>model</module>
                 <module>core</module>
                 <module>backend</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>all</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>model</module>
+                <module>core</module>
+                <module>backend</module>
+                <module>desktop-app</module>
             </modules>
         </profile>
     </profiles>
