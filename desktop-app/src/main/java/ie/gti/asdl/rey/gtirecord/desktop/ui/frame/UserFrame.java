@@ -428,7 +428,7 @@ public class UserFrame extends AbstractFrame {
     private void jAddBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddBtnActionPerformed
         DefaultTableModel model = (DefaultTableModel) jUserTable.getModel();
 
-        model.addRow(new Object[]{0L, "", "", false, false, false, "Delete"});
+        model.addRow(new Object[]{0, "", "", false, false, false, "Delete"});
         int newRow = jUserTable.getRowCount() - 1;
         jUserTable.setRowSelectionInterval(newRow, newRow);
         startInserting();
