@@ -12,7 +12,7 @@
         <module>core</module>
         <module>backend</module>
         <module>desktop-app</module>
-        <module>android-app</module>
+<!--        <module>android-app</module>-->
     </modules>
 
     <modelVersion>4.0.0</modelVersion>
