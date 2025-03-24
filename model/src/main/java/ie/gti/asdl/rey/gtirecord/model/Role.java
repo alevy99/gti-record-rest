@@ -1,6 +1,8 @@
 package ie.gti.asdl.rey.gtirecord.model;
 
-public class Role {
+import java.io.Serializable;
+
+public class Role implements Serializable {
 
     public enum RoleType {
         ADMIN(1, "admin"),

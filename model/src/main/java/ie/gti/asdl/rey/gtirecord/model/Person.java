@@ -1,8 +1,9 @@
 package ie.gti.asdl.rey.gtirecord.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Person {
+public class Person implements Serializable {
 
     private int id;
 
