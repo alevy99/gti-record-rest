@@ -77,7 +77,7 @@ public class UserDaoImpl implements UserDao {
                 """
                         SELECT u.id, u.username, u.password, r.id as role_id, r.name as role_name
                         FROM user u
-                        LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id\s
+                        LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id
                         LEFT OUTER JOIN role r ON r.id = ur.role_id""";
         return jdbcTemplate.query(SQL_GET_USER_BY_NAME, new ResultSetExtractor<List<User>>() {
 
