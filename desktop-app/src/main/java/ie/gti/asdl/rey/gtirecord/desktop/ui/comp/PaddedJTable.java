@@ -9,9 +9,6 @@ import static javax.swing.SwingConstants.CENTER;
 
 public class PaddedJTable extends JTable {
 
-    private static final Color EVEN_ROW_COLOR = Color.WHITE;
-    private static final Color ODD_ROW_COLOR = new Color(230, 230, 230); // Light gray
-
     public PaddedJTable() {
         super();
 //        java.awt.EventQueue.invokeLater(() -> {
@@ -26,7 +23,7 @@ public class PaddedJTable extends JTable {
             }
 
             JTableHeader header = getTableHeader();
-            header.setFont(new Font("Comic", Font.PLAIN, 14)); // Bold, larger font
+            header.setFont(new Font("Comic", Font.PLAIN, 14)); // Plain, larger font
             header.setBackground(Color.LIGHT_GRAY); // Dark background
             header.setForeground(Color.DARK_GRAY); // White text
             header.setOpaque(true);
@@ -45,6 +42,7 @@ public class PaddedJTable extends JTable {
             if (c instanceof JLabel) {
                 ((JLabel) c).setBorder(new EmptyBorder(5, 5, 5, 5)); // Top, Left, Bottom, Right
                 // Check if the value is of type Long
+
                 if (value instanceof Number) {
                     setHorizontalAlignment(SwingConstants.RIGHT); // Align Long values to the right
                 } else {
@@ -54,9 +52,9 @@ public class PaddedJTable extends JTable {
 
             if (!isSelected) { // Keep selection color when row is selected
                 if (row % 2 == 0) {
-                    c.setBackground(EVEN_ROW_COLOR);
+                    c.setBackground(GuiConsts.EVEN_ROW_COLOR);
                 } else {
-                    c.setBackground(ODD_ROW_COLOR);
+                    c.setBackground(GuiConsts.ODD_ROW_COLOR);
                 }
             }
 
@@ -87,7 +85,7 @@ public class PaddedJTable extends JTable {
 
             // Apply alternating row colors
             if (!isSelected) {
-                Color bg = (row % 2 == 0) ? EVEN_ROW_COLOR : ODD_ROW_COLOR; // Match Nimbus striping
+                Color bg = (row % 2 == 0) ? GuiConsts.EVEN_ROW_COLOR : GuiConsts.ODD_ROW_COLOR; // Match Nimbus striping
                 setBackground(bg);
             } else {
                 setBackground(table.getSelectionBackground()); // Keep selection color

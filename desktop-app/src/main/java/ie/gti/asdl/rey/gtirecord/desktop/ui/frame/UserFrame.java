@@ -5,15 +5,13 @@
 package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 
 import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.*;
 import ie.gti.asdl.rey.gtirecord.model.Role;
 import ie.gti.asdl.rey.gtirecord.model.User;
 import ie.gti.asdl.rey.gtirecord.core.service.ServiceManager;
 import ie.gti.asdl.rey.gtirecord.core.service.UserService;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.ButtonCellEditor;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.ButtonCellRenderer;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PaddedJTable;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.util.UserUtils;
 import org.springframework.context.ApplicationContext;
@@ -36,12 +34,18 @@ import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.USER;
 //@Profile("!web")
 public class UserFrame extends AbstractFrame {
 
-    private static final int ID_COLUMN = 0;
-    private static final int USERNAME_COLUMN = 1;
-    private static final int PASSWORD_COLUMN = 2;
-    private static final int IS_STUDENT_COLUMN = 3;
-    private static final int IS_TEACHER_COLUMN = 4;
-    private static final int IS_ADMIN_COLUMN = 5;
+    enum USER_TBL_COL {
+          ID(0), USERNAME(1), PASSWORD(2),
+        IS_STUDENT(3), IS_TEACHER(4), IS_ADMIN(5),
+        PERSON_INFO(6);
+
+          private int index;
+          private USER_TBL_COL(int index) {
+              this.index = index;
+          }
+    }
+
+    private static final String PERSON_INFO_BTN_TITLE = "Person info";
 
     private final UserService userService;
 
@@ -72,13 +76,13 @@ public class UserFrame extends AbstractFrame {
 //        jUserTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         TableColumnModel columnModel = jUserTable.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(20);
-        columnModel.getColumn(1).setPreferredWidth(60);
-        columnModel.getColumn(2).setPreferredWidth(60);
-        columnModel.getColumn(3).setPreferredWidth(30);
-        columnModel.getColumn(4).setPreferredWidth(30);
-        columnModel.getColumn(5).setPreferredWidth(30);
-        columnModel.getColumn(6).setPreferredWidth(50);
+        columnModel.getColumn(USER_TBL_COL.ID.index).setPreferredWidth(20);
+        columnModel.getColumn(USER_TBL_COL.USERNAME.index).setPreferredWidth(60);
+        columnModel.getColumn(USER_TBL_COL.PASSWORD.index).setPreferredWidth(60);
+        columnModel.getColumn(USER_TBL_COL.IS_STUDENT.index).setPreferredWidth(30);
+        columnModel.getColumn(USER_TBL_COL.IS_TEACHER.index).setPreferredWidth(30);
+        columnModel.getColumn(USER_TBL_COL.IS_ADMIN.index).setPreferredWidth(30);
+        columnModel.getColumn(USER_TBL_COL.PERSON_INFO.index).setPreferredWidth(50);
 
         // Add selection listener
         jUserTable.getSelectionModel().addListSelectionListener(this::updateUI);
@@ -102,8 +106,11 @@ public class UserFrame extends AbstractFrame {
 //        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(jUserTable.getModel());
 //        jUserTable.setRowSorter(sorter);
 
-        jUserTable.getColumnModel().getColumn(6).setCellRenderer(new ButtonCellRenderer());
-        jUserTable.getColumnModel().getColumn(6).setCellEditor(new ButtonCellEditor(new JCheckBox()));
+        jUserTable.getColumnModel().getColumn(USER_TBL_COL.PASSWORD.index).setCellRenderer(new PasswordCellRenderer());
+        jUserTable.getColumnModel().getColumn(USER_TBL_COL.PASSWORD.index).setCellEditor(new PasswordCellEditor());
+
+        jUserTable.getColumnModel().getColumn(USER_TBL_COL.PERSON_INFO.index).setCellRenderer(new ButtonCellRenderer());
+        jUserTable.getColumnModel().getColumn(USER_TBL_COL.PERSON_INFO.index).setCellEditor(new ButtonCellEditor(new JCheckBox()));
     }
 
     private void updateUI(ListSelectionEvent listSelectionEvent) {
@@ -376,7 +383,7 @@ public class UserFrame extends AbstractFrame {
 
             users.forEach(user -> {
                 model.addRow(new Object[]{user.getId(), user.getUsername(), user.getPassword(),
-                        UserUtils.isStudent(user), UserUtils.isTeacher(user), UserUtils.isAdmin(user), "Delete"});
+                        UserUtils.isStudent(user), UserUtils.isTeacher(user), UserUtils.isAdmin(user), PERSON_INFO_BTN_TITLE});
             });
 
         } else {
@@ -418,7 +425,7 @@ public class UserFrame extends AbstractFrame {
         return JOptionPane.showConfirmDialog(this,
                 message + "\n" +
                         Arrays.stream(jUserTable.getSelectedRows()).
-                                mapToObj(row -> jUserTable.getModel().getValueAt(row, USERNAME_COLUMN).toString()).
+                                mapToObj(row -> jUserTable.getModel().getValueAt(row, USER_TBL_COL.USERNAME.index).toString()).
                                 collect(Collectors.joining(", ")),
                 title,
                 JOptionPane.YES_NO_OPTION,
@@ -428,7 +435,7 @@ public class UserFrame extends AbstractFrame {
     private void jAddBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddBtnActionPerformed
         DefaultTableModel model = (DefaultTableModel) jUserTable.getModel();
 
-        model.addRow(new Object[]{0, "", "", false, false, false, "Delete"});
+        model.addRow(new Object[]{null, "", "", false, false, false, PERSON_INFO_BTN_TITLE});
         int newRow = jUserTable.getRowCount() - 1;
         jUserTable.setRowSelectionInterval(newRow, newRow);
         startInserting();
@@ -442,9 +449,9 @@ public class UserFrame extends AbstractFrame {
         } else {
             Arrays.stream(jUserTable.getSelectedRows()).forEach(row -> {
                 User user = new User();
-                user.setId((Integer) jUserTable.getValueAt(row, 0));
-                user.setUsername(jUserTable.getValueAt(row, 1).toString());
-                user.setPassword(jUserTable.getValueAt(row, 2).toString());
+                user.setId((Integer) jUserTable.getValueAt(row, USER_TBL_COL.ID.index));
+                user.setUsername(jUserTable.getValueAt(row, USER_TBL_COL.USERNAME.index).toString());
+                user.setPassword(jUserTable.getValueAt(row, USER_TBL_COL.PASSWORD.index).toString());
 
                 fillUserRoles(row, user);
 
@@ -466,8 +473,8 @@ public class UserFrame extends AbstractFrame {
         List<String> errorUsers = new ArrayList<>();
         rowsInserting.forEach(row -> {
             User newUser = new User();
-            newUser.setUsername(jUserTable.getValueAt(row, USERNAME_COLUMN).toString());
-            newUser.setPassword(jUserTable.getValueAt(row, PASSWORD_COLUMN).toString());
+            newUser.setUsername(jUserTable.getValueAt(row, USER_TBL_COL.USERNAME.index).toString());
+            newUser.setPassword(jUserTable.getValueAt(row, USER_TBL_COL.PASSWORD.index).toString());
 
             fillUserRoles(row, newUser);
 
@@ -485,15 +492,15 @@ public class UserFrame extends AbstractFrame {
     }//GEN-LAST:event_jAddSaveBtnActionPerformed
 
     private void fillUserRoles(int row, User user) {
-        if ((Boolean) jUserTable.getValueAt(row, IS_STUDENT_COLUMN)) {
+        if ((Boolean) jUserTable.getValueAt(row, USER_TBL_COL.IS_STUDENT.index)) {
             user.getRoles().add(Role.RoleType.STUDENT.asRole());
         }
 
-        if ((Boolean) jUserTable.getValueAt(row, IS_TEACHER_COLUMN)) {
+        if ((Boolean) jUserTable.getValueAt(row, USER_TBL_COL.IS_TEACHER.index)) {
             user.getRoles().add(Role.RoleType.TEACHER.asRole());
         }
 
-        if ((Boolean) jUserTable.getValueAt(row, IS_ADMIN_COLUMN)) {
+        if ((Boolean) jUserTable.getValueAt(row, USER_TBL_COL.IS_ADMIN.index)) {
             user.getRoles().add(Role.RoleType.ADMIN.asRole());
         }
     }
