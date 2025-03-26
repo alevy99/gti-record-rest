@@ -1,6 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.core.service;
 
-import ie.gti.asdl.rey.gtirecord.model.Person;
+import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

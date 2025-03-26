@@ -1,10 +1,10 @@
-package ie.gti.asdl.rey.gtirecord.model;
+package ie.gti.asdl.rey.gtirecord.model.entity;
 
-public class Subject {
+public class Group {
 
     private String name;
 
-    private String code;
+    private Course course;
     
     /**
      * @return the name
@@ -21,17 +21,17 @@ public class Subject {
     }
 
     /**
-     * @return the code
+     * @return the course
      */
-    public String getCode() {
-        return code;
+    public Course getCourse() {
+        return course;
     }
 
     /**
-     * @param code the code to set
+     * @param course the course to set
      */
-    public void setCode(String code) {
-        this.code = code;
+    public void setCourse(Course course) {
+        this.course = course;
     }
-
+    
 }

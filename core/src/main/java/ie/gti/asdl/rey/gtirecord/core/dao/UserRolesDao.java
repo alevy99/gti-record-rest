@@ -1,8 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.core.dao;
 
-import ie.gti.asdl.rey.gtirecord.model.Role;
-import ie.gti.asdl.rey.gtirecord.model.User;
-import ie.gti.asdl.rey.gtirecord.model.UserRoles;
+import ie.gti.asdl.rey.gtirecord.model.entity.Role;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

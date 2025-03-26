@@ -8,7 +8,7 @@ import java.awt.event.*;
 import java.util.Optional;
 import javax.swing.*;
 
-import ie.gti.asdl.rey.gtirecord.model.User;
+import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import ie.gti.asdl.rey.gtirecord.core.service.ServiceManager;
 import ie.gti.asdl.rey.gtirecord.core.service.UserService;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractFrame;

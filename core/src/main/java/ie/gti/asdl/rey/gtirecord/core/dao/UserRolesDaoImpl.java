@@ -1,7 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.core.dao;
 
-import ie.gti.asdl.rey.gtirecord.model.Role;
-import ie.gti.asdl.rey.gtirecord.model.User;
+import ie.gti.asdl.rey.gtirecord.model.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;

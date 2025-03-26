@@ -2,8 +2,8 @@ package ie.gti.asdl.rey.gtirecord.core.service;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.UserDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.UserRolesDao;
-import ie.gti.asdl.rey.gtirecord.model.Role;
-import ie.gti.asdl.rey.gtirecord.model.User;
+import ie.gti.asdl.rey.gtirecord.model.entity.Role;
+import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

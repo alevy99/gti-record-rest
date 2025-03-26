@@ -4,11 +4,11 @@
  */
 package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 
-import ie.gti.asdl.rey.gtirecord.model.User;
+import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import ie.gti.asdl.rey.gtirecord.core.service.ServiceManager;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
-import ie.gti.asdl.rey.gtirecord.util.UserUtils;
+import ie.gti.asdl.rey.gtirecord.model.util.UserUtils;
 
 import javax.swing.*;
 

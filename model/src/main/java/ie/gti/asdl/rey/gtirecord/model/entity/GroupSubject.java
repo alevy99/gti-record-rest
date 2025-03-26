@@ -1,4 +1,4 @@
-package ie.gti.asdl.rey.gtirecord.model;
+package ie.gti.asdl.rey.gtirecord.model.entity;
 
 public class GroupSubject {
 

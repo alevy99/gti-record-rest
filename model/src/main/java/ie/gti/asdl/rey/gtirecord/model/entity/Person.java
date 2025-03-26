@@ -1,4 +1,4 @@
-package ie.gti.asdl.rey.gtirecord.model;
+package ie.gti.asdl.rey.gtirecord.model.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;

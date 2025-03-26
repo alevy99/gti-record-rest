@@ -1,7 +1,7 @@
-package ie.gti.asdl.rey.gtirecord.util;
+package ie.gti.asdl.rey.gtirecord.model.util;
 
-import ie.gti.asdl.rey.gtirecord.model.Role;
-import ie.gti.asdl.rey.gtirecord.model.User;
+import ie.gti.asdl.rey.gtirecord.model.entity.Role;
+import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

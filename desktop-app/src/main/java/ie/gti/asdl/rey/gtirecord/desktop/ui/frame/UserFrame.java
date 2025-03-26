@@ -6,14 +6,14 @@ package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 
 import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.*;
-import ie.gti.asdl.rey.gtirecord.model.Role;
-import ie.gti.asdl.rey.gtirecord.model.User;
+import ie.gti.asdl.rey.gtirecord.model.entity.Role;
+import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import ie.gti.asdl.rey.gtirecord.core.service.ServiceManager;
 import ie.gti.asdl.rey.gtirecord.core.service.UserService;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
-import ie.gti.asdl.rey.gtirecord.util.UserUtils;
+import ie.gti.asdl.rey.gtirecord.model.util.UserUtils;
 import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
