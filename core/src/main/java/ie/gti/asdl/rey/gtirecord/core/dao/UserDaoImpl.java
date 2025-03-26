@@ -83,11 +83,11 @@ public class UserDaoImpl implements UserDao {
 
             @Override
             public List<User> extractData(@NonNull ResultSet rs) throws SQLException, DataAccessException {
-                Map<Long, User> userMap = new HashMap<>();
+                Map<Integer, User> userMap = new HashMap<>();
 
                 int row = 0;
                 while (rs.next()) {
-                    long userID = rs.getLong("id");
+                    int userID = rs.getInt("id");
                     User user = userMap.get(userID);
                     if (user == null)  {
                         user = userMapper.mapRow(rs, row);
@@ -118,7 +118,11 @@ public class UserDaoImpl implements UserDao {
             }
         }, keyHolder);
 
-        return Optional.ofNullable((Integer) keyHolder.getKey());
+        if (keyHolder.getKey() == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(keyHolder.getKey().intValue());
+        }
     }
 
     @Override

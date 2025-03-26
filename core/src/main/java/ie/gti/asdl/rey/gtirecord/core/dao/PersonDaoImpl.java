@@ -63,7 +63,11 @@ public class PersonDaoImpl implements PersonDao {
             }
         }, keyHolder);
 
-        return Optional.ofNullable((Integer) keyHolder.getKey());
+        if (keyHolder.getKey() == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(keyHolder.getKey().intValue());
+        }
     }
 
     @Override

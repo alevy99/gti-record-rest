@@ -9,10 +9,10 @@ public class Role implements Serializable {
         TEACHER(2, "teacher"),
         STUDENT(3, "student");
 
-        public final long id;
+        public final int id;
         public final String name;
 
-        RoleType(long id, String name) {
+        RoleType(int id, String name) {
             this.id = id;
             this.name = name;
         }
@@ -25,15 +25,15 @@ public class Role implements Serializable {
         }
     }
 
-    private long id;
+    private int id;
 
     private String name;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -52,6 +52,6 @@ public class Role implements Serializable {
 
     @Override
     public int hashCode() {
-        return Long.valueOf(id).hashCode();
+        return Integer.valueOf(id).hashCode();
     }
 }

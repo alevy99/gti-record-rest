@@ -28,8 +28,8 @@ public class UserRolesDaoImpl implements UserRolesDao {
         jdbcTemplate.batchUpdate(sql, roles, roles.size(), new ParameterizedPreparedStatementSetter<Role>() {
             @Override
             public void setValues(PreparedStatement ps, Role role) throws SQLException {
-                ps.setLong(1, userID);
-                ps.setLong(2, role.getId());
+                ps.setInt(1, userID);
+                ps.setInt(2, role.getId());
             }
         });
     }
@@ -40,8 +40,8 @@ public class UserRolesDaoImpl implements UserRolesDao {
         jdbcTemplate.batchUpdate(sql, roles, roles.size(), new ParameterizedPreparedStatementSetter<Role>() {
             @Override
             public void setValues(PreparedStatement ps, Role role) throws SQLException {
-                ps.setLong(1, userID);
-                ps.setLong(2, role.getId());
+                ps.setInt(1, userID);
+                ps.setInt(2, role.getId());
             }
         });
     }
