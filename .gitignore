@@ -4,3 +4,5 @@
 target/
 
 notes.txt
+
+desktop-app/src/main/resources/application.properties
