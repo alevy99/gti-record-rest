@@ -202,6 +202,14 @@ public class UserFrame extends AbstractFrame {
                     java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Object.class
             };
 
+            boolean[] canEdit = new boolean [] {
+                    false, true, true, true, true, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }
