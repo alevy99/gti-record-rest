@@ -8,7 +8,11 @@ import java.util.Arrays;
 
 public class SpringGuiRunner {
 
-    public static <T> ApplicationContext run(Class<T> clazz, String[] args) {
+    private static boolean isTestMode = false;
+
+    public static <T> ApplicationContext run(Class<T> clazz, boolean isTestMode, String[] args) {
+        SpringGuiRunner.isTestMode = isTestMode;
+
         SpringApplication app = new SpringApplication(clazz);
         // Disable Tomcat based on active profile
         if (Arrays.asList(args).contains("web")) {
@@ -19,4 +23,11 @@ public class SpringGuiRunner {
         return app.run(args);
     }
 
+    public static boolean isTestMode() {
+        return isTestMode;
+    }
+
+    public static void setTestMode(boolean isTestMode) {
+        SpringGuiRunner.isTestMode = isTestMode;
+    }
 }

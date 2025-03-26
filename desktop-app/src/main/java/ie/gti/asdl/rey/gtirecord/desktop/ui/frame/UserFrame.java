@@ -401,9 +401,13 @@ public class UserFrame extends AbstractFrame {
     }//GEN-LAST:event_jRevertBtnActionPerformed
 
     private void jCloseBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCloseBtnActionPerformed
-        this.setVisible(false);
+        if (isTestMode()) {
+            System.exit(0);
+        } else {
+            this.setVisible(false);
 //        mainFrame.setVisible(true);
-        frameManager.showFrame(MAIN);
+            frameManager.showFrame(MAIN);
+        }
     }//GEN-LAST:event_jCloseBtnActionPerformed
 
     private void jDeleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jDeleteBtnActionPerformed
@@ -546,7 +550,7 @@ public class UserFrame extends AbstractFrame {
 //                );
 //                ApplicationContext context = SpringApplication.run(GtiRecordDesktopGuiApp.class, args);
 //                ApplicationContext context = SpringApplication.run(UserFrame.class, args);
-                ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, args);
+                ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, true, args);
                 FrameManager manager = context.getBean(FrameManager.class);
                 manager.showFrame(USER);
             }

@@ -1,5 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.desktop.ui;
 
+import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,10 @@ public abstract class AbstractFrame extends JFrame {
 
     protected void shownFirstTime() {
 
+    }
+
+    protected boolean isTestMode() {
+        return SpringGuiRunner.isTestMode();
     }
 
     protected void initForm() {
