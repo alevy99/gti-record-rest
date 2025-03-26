@@ -21,6 +21,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -110,7 +112,12 @@ public class UserFrame extends AbstractFrame {
         jUserTable.getColumnModel().getColumn(USER_TBL_COL.PASSWORD.index).setCellEditor(new PasswordCellEditor());
 
         jUserTable.getColumnModel().getColumn(USER_TBL_COL.PERSON_INFO.index).setCellRenderer(new ButtonCellRenderer());
-        jUserTable.getColumnModel().getColumn(USER_TBL_COL.PERSON_INFO.index).setCellEditor(new ButtonCellEditor(new JCheckBox()));
+        jUserTable.getColumnModel().getColumn(USER_TBL_COL.PERSON_INFO.index).setCellEditor(new ButtonCellEditor(new ActionPerformer<TableRowData>() {
+            @Override
+            public void actionPerformed(ActionEvent e, TableRowData data) {
+                System.out.println("Button clicked for UserID: " + data.getUserId());
+            }
+        }));
     }
 
     private void updateUI(ListSelectionEvent listSelectionEvent) {
