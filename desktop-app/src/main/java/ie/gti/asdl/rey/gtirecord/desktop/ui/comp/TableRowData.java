@@ -1,24 +1,30 @@
 package ie.gti.asdl.rey.gtirecord.desktop.ui.comp;
 
-public class TableRowData {
-    private final int userId;
+public abstract class TableRowData<T> {
+    private int row;
+    private T data;
 //    private final String actionName; // Можно добавить дополнительные данные
 
-    public TableRowData(int rowIndex) {
-        this.userId = rowIndex;
-//        this.actionName = actionName;
+    public TableRowData(T data) {
+        this.data = data;
     }
 
-    public int getUserId() {
-        return userId;
+    public void setRow(int row) {
+        this.row = row;
     }
 
-//    public String getActionName() {
-//        return actionName;
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return actionName; // Нужно для отображения в таблице
-//    }
+    public int getRow() {
+        return row;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public abstract String getText();
+
 }

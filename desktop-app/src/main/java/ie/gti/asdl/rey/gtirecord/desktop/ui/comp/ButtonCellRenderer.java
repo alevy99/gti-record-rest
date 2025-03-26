@@ -15,7 +15,14 @@ public class ButtonCellRenderer extends JButton  implements TableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                                                    boolean hasFocus, int row, int column) {
-        setText((value == null) ? "" : value.toString());
+        String title;
+        if (value instanceof TableRowData) {
+            title = ((TableRowData) value).getText();
+        } else {
+            title = "";
+        }
+
+        setText(title);
 //        setMargin(new Insets(5, 5, 5, 5));
 //        setBorder(new EmptyBorder(5, 5, 5, 5));
         return this;

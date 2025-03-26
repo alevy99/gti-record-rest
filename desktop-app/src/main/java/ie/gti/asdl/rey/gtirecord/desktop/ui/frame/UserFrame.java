@@ -112,10 +112,10 @@ public class UserFrame extends AbstractFrame {
         jUserTable.getColumnModel().getColumn(USER_TBL_COL.PASSWORD.index).setCellEditor(new PasswordCellEditor());
 
         jUserTable.getColumnModel().getColumn(USER_TBL_COL.PERSON_INFO.index).setCellRenderer(new ButtonCellRenderer());
-        jUserTable.getColumnModel().getColumn(USER_TBL_COL.PERSON_INFO.index).setCellEditor(new ButtonCellEditor(new ActionPerformer<TableRowData>() {
+        jUserTable.getColumnModel().getColumn(USER_TBL_COL.PERSON_INFO.index).setCellEditor(new ButtonCellEditor<User>(new ActionPerformer<TableRowData<User>>() {
             @Override
-            public void actionPerformed(ActionEvent e, TableRowData data) {
-                System.out.println("Button clicked for UserID: " + data.getUserId());
+            public void actionPerformed(ActionEvent e, TableRowData<User> data) {
+                System.out.println("Button clicked for UserID: " + data.getData().getId());
             }
         }));
     }
@@ -390,7 +390,12 @@ public class UserFrame extends AbstractFrame {
 
             users.forEach(user -> {
                 model.addRow(new Object[]{user.getId(), user.getUsername(), user.getPassword(),
-                        UserUtils.isStudent(user), UserUtils.isTeacher(user), UserUtils.isAdmin(user), PERSON_INFO_BTN_TITLE});
+                        UserUtils.isStudent(user), UserUtils.isTeacher(user), UserUtils.isAdmin(user), new TableRowData<>(user) {
+                    @Override
+                    public String getText() {
+                        return PERSON_INFO_BTN_TITLE;
+                    }
+                }});//PERSON_INFO_BTN_TITLE});
             });
 
         } else {
@@ -446,7 +451,12 @@ public class UserFrame extends AbstractFrame {
     private void jAddBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddBtnActionPerformed
         DefaultTableModel model = (DefaultTableModel) jUserTable.getModel();
 
-        model.addRow(new Object[]{null, "", "", false, false, false, PERSON_INFO_BTN_TITLE});
+        model.addRow(new Object[]{null, "", "", false, false, false, new TableRowData<User>(null) {
+            @Override
+            public String getText() {
+                return PERSON_INFO_BTN_TITLE;
+            }
+        }});
         int newRow = jUserTable.getRowCount() - 1;
         jUserTable.setRowSelectionInterval(newRow, newRow);
         startInserting();
@@ -467,9 +477,6 @@ public class UserFrame extends AbstractFrame {
                 fillUserRoles(row, user);
 
                 userService.updateUser(user);
-//                newUser.setUsername(jUserTable.getValueAt(row, 1).toString());
-//                newUser.setPassword(jUserTable.getValueAt(row, 2).toString());
-//                long newId = userService.updateUser(newUser);
             });
         }
     }//GEN-LAST:event_jUpdateBtnActionPerformed

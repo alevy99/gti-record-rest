@@ -7,15 +7,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 // ButtonEditor: Custom cell editor for handling button clicks
-public class ButtonCellEditor extends AbstractCellEditor implements TableCellEditor {
-    private String label;
+public class ButtonCellEditor<T> extends AbstractCellEditor implements TableCellEditor {
     private final JButton button;
 //    private boolean isPushed;
-    private TableRowData rowData;
+    private TableRowData<T> rowData;
 
 //    private ActionListener actionListener;
 
-    public ButtonCellEditor(ActionPerformer<TableRowData> actionPerformer) {
+    public ButtonCellEditor(ActionPerformer<TableRowData<T>> actionPerformer) {
 //        super(new JCheckBox());
         button = new JButton();
         button.setOpaque(true);
@@ -29,14 +28,22 @@ public class ButtonCellEditor extends AbstractCellEditor implements TableCellEdi
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected,
                                                  int row, int column) {
+//        if (value instanceof TableRowData) {
+//            rowData = (TableRowData) value;
+//        } else {
+//            rowData = new TableRowData<T>(row, (T) value);
+//        }
+
+        String title;
         if (value instanceof TableRowData) {
-            rowData = (TableRowData) value;
+            rowData = (TableRowData<T>) value;
+            rowData.setRow(row);
+            title = rowData.getText();
         } else {
-            rowData = new TableRowData(row);
+            title = "";
         }
 
-        label = (value == null) ? "" : value.toString();
-        button.setText(label);
+        button.setText(title);
 //        isPushed = true;
         return button;
     }
@@ -48,7 +55,7 @@ public class ButtonCellEditor extends AbstractCellEditor implements TableCellEdi
 //            System.out.println("Button clicked in row: " + label);
 //        }
 //        isPushed = false;
-        return label;
+        return rowData;
     }
 
     @Override
