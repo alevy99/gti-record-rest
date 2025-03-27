@@ -128,7 +128,8 @@ public class UserFrame extends AbstractFrame {
     protected void onFormHidden() {
         super.onFormHidden();
 //        mainFrame.setVisible(true);
-        frameManager.showFrame(MAIN);
+//        frameManager.showFrame(MAIN);
+        onClose();
     }
 
 
@@ -421,6 +422,10 @@ public class UserFrame extends AbstractFrame {
     }//GEN-LAST:event_jRevertBtnActionPerformed
 
     private void jCloseBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCloseBtnActionPerformed
+        onClose();
+    }//GEN-LAST:event_jCloseBtnActionPerformed
+
+    private void onClose() {
         if (isTestMode()) {
             System.exit(0);
         } else {
