@@ -112,12 +112,17 @@ public class UserFrame extends AbstractFrame {
         jUserTable.getColumnModel().getColumn(USER_TBL_COL.PASSWORD.index).setCellEditor(new PasswordCellEditor());
 
         jUserTable.getColumnModel().getColumn(USER_TBL_COL.PERSON_INFO.index).setCellRenderer(new ButtonCellRenderer());
-        jUserTable.getColumnModel().getColumn(USER_TBL_COL.PERSON_INFO.index).setCellEditor(new ButtonCellEditor<User>(new ActionPerformer<TableRowData<User>>() {
+        jUserTable.getColumnModel().getColumn(USER_TBL_COL.PERSON_INFO.index).setCellEditor(new ButtonCellEditor<User>(new ActionPerformer<Integer>() {
             @Override
-            public void actionPerformed(ActionEvent e, TableRowData<User> data) {
-                System.out.println("Button clicked for UserID: " + data.getData().getId());
+            public void actionPerformed(ActionEvent e, Integer row) {
+                System.out.println("BTN CLICK " + getTableModel().getData(row).getId());
+//                System.out.println("Button clicked for UserID: " + data.getData().getId());
             }
         }));
+    }
+
+    private DataTableModel<User> getTableModel() {
+        return (DataTableModel<User>) jUserTable.getModel();
     }
 
     private void updateUI(ListSelectionEvent listSelectionEvent) {
@@ -191,7 +196,7 @@ public class UserFrame extends AbstractFrame {
 
         jUserTable.setAutoCreateRowSorter(true);
         jUserTable.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        jUserTable.setModel(new javax.swing.table.DefaultTableModel(
+        jUserTable.setModel(new DataTableModel<User>(
                 new Object[][]{
                         {null, null, null, null, null, null, null}
                 },
@@ -391,25 +396,17 @@ public class UserFrame extends AbstractFrame {
 
     private void reloadTableData() {
         stopInserting();
-        if (jUserTable.getModel() instanceof DefaultTableModel model) {
-            // Clear table
-            model.setRowCount(0);
+        DataTableModel<User> model = getTableModel();
+        // Clear table
+        model.setRowCount(0);
 
-            List<User> users = userService.getAllUsers();
+        List<User> users = userService.getAllUsers();
 
-            users.forEach(user -> {
-                model.addRow(new Object[]{user.getId(), user.getUsername(), user.getPassword(),
-                        UserUtils.isStudent(user), UserUtils.isTeacher(user), UserUtils.isAdmin(user), new TableRowData<>(user) {
-                    @Override
-                    public String getText() {
-                        return PERSON_INFO_BTN_TITLE;
-                    }
-                }});//PERSON_INFO_BTN_TITLE});
-            });
+        users.forEach(user -> {
+            model.addRow(user, new Object[]{user.getId(), user.getUsername(), user.getPassword(),
+                    UserUtils.isStudent(user), UserUtils.isTeacher(user), UserUtils.isAdmin(user), PERSON_INFO_BTN_TITLE});
+        });
 
-        } else {
-            throw new RuntimeException("Unknown table model");
-        }
 //        setTableSelection(true);
     }
 
@@ -433,7 +430,7 @@ public class UserFrame extends AbstractFrame {
 //        mainFrame.setVisible(true);
             frameManager.showFrame(MAIN);
         }
-    }//GEN-LAST:event_jCloseBtnActionPerformed
+    }
 
     private void jDeleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jDeleteBtnActionPerformed
         if (!confirmBatchTableAction("Confirm delete", "Are you sure want to delete users:")) return;
@@ -462,14 +459,9 @@ public class UserFrame extends AbstractFrame {
     }
 
     private void jAddBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddBtnActionPerformed
-        DefaultTableModel model = (DefaultTableModel) jUserTable.getModel();
+        DataTableModel<User> model = getTableModel();
 
-        model.addRow(new Object[]{null, "", "", false, false, false, new TableRowData<User>(null) {
-            @Override
-            public String getText() {
-                return PERSON_INFO_BTN_TITLE;
-            }
-        }});
+        model.addRow(new User(), new Object[]{null, "", "", false, false, false, null});
         int newRow = jUserTable.getRowCount() - 1;
         jUserTable.setRowSelectionInterval(newRow, newRow);
         startInserting();
@@ -482,7 +474,7 @@ public class UserFrame extends AbstractFrame {
 
         } else {
             Arrays.stream(jUserTable.getSelectedRows()).forEach(row -> {
-                User user = new User();
+                User user = getTableModel().getData(row);
                 user.setId((Integer) jUserTable.getValueAt(row, USER_TBL_COL.ID.index));
                 user.setUsername(jUserTable.getValueAt(row, USER_TBL_COL.USERNAME.index).toString());
                 user.setPassword(jUserTable.getValueAt(row, USER_TBL_COL.PASSWORD.index).toString());
@@ -503,7 +495,7 @@ public class UserFrame extends AbstractFrame {
     private void jAddSaveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddSaveBtnActionPerformed
         List<String> errorUsers = new ArrayList<>();
         rowsInserting.forEach(row -> {
-            User newUser = new User();
+            User newUser = getTableModel().getData(row);
             newUser.setUsername(jUserTable.getValueAt(row, USER_TBL_COL.USERNAME.index).toString());
             newUser.setPassword(jUserTable.getValueAt(row, USER_TBL_COL.PASSWORD.index).toString());
 
@@ -513,7 +505,8 @@ public class UserFrame extends AbstractFrame {
             if (newId.isEmpty()) {
                 errorUsers.add(newUser.getUsername());
             } else {
-                jUserTable.setValueAt(newId.get(), row, 0);
+                jUserTable.setValueAt(newId.get(), row, USER_TBL_COL.ID.index);
+                jUserTable.setValueAt(PERSON_INFO_BTN_TITLE, row, USER_TBL_COL.PERSON_INFO.index);
             }
         });
         if (!errorUsers.isEmpty()) {
