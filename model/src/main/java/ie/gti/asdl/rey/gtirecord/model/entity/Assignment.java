@@ -1,54 +1,23 @@
 package ie.gti.asdl.rey.gtirecord.model.entity;
 
-import java.util.Date;
 
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
+@Data
 public class Assignment {
 
-    private GroupSubject groupSubject;
+    private int id;
 
-    private Date openDate;
+    private GroupModule groupModule;
 
-    private Date dueDate;
+    private String name;
 
-    /**
-     * @return the groupSubject
-     */
-    public GroupSubject getGroupSubject() {
-        return groupSubject;
-    }
+    private Double weighting;
 
-    /**
-     * @param groupSubject the groupSubject to set
-     */
-    public void setGroupSubject(GroupSubject groupSubject) {
-        this.groupSubject = groupSubject;
-    }
+    private LocalDateTime openDate;
 
-    /**
-     * @return the openDate
-     */
-    public Date getOpenDate() {
-        return openDate;
-    }
+    private LocalDateTime dueDate;
 
-    /**
-     * @param openDate the openDate to set
-     */
-    public void setOpenDate(Date openDate) {
-        this.openDate = openDate;
-    }
-
-    /**
-     * @return the dueDate
-     */
-    public Date getDueDate() {
-        return dueDate;
-    }
-
-    /**
-     * @param dueDate the dueDate to set
-     */
-    public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
-    }
 }

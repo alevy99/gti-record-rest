@@ -8,8 +8,16 @@
         <outputRelativeToContentRoot value="true" />
         <module name="gti-record-desktop-app" />
         <module name="gti-record-backend" />
-        <module name="gti-record-model" />
         <module name="gti-record-core" />
+      </profile>
+      <profile name="Annotation profile for gti-record" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
+        </processorPath>
+        <module name="gti-record-model" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

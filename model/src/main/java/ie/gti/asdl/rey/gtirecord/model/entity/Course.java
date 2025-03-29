@@ -1,5 +1,8 @@
 package ie.gti.asdl.rey.gtirecord.model.entity;
 
+import lombok.Data;
+
+@Data
 public class Course {
     
     private String name;
@@ -8,46 +11,10 @@ public class Course {
     
     private boolean isFullTime;
 
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
+    private CourseType courseType;
 
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+    private Department department;
 
-    /**
-     * @return the code
-     */
-    public String getCode() {
-        return code;
-    }
+    private QQILevel qqiLevel;
 
-    /**
-     * @param code the code to set
-     */
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    /**
-     * @return the isFullTime
-     */
-    public boolean isIsFullTime() {
-        return isFullTime;
-    }
-
-    /**
-     * @param isFullTime the isFullTime to set
-     */
-    public void setIsFullTime(boolean isFullTime) {
-        this.isFullTime = isFullTime;
-    }
-    
 }

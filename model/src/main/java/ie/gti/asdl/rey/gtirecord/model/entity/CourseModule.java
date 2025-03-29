@@ -3,12 +3,10 @@ package ie.gti.asdl.rey.gtirecord.model.entity;
 import lombok.Data;
 
 @Data
-public class Group {
-
-    private String name;
-
-    private String code;
+public class CourseModule {
 
     private Course course;
+
+    private Module module;
 
 }

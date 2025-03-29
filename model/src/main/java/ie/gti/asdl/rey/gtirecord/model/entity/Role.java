@@ -1,7 +1,10 @@
 package ie.gti.asdl.rey.gtirecord.model.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
+@Data
 public class Role implements Serializable {
 
     public enum RoleType {
@@ -29,29 +32,4 @@ public class Role implements Serializable {
 
     private String name;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof Role && ((Role) obj).getId() == id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Integer.valueOf(id).hashCode();
-    }
 }

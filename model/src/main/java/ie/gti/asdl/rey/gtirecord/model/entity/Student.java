@@ -1,15 +1,12 @@
 package ie.gti.asdl.rey.gtirecord.model.entity;
 
+import lombok.Data;
+
+@Data
 public class Student {
     
     private Person person;
 
-    public Person getPerson() {
-        return person;
-    }
+    private String certificates;
 
-    public void setPerson(Person person) {
-        this.person = person;
-    }
-    
 }
