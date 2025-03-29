@@ -48,7 +48,7 @@ public class UserDaoImpl implements UserDao {
 //    private
 
     @Override
-    public Optional<User> getUserById(int id) {
+    public Optional<User> getById(int id) {
         final String SQL_GET_USER_BY_ID =
                 """
                         SELECT u.id, u.username, u.password, r.id as role_id, r.name as role_name
@@ -60,7 +60,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> getUserByUsername(String username) {
+    public Optional<User> getByUsername(String username) {
         final String SQL_GET_USER_BY_NAME =
                 """
                         SELECT u.id, u.username, u.password, r.id as role_id, r.name as role_name
@@ -72,7 +72,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<User> getAll() {
         final String SQL_GET_USER_BY_NAME =
                 """
                         SELECT u.id, u.username, u.password, r.id as role_id, r.name as role_name
@@ -103,7 +103,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<Integer> insertUser(User user) {
+    public Optional<Integer> insert(User user) {
         final String INSERT_USER_SQL = "INSERT INTO user (username, password) VALUES (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -126,7 +126,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteUserById(int id) {
+    public void delete(int id) {
         final String DELETE_USER_BY_ID = "DELETE FROM user WHERE user.id = ?";
         jdbcTemplate.update(DELETE_USER_BY_ID, id);
     }
@@ -145,7 +145,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void updateUser(User user) {
+    public void update(User user) {
         final String UPDATE_USER_SQL = "UPDATE user SET username = ?, password = ? WHERE id = ?";
         jdbcTemplate.update(UPDATE_USER_SQL, user.getUsername(), user.getPassword(), user.getId());
     }

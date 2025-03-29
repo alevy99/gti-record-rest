@@ -26,48 +26,18 @@ public class MainFrame extends AbstractFrame {
 
     private static final String ADMIN_TAB_TITLE = "Administrator";
 
-    private boolean isHiddenBehindSubframe = false;
-
     private User user;
-
-//    @Autowired
-//    private LoginFrame loginFrame;
-//
-//    @Autowired
-//    private TeacherFrame teacherFrame;
-//
-//    @Autowired
-//    private UserFrame userFrame;
-
-    private FrameManager frameManager;
 
     @Override
     protected int getDefaultCloseOperationValue() {
         return JFrame.HIDE_ON_CLOSE;
     }
 
-    @Override
-    protected void onFormShown() {
-        super.onFormShown();
-        isHiddenBehindSubframe = false;
-    }
-
-    @Override
-    protected void onFormHidden() {
-        super.onFormHidden();
-        if (! isHiddenBehindSubframe) {
-            frameManager.showFrame(LOGIN);
-        }
-    }
-
     /**
      * Creates new form MainFrame
      */
-//    @Autowired
     public MainFrame(FrameManager frameManager, ServiceManager serviceManager) {
-        super();
-        this.frameManager = frameManager;
-//        setLocationRelativeTo(this);
+        super(frameManager);
         initComponents();
         initForm();
     }
@@ -96,13 +66,7 @@ public class MainFrame extends AbstractFrame {
         jUsersBtn = new javax.swing.JButton();
         jTeachersBtn = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosed(java.awt.event.WindowEvent evt) {
-                formWindowClosed(evt);
-            }
-        });
+        btnLogOut = new javax.swing.JButton();
 
         jButton10.setText("USER ST");
 
@@ -247,10 +211,10 @@ public class MainFrame extends AbstractFrame {
 
         jTabbedPane.setSelectedComponent(jAdminTabPanel);
 
-        jButton1.setText("Logout");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnLogOut.setText("Logout");
+        btnLogOut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnLogOutActionPerformed(evt);
             }
         });
 
@@ -260,7 +224,7 @@ public class MainFrame extends AbstractFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnLogOut)
                 .addGap(42, 42, 42))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jTabbedPane)
@@ -271,16 +235,17 @@ public class MainFrame extends AbstractFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 635, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(btnLogOut)
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
+        user = null;
+        getFrameManager().showParent();
+    }//GEN-LAST:event_btnLogOutActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
@@ -298,63 +263,18 @@ public class MainFrame extends AbstractFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton6ActionPerformed
 
-    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        frameManager.showFrame(LOGIN);
-    }//GEN-LAST:event_formWindowClosed
-
     private void jTeachersBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTeachersBtnActionPerformed
-        frameManager.showFrame(TEACHER);
+        getFrameManager().showSub(TEACHER);
     }//GEN-LAST:event_jTeachersBtnActionPerformed
 
     private void jUsersBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUsersBtnActionPerformed
-        frameManager.showFrame(USER);
-        subframeOpened();
+        getFrameManager().showSub(USER);
     }//GEN-LAST:event_jUsersBtnActionPerformed
 
-    private void subframeOpened() {
-        isHiddenBehindSubframe = true;
-        this.setVisible(false);
-    }
-    
-    
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new MainFrame().setVisible(true);
-//            }
-//        });
-//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnLogOut;
     private javax.swing.JPanel jAdminTabPanel;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
@@ -396,7 +316,9 @@ public class MainFrame extends AbstractFrame {
     }
 
     public void setUser(User user) {
-        assert user != null;
+        if (user == null) {
+            throw new RuntimeException("user is null");
+        }
         this.user = user;
         refreshUI();
     }

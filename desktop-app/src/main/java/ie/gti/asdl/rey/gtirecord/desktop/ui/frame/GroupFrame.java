@@ -4,7 +4,9 @@
  */
 package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 
+import ie.gti.asdl.rey.gtirecord.core.service.ServiceManager;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractFrame;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
 
 import javax.swing.*;
 
@@ -22,7 +24,8 @@ public class GroupFrame extends AbstractFrame {
     /**
      * Creates new form GroupFrame
      */
-    public GroupFrame() {
+    public GroupFrame(FrameManager frameManager, ServiceManager serviceManager) {
+        super(frameManager);
         initComponents();
     }
 

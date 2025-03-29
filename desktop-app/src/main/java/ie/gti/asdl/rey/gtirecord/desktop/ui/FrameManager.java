@@ -2,20 +2,25 @@ package ie.gti.asdl.rey.gtirecord.desktop.ui;
 
 import ie.gti.asdl.rey.gtirecord.desktop.ui.frame.*;
 import ie.gti.asdl.rey.gtirecord.core.service.ServiceManager;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.frame.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 @Component
 public class FrameManager {
 
     private final ServiceManager serviceManager;
 
+    private FrameType activeFrameType = FrameType.NO_FRAME;
+
+    private Stack<FrameType> parentFrameStack = new Stack<>();
+
     public enum FrameType {
+        NO_FRAME(null),
         LOGIN(LoginFrame.class),
         MAIN(MainFrame.class),
         USER(UserFrame.class),
@@ -40,8 +45,12 @@ public class FrameManager {
 //        formCache.put(FrameType.MAIN, new MainFrame(this, serviceManager));
     }
 
-    public AbstractFrame getFrame(FrameType frameType) {
+    public <T extends AbstractFrame> T getFrame(FrameType frameType) {
         AbstractFrame frame;
+
+        if (frameType == FrameType.NO_FRAME) {
+            return null;
+        }
 
         if (formCache.containsKey(frameType)) {
             frame = formCache.get(frameType);
@@ -55,10 +64,33 @@ public class FrameManager {
             formCache.put(frameType, frame);
         }
 
-        return formCache.get(frameType);
+        return (T) formCache.get(frameType);
     }
 
-    public void showFrame(FrameType formName) {
-        getFrame(formName).showForm();
+    public void showParent() {
+        if (parentFrameStack.isEmpty() || FrameType.NO_FRAME == parentFrameStack.peek()) {
+            System.exit(0);
+        }
+        FrameType frameType = parentFrameStack.pop();
+        assert activeFrameType != FrameType.NO_FRAME;
+        getFrame(activeFrameType).setVisible(false);
+        showFrame(frameType);
+    }
+
+    public void showSub(FrameType subFrame, boolean hideCurrent) {
+        if (hideCurrent && activeFrameType != FrameType.NO_FRAME) {
+            parentFrameStack.push(activeFrameType);
+            getFrame(activeFrameType).setVisible(false);
+        }
+        showFrame(subFrame);
+    }
+
+    public void showSub(FrameType subFrame) {
+        showSub(subFrame, true);
+    }
+
+    private void showFrame(FrameType frameType) {
+        getFrame(frameType).showForm();
+        activeFrameType = frameType;
     }
 }

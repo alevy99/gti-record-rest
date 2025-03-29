@@ -14,11 +14,37 @@ public abstract class AbstractFrame extends JFrame {
 
     protected abstract int getDefaultCloseOperationValue();
 
+    private final FrameManager frameManager;
 
-    public AbstractFrame() {
+    public AbstractFrame(FrameManager frameManager) {
         super();
+        this.frameManager = frameManager;
 //        setLocationRelativeTo(this);
+        init();
     }
+
+    private void init() {
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                frameManager.showParent();
+            }
+        });
+
+//        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Prevent default close action
+//
+//        // Add a window listener
+//        addWindowListener(new WindowAdapter() {
+//            @Override
+//            public void windowClosing(WindowEvent e) {
+//                // Hide the frame instead of closing
+//                setVisible(false);
+//            }
+//        });
+    }
+
+//    protected void onWindowClosing(WindowEvent e) {
+//
+//    }
 
     protected void shownFirstTime() {
 
@@ -59,12 +85,15 @@ public abstract class AbstractFrame extends JFrame {
     }
 
     public void showForm() {
-        SwingUtilities.invokeLater(() -> {
+//        SwingUtilities.invokeLater(() -> {
             setVisible(true);
             toFront();
-        });
+//        });
     }
 
+    public FrameManager getFrameManager() {
+        return frameManager;
+    }
 
 
 //    protected boolean isShownOnce() {

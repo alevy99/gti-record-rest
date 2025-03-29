@@ -28,19 +28,19 @@ public class PersonDaoImpl implements PersonDao {
     }
 
     @Override
-    public List<Person> getAllPersons() {
+    public List<Person> getAll() {
         final String sql = "SELECT * FROM person";
         return jdbcTemplate.query(sql, personRowMapper);
     }
 
     @Override
-    public Optional<Person> getPersonById(int id) {
+    public Optional<Person> getById(int id) {
         final String sql = "SELECT * FROM person WHERE id = ?";
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, personRowMapper, id));
     }
 
     @Override
-    public Optional<Integer> insertPerson(Person person) {
+    public Optional<Integer> insert(Person person) {
         final String sql = """
                 INSERT INTO person
                 (first_name, last_name, date_of_birth, phone_num, email, ppsn)
@@ -71,7 +71,7 @@ public class PersonDaoImpl implements PersonDao {
     }
 
     @Override
-    public void updatePerson(Person person) {
+    public void update(Person person) {
         final String sql = """
                 UPDATE person
                 SET first_name = ?, last_name = ?, date_of_birth = ?, phone_num = ?, email = ?, ppsn = ?
@@ -82,7 +82,7 @@ public class PersonDaoImpl implements PersonDao {
     }
 
     @Override
-    public void deletePerson(int id) {
+    public void delete(int id) {
         final String sql = "DELETE FROM person WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }

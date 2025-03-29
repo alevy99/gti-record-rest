@@ -9,19 +9,19 @@ import java.util.Optional;
 @Repository
 public interface UserDao {
 
-    Optional<User> getUserById(int id);
+    Optional<User> getById(int id);
 
-    Optional<User> getUserByUsername(String username);
+    Optional<User> getByUsername(String username);
 
-    List<User> getAllUsers();
+    List<User> getAll();
 
-    Optional<Integer> insertUser(User user);
+    Optional<Integer> insert(User user);
 
-    void deleteUserById(int id);
+    void delete(int id);
 
     void deleteUsersById(List<Integer> ids);
 
-    void updateUser(User user);
+    void update(User user);
 
 
 }

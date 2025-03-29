@@ -28,12 +28,12 @@ public class LoginFrame extends AbstractFrame {
 
     private final UserService userService;
 
-    private final FrameManager frameManager;
+//    private final FrameManager frameManager;
 
     public LoginFrame(FrameManager frameManager, ServiceManager serviceManager) {
-        super();
+        super(frameManager);
 //        this.userService = userService;
-        this.frameManager = frameManager;
+//        this.frameManager = frameManager;
         userService = serviceManager.getUserService();
         initComponents();
         initForm();
@@ -160,7 +160,7 @@ public class LoginFrame extends AbstractFrame {
 //
 //        jPasswordTF.setText("12345");
 
-        Optional<User> user = userService.getUserByUsername(jUsernameTF.getText());
+        Optional<User> user = userService.getByUsername(jUsernameTF.getText());
 
         if (user.isEmpty() || (! user.get().getPassword().equals(String.valueOf(jPasswordTF.getPassword())))) {
             JOptionPane.showMessageDialog(this, "Invalid username or password");
@@ -177,9 +177,10 @@ public class LoginFrame extends AbstractFrame {
 //                mainFrame = new MainFrame();
 //            }
             // user is not empty
-            ((MainFrame) frameManager.getFrame(MAIN)).setUser(user.get());
-            frameManager.showFrame(MAIN);
-            this.setVisible(false);
+            MainFrame mainFrame = getFrameManager().getFrame(MAIN);
+            mainFrame.setUser(user.get());
+            getFrameManager().showSub(MAIN);
+//            this.setVisible(false);
 //            mainFrame.setLocationRelativeTo(this);
         }
 

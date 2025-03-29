@@ -11,12 +11,12 @@ public interface PersonService {
 
     List<Person> getAllPersons();
 
-    Optional<Person> getPersonById(int id);
+    Optional<Person> getById(int id);
 
-    Optional<Integer> insertPerson(Person person);
+    Optional<Integer> insert(Person person);
 
-    void updatePerson(Person person);
+    void update(Person person);
 
-    void deletePerson(Person person);
+    void delete(Person person);
 
 }

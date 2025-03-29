@@ -9,14 +9,14 @@ import java.util.Optional;
 @Repository
 public interface PersonDao {
 
-    List<Person> getAllPersons();
+    List<Person> getAll();
 
-    Optional<Person> getPersonById(int id);
+    Optional<Person> getById(int id);
 
-    Optional<Integer> insertPerson(Person person);
+    Optional<Integer> insert(Person person);
 
-    void updatePerson(Person person);
+    void update(Person person);
 
-    void deletePerson(int id);
+    void delete(int id);
 
 }

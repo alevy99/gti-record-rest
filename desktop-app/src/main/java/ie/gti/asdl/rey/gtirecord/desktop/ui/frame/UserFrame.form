@@ -144,7 +144,7 @@
                   <Component id="jUpdatePanel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jPersonDetailsPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -247,7 +247,7 @@
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="jUpdateBtn" alignment="0" pref="237" max="32767" attributes="0"/>
                           <Component id="jDeleteBtn" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jRevertBtn" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jReloadBtn" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace pref="16" max="32767" attributes="0"/>
                   </Group>
@@ -261,7 +261,7 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jDeleteBtn" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="33" max="32767" attributes="0"/>
-                      <Component id="jRevertBtn" min="-2" max="-2" attributes="0"/>
+                      <Component id="jReloadBtn" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -276,12 +276,12 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jUpdateBtnActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jRevertBtn">
+            <Component class="javax.swing.JButton" name="jReloadBtn">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Reload users"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jRevertBtnActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jReloadBtnActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="jDeleteBtn">
@@ -308,7 +308,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jPersonInfoBtn" pref="237" max="32767" attributes="0"/>
+                      <Component id="jPersonInfoBtn" pref="210" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                   </Group>
               </Group>

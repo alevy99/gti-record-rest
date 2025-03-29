@@ -46,7 +46,7 @@ public class GtiRecordDesktopGuiApp {
 
 //        System.out.println("Hello World!");
         FrameManager frameManager = context.getBean(FrameManager.class);
-        frameManager.showFrame(LOGIN);
+        frameManager.showSub(LOGIN);
         
 //        loginFrame = new LoginFrame(context);//context.getBean(LoginFrame.class);
     }

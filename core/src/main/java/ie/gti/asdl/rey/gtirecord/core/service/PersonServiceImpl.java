@@ -1,6 +1,8 @@
 package ie.gti.asdl.rey.gtirecord.core.service;
 
+import ie.gti.asdl.rey.gtirecord.core.dao.AddressDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.PersonDao;
+import ie.gti.asdl.rey.gtirecord.model.entity.Address;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,34 +14,42 @@ import java.util.Optional;
 public class PersonServiceImpl implements PersonService {
 
     private final PersonDao personDao;
+    private final AddressDao addressDao;
 
     @Autowired
-    PersonServiceImpl(PersonDao personDao) {
+    PersonServiceImpl(PersonDao personDao, AddressDao addressDao) {
         this.personDao = personDao;
+        this.addressDao = addressDao;
     }
 
     @Override
     public List<Person> getAllPersons() {
-        return personDao.getAllPersons();
+        return personDao.getAll();
     }
 
     @Override
-    public Optional<Person> getPersonById(int id) {
-        return personDao.getPersonById(id);
+    public Optional<Person> getById(int id) {
+        Optional<Person> person = personDao.getById(id);
+        person.ifPresent( p -> {
+            Optional<Address> address = addressDao.getByPersonId(id);
+            p.setAddress(address.orElse(null));
+        });
+        return person;
     }
 
     @Override
-    public Optional<Integer> insertPerson(Person person) {
-        return personDao.insertPerson(person);
+    public Optional<Integer> insert(Person person) {
+        return personDao.insert(person);
     }
 
     @Override
-    public void updatePerson(Person person) {
-        personDao.updatePerson(person);
+    public void update(Person person) {
+        personDao.update(person);
+
     }
 
     @Override
-    public void deletePerson(Person person) {
-        personDao.deletePerson(person.getId());
+    public void delete(Person person) {
+        personDao.delete(person.getId());
     }
 }

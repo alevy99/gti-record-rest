@@ -34,21 +34,21 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Optional<Integer> insertUser(User user) {
-        Optional<Integer> newId = userDao.insertUser(user);
+    public Optional<Integer> insert(User user) {
+        Optional<Integer> newId = userDao.insert(user);
         if (newId.isEmpty()) {
             return newId;
         }
         user.setId(newId.get());
-        userRolesDao.insertUserRoles(user.getId(), user.getRoles());
+        userRolesDao.insert(user.getId(), user.getRoles());
         return newId;
     }
 
     @Transactional
     @Override
-    public void updateUser(User user) {
-        userDao.getUserById(user.getId()).ifPresentOrElse(userDB -> {
-            userDao.updateUser(user);
+    public void update(User user) {
+        userDao.getById(user.getId()).ifPresentOrElse(userDB -> {
+            userDao.update(user);
 
             logger.info("New roles: {}", user.getRoles().stream()
                     .map(Role::getName)
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
                     .map(Role::getName)
                     .collect(Collectors.joining(", ")));
 
-            userRolesDao.insertUserRoles(user.getId(), rolesToInsert);
+            userRolesDao.insert(user.getId(), rolesToInsert);
 
             List<Role> rolesToDelete = new ArrayList<>(currentRoles);
             rolesToDelete.removeAll(user.getRoles());
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
                     .map(Role::getName)
                     .collect(Collectors.joining(", ")));
 
-            userRolesDao.deleteUserRoles(user.getId(), rolesToDelete);
+            userRolesDao.delete(user.getId(), rolesToDelete);
 
         }, () -> {
             throw new RuntimeException("User was not found: ID = " + user.getId());
@@ -85,24 +85,24 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void deleteUser(int id) {
+    public void delete(int id) {
         // Roles are deleted first
-        userRolesDao.deleteUserRoles(id);
-        userDao.deleteUserById(id);
+        userRolesDao.delete(id);
+        userDao.delete(id);
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userDao.getAllUsers();
+    public List<User> getAll() {
+        return userDao.getAll();
     }
 
     @Override
-    public Optional<User> getUserByUsername(String username) {
-        return userDao.getUserByUsername(username);
+    public Optional<User> getByUsername(String username) {
+        return userDao.getByUsername(username);
     }
 
     @Override
-    public Optional<User> getUserById(int id) {
-        return userDao.getUserById(id);
+    public Optional<User> getById(int id) {
+        return userDao.getById(id);
     }
 }

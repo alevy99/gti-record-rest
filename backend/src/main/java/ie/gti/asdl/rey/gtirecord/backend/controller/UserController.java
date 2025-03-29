@@ -24,7 +24,7 @@ public class UserController {
 
     @GetMapping("/user/id/{id}")
     public User getUser(@PathVariable Integer id) {
-        return userService.getUserById(id)
+        return userService.getById(id)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")).getBody();
 //        userService.getUserById(id).orElse(null);
@@ -32,7 +32,7 @@ public class UserController {
 
     @GetMapping("/user/name/{username}")
     public User getUser(@PathVariable String username) {
-        return userService.getUserByUsername(username)
+        return userService.getByUsername(username)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")).getBody();
     }

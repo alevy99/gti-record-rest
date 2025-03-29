@@ -12,7 +12,6 @@ import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
 
-import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.MAIN;
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.TEACHER;
 
 /**
@@ -25,7 +24,7 @@ public class TeacherFrame extends AbstractFrame {
 //    @Autowired
 //    private MainFrame mainFrame;
 
-    private final FrameManager frameManager;
+//    private final FrameManager frameManager;
     
     @Override
     protected int getDefaultCloseOperationValue() {
@@ -36,8 +35,8 @@ public class TeacherFrame extends AbstractFrame {
      * Creates new form TeacherFrame
      */
     public TeacherFrame(FrameManager frameManager, ServiceManager serviceManager) {
-        super();
-        this.frameManager = frameManager;
+        super(frameManager);
+//        this.frameManager = frameManager;
         initComponents();
         initForm();
     }
@@ -72,7 +71,7 @@ public class TeacherFrame extends AbstractFrame {
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
 //        mainFrame.setVisible(true);
-        frameManager.showFrame(MAIN);
+//        frameManager.showParentFrame();
     }//GEN-LAST:event_formWindowClosed
 
     /**
@@ -107,7 +106,7 @@ public class TeacherFrame extends AbstractFrame {
             public void run() {
                 ApplicationContext context = SpringApplication.run(UserFrame.class, args);
                 FrameManager manager = context.getBean(FrameManager.class);
-                manager.showFrame(TEACHER);
+                manager.showSub(TEACHER);
             }
         });
 
