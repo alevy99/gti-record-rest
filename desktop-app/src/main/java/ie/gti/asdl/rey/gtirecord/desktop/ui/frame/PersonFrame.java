@@ -86,6 +86,26 @@ public class PersonFrame extends AbstractFrame {
         }
     }
 
+    private void fillPersonFromUI() {
+        person.setFirstName(tfFirstName.getText());
+        person.setLastName(tfLastName.getText());
+        person.setDateOfBirth(dobDatePicker.getDate());
+        person.setEmail(tfEmail.getText());
+        person.setPhoneNum(tfPhoneNumber.getText());
+        person.setPpsn(tfPPSN.getText());
+        Address address = person.getAddress();
+        if (address == null) {
+            address = new Address();
+            person.setAddress(address);
+        }
+        address.setLine1(tfAddressLine1.getText());
+        address.setLine2(tfAddressLine2.getText());
+        address.setCounty(tfAddressCounty.getText());
+        address.setCity(tfAddressCity.getText());
+        address.setCountry(tfAddressCountry.getText());
+        address.setEirCode(tfAddressEircode.getText());
+    }
+
     private void initUI() {
         tfDOB.setVisible(false);
 
@@ -110,9 +130,9 @@ public class PersonFrame extends AbstractFrame {
 //        ((AbstractDocument) tfFirstName.getDocument()).setDocumentFilter(new AutoFormatFilter(tfFirstName));
 
 //        tfFirstName.addFocusListener(new PhoneNumberValidator(tfFirstName, lblError));
-        tfFirstName.getDocument().addDocumentListener(new PhoneNumberValidator(tfFirstName, lblError));
+        tfPhoneNumber.getDocument().addDocumentListener(new PhoneNumberValidator(tfPhoneNumber, lblError));
 
-        ((AbstractDocument) tfFirstName.getDocument()).setDocumentFilter(new DocumentFilter() {
+        ((AbstractDocument) tfPhoneNumber.getDocument()).setDocumentFilter(new DocumentFilter() {
 //            private String regex = "^\\+?\\(?\\d{1,3}\\)?[-\\s]?\\d{2,3}[-\\s]?\\d{2}[-\\s]?\\d{2,3}$";
 
             private boolean isValidInput(String text) {
@@ -216,7 +236,7 @@ public class PersonFrame extends AbstractFrame {
         jLabel17 = new javax.swing.JLabel();
         tfAddressEircode = new javax.swing.JTextField();
         jCloseBtn = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
 
         setResizable(false);
 
@@ -621,7 +641,12 @@ public class PersonFrame extends AbstractFrame {
             }
         });
 
-        jButton1.setText("Save");
+        btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -632,7 +657,7 @@ public class PersonFrame extends AbstractFrame {
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jCloseBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(pnlMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -647,7 +672,7 @@ public class PersonFrame extends AbstractFrame {
                 .addComponent(pnlMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(btnSave)
                     .addComponent(jCloseBtn))
                 .addContainerGap(92, Short.MAX_VALUE))
         );
@@ -707,6 +732,11 @@ public class PersonFrame extends AbstractFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tfAddressEircodeActionPerformed
 
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        fillPersonFromUI();
+        personService.save(person);
+    }//GEN-LAST:event_btnSaveActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -722,7 +752,7 @@ public class PersonFrame extends AbstractFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnSave;
     private javax.swing.JButton jCloseBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

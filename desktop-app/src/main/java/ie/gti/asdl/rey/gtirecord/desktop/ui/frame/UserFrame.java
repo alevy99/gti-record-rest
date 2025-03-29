@@ -4,8 +4,10 @@
  */
 package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 
+import ie.gti.asdl.rey.gtirecord.core.service.PersonService;
 import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.*;
+import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import ie.gti.asdl.rey.gtirecord.model.entity.Role;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import ie.gti.asdl.rey.gtirecord.core.service.ServiceManager;
@@ -49,6 +51,8 @@ public class UserFrame extends AbstractFrame {
 
     private final UserService userService;
 
+    private final PersonService personService;
+
     private boolean isInserting = false;
 
     private final Set<Integer> rowsInserting = new HashSet<>();
@@ -59,6 +63,7 @@ public class UserFrame extends AbstractFrame {
     public UserFrame(FrameManager frameManager, ServiceManager serviceManager) {
         super(frameManager);
         userService = serviceManager.getUserService();
+        personService = serviceManager.getPersonService();
         initComponents();
         initForm();
     }
@@ -207,31 +212,24 @@ public class UserFrame extends AbstractFrame {
 
         jUserTable.setAutoCreateRowSorter(true);
         jUserTable.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        jUserTable.setModel(new DataTableModel<User>(
-                new Object[][]{
-                        {null, null, null, null, null, null}
-                },
-                new String[]{
-                        "ID", "Username", "Password", "Student", "Teacher", "Admin"
-                }
-        ) {
-            Class[] types = new Class[]{
-                    java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class
-            };
-
-            boolean[] canEdit = new boolean [] {
-                    false, true, true, true, true, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+        jUserTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "ID", "Username", "Password", "Student", "Teacher", "Admin"
             }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class
+            };
 
             public Class getColumnClass(int columnIndex) {
-                return types[columnIndex];
+                return types [columnIndex];
             }
         });
         jUserTable.setFillsViewportHeight(true);
+        jUserTable.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         jUserTable.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         jUserTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jUserTable);
@@ -357,7 +355,7 @@ public class UserFrame extends AbstractFrame {
             jPersonDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPersonDetailsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPersonInfoBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+                .addComponent(jPersonInfoBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
                 .addGap(12, 12, 12))
         );
         jPersonDetailsPanelLayout.setVerticalGroup(
@@ -379,7 +377,7 @@ public class UserFrame extends AbstractFrame {
                 .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPersonDetailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48))
+                .addGap(24, 24, 24))
         );
         jButtonsPanelLayout.setVerticalGroup(
             jButtonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -501,9 +499,7 @@ public class UserFrame extends AbstractFrame {
     private void jUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUpdateBtnActionPerformed
         if (!confirmBatchTableAction("Confirm update", "Are you sure want to update users:")) return;
 
-        if (isInserting) {
-
-        } else {
+        if (! isInserting) {
             Arrays.stream(jUserTable.getSelectedRows()).forEach(row -> {
                 User user = getTableModel().getData(row);
                 user.setId((Integer) jUserTable.getValueAt(row, USER_TBL_COL.ID.index));
@@ -512,7 +508,7 @@ public class UserFrame extends AbstractFrame {
 
                 fillUserRoles(row, user);
 
-                userService.update(user);
+                userService.updateUserWithRoles(user);
             });
         }
     }//GEN-LAST:event_jUpdateBtnActionPerformed
@@ -553,11 +549,20 @@ public class UserFrame extends AbstractFrame {
         }
         User user = getTableModel().getData(rows[0]);
         PersonFrame personFrame = getFrameManager().getFrame(PERSON);
-        Integer personId = null;
-        if (user.getPerson() != null) {
-            personId = user.getPerson().getId();
-        }
-        personFrame.setPersonId(personId);
+//        Integer personId = null;
+//        if (user.getPerson() != null) {
+//            personId = user.getPerson().getId();
+//        }
+        userService.insertPersonToUser(user);
+//        if (user.getPersonId() == null) {
+//            Person person = new Person();
+//            Optional<Integer> newPersonIdOpt = personService.insert(person);
+//            newPersonIdOpt.ifPresent(personId -> {
+//                user.setPersonId(personId);
+//                userService.updateUser(user);
+//            });
+//        }
+        personFrame.setPersonId(user.getPersonId());
         getFrameManager().showSub(PERSON);
     }//GEN-LAST:event_jPersonInfoBtnActionPerformed
 
@@ -640,7 +645,7 @@ public class UserFrame extends AbstractFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jUpdateBtn;
     private javax.swing.JPanel jUpdatePanel;
-    private PaddedJTable jUserTable;
+    private javax.swing.JTable jUserTable;
     // End of variables declaration//GEN-END:variables
 
 

@@ -9,13 +9,15 @@ import java.util.Optional;
 @Service
 public interface PersonService {
 
-    List<Person> getAllPersons();
+    List<Person> getAll();
 
     Optional<Person> getById(int id);
 
     Optional<Integer> insert(Person person);
 
     void update(Person person);
+
+    Optional<Integer> save(Person person);
 
     void delete(Person person);
 

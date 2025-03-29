@@ -14,7 +14,7 @@ public class User implements Serializable {
 
     private final List<Role> roles;
 
-    private Person person;
+    private Integer personId;
 
     public User() {
         roles = new ArrayList<>();
@@ -48,16 +48,16 @@ public class User implements Serializable {
         return roles;
     }
 
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
-
     @Override
     public String toString() {
         return "ID: " + id + ", Username: " + username;
+    }
+
+    public Integer getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(Integer personId) {
+        this.personId = personId;
     }
 }

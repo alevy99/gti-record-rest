@@ -10,9 +10,9 @@ public interface AddressDao {
 
     Optional<Address> getByPersonId(int personId);
 
-    Optional<Integer> insert(Address address);
+    void insert(Address address);
 
     void update(Address address);
 
-    void delete(int id);
+    void deleteByPersonId(int personId);
 }

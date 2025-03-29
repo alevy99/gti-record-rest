@@ -55,7 +55,11 @@ public class PersonDaoImpl implements PersonDao {
                 PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1, person.getFirstName());
                 ps.setString(2, person.getLastName());
-                ps.setDate(3, Date.valueOf(person.getDateOfBirth()));
+                if (person.getDateOfBirth() != null) {
+                    ps.setDate(3, Date.valueOf(person.getDateOfBirth()));
+                } else {
+                    ps.setNull(3, Types.DATE);
+                }
                 ps.setString(4, person.getPhoneNum());
                 ps.setString(5, person.getEmail());
                 ps.setString(6, person.getPpsn());
@@ -77,7 +81,13 @@ public class PersonDaoImpl implements PersonDao {
                 SET first_name = ?, last_name = ?, date_of_birth = ?, phone_num = ?, email = ?, ppsn = ?
                 WHERE id = ?;
                 """;
-        jdbcTemplate.update(sql, person.getFirstName(), person.getLastName(), Date.valueOf(person.getDateOfBirth()),
+        java.sql.Date sqlDate = person.getDateOfBirth() != null ? Date.valueOf(person.getDateOfBirth()) : null;
+//        if (person.getDateOfBirth() != null) {
+//            ps.setDate(3, Date.valueOf(person.getDateOfBirth()));
+//        } else {
+//            ps.setNull(3, Types.DATE);
+//        }
+        jdbcTemplate.update(sql, person.getFirstName(), person.getLastName(), sqlDate,
                 person.getPhoneNum(), person.getEmail(), person.getPpsn(), person.getId());
     }
 

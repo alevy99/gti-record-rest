@@ -45,13 +45,11 @@ public class UserDaoImpl implements UserDao {
     }
 
 
-//    private
-
     @Override
     public Optional<User> getById(int id) {
         final String SQL_GET_USER_BY_ID =
                 """
-                        SELECT u.id, u.username, u.password, r.id as role_id, r.name as role_name
+                        SELECT u.id, u.person_id, u.username, u.password, r.id as role_id, r.name as role_name
                         FROM user u
                         LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id\s
                         LEFT OUTER JOIN role r ON r.id = ur.role_id
@@ -63,7 +61,7 @@ public class UserDaoImpl implements UserDao {
     public Optional<User> getByUsername(String username) {
         final String SQL_GET_USER_BY_NAME =
                 """
-                        SELECT u.id, u.username, u.password, r.id as role_id, r.name as role_name
+                        SELECT u.id, u.person_id, u.username, u.password, r.id as role_id, r.name as role_name
                         FROM user u
                         LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id\s
                         LEFT OUTER JOIN role r ON r.id = ur.role_id
@@ -75,7 +73,7 @@ public class UserDaoImpl implements UserDao {
     public List<User> getAll() {
         final String SQL_GET_USER_BY_NAME =
                 """
-                        SELECT u.id, u.username, u.password, r.id as role_id, r.name as role_name
+                        SELECT u.id, u.person_id, u.username, u.password, r.id as role_id, r.name as role_name
                         FROM user u
                         LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id
                         LEFT OUTER JOIN role r ON r.id = ur.role_id""";
@@ -146,8 +144,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void update(User user) {
-        final String UPDATE_USER_SQL = "UPDATE user SET username = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(UPDATE_USER_SQL, user.getUsername(), user.getPassword(), user.getId());
+        final String UPDATE_USER_SQL = "UPDATE user SET person_id = ?, username = ?, password = ? WHERE id = ?";
+        jdbcTemplate.update(UPDATE_USER_SQL, user.getPersonId(), user.getUsername(), user.getPassword(), user.getId());
     }
 
 }

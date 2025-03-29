@@ -1,7 +1,9 @@
 package ie.gti.asdl.rey.gtirecord.core.service;
 
+import ie.gti.asdl.rey.gtirecord.core.dao.PersonDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.UserDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.UserRolesDao;
+import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import ie.gti.asdl.rey.gtirecord.model.entity.Role;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import org.slf4j.Logger;
@@ -25,11 +27,14 @@ public class UserServiceImpl implements UserService {
 
     private final UserRolesDao userRolesDao;
 
+    private final PersonService personService;
+
     @Autowired
-    public UserServiceImpl(UserDao userDao, UserRolesDao userRolesDao) {
+    public UserServiceImpl(UserDao userDao, UserRolesDao userRolesDao, PersonService personService) {
         super();
         this.userDao = userDao;
         this.userRolesDao = userRolesDao;
+        this.personService = personService;
     }
 
     @Transactional
@@ -46,24 +51,24 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void update(User user) {
+    public void updateUserWithRoles(User user) {
         userDao.getById(user.getId()).ifPresentOrElse(userDB -> {
             userDao.update(user);
 
-            logger.info("New roles: {}", user.getRoles().stream()
+            logger.trace("New roles: {}", user.getRoles().stream()
                     .map(Role::getName)
                     .collect(Collectors.joining(", ")));
 
             List<Role> currentRoles = userDB.getRoles();
 
-            logger.info("Current roles: {}", currentRoles.stream()
+            logger.trace("Current roles: {}", currentRoles.stream()
                     .map(Role::getName)
                     .collect(Collectors.joining(", ")));
 
             List<Role> rolesToInsert = new ArrayList<>(user.getRoles());
             rolesToInsert.removeAll(currentRoles);
 
-            logger.info("Roles to insert: {}", rolesToInsert.stream()
+            logger.trace("Roles to insert: {}", rolesToInsert.stream()
                     .map(Role::getName)
                     .collect(Collectors.joining(", ")));
 
@@ -72,14 +77,40 @@ public class UserServiceImpl implements UserService {
             List<Role> rolesToDelete = new ArrayList<>(currentRoles);
             rolesToDelete.removeAll(user.getRoles());
 
-            logger.info("Roles to delete: {}", rolesToInsert.stream()
+            logger.trace("Roles to delete: {}", rolesToInsert.stream()
                     .map(Role::getName)
                     .collect(Collectors.joining(", ")));
 
             userRolesDao.delete(user.getId(), rolesToDelete);
-
         }, () -> {
             throw new RuntimeException("User was not found: ID = " + user.getId());
+        });
+    }
+
+//    @Transactional
+    @Override
+    public void updateUser(User user) {
+        userDao.update(user);
+//        Optional<Integer> personId = personService.save(user.getPerson());
+//        personId.ifPresent(personIdDB -> {
+//            user.setId(personIdDB);
+//            userDao.update(user);
+//        });
+    }
+
+    @Transactional
+    @Override
+    public void insertPersonToUser(User user) {
+        if (user.getPersonId() != null) {
+            return;
+        }
+        Person person = new Person();
+        Optional<Integer> newPersonIdOpt = personService.insert(person);
+        newPersonIdOpt.ifPresentOrElse(personId -> {
+            user.setPersonId(personId);
+            userDao.update(user);
+        }, () -> {
+            throw new RuntimeException("Error adding new person for user ID = " + user.getId());
         });
     }
 

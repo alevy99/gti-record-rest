@@ -6,6 +6,7 @@ import ie.gti.asdl.rey.gtirecord.model.entity.Address;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +24,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public List<Person> getAllPersons() {
+    public List<Person> getAll() {
         return personDao.getAll();
     }
 
@@ -37,19 +38,50 @@ public class PersonServiceImpl implements PersonService {
         return person;
     }
 
+    @Transactional
     @Override
     public Optional<Integer> insert(Person person) {
-        return personDao.insert(person);
+        Optional<Integer> personId = personDao.insert(person);
+        personId.ifPresent(persId -> {
+            if (person.getAddress() != null) {
+                person.getAddress().setPersonId(persId);
+                addressDao.insert(person.getAddress());
+            }
+        });
+        return personId;
     }
 
+    @Transactional
     @Override
     public void update(Person person) {
         personDao.update(person);
-
+        if (person.getAddress() != null) {
+            if (person.getAddress().getPersonId() != null) {
+                addressDao.update(person.getAddress());
+            } else {
+                person.getAddress().setPersonId(person.getId());
+                addressDao.insert(person.getAddress());
+            }
+        }
     }
 
+    @Transactional
+    @Override
+    public Optional<Integer> save(Person person) {
+        Optional<Integer> result;
+        if (person.getId() == null) {
+            result = insert(person);
+        } else {
+            update(person);
+            result = Optional.of(person.getId());
+        }
+        return result;
+    }
+
+    @Transactional
     @Override
     public void delete(Person person) {
         personDao.delete(person.getId());
+        addressDao.deleteByPersonId(person.getId());
     }
 }

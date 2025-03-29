@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Address implements Serializable {
 
-    private String personId;
+    private Integer personId;
 
     private String line1;
 
@@ -66,11 +66,11 @@ public class Address implements Serializable {
         this.eirCode = eirCode;
     }
 
-    public String getPersonId() {
+    public Integer getPersonId() {
         return personId;
     }
 
-    public void setPersonId(String personId) {
+    public void setPersonId(Integer personId) {
         this.personId = personId;
     }
 }
