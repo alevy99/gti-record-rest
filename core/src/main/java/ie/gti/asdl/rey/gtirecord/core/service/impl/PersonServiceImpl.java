@@ -1,7 +1,8 @@
-package ie.gti.asdl.rey.gtirecord.core.service;
+package ie.gti.asdl.rey.gtirecord.core.service.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.AddressDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.PersonDao;
+import ie.gti.asdl.rey.gtirecord.core.service.PersonService;
 import ie.gti.asdl.rey.gtirecord.model.entity.Address;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,9 @@
-package ie.gti.asdl.rey.gtirecord.core.service;
+package ie.gti.asdl.rey.gtirecord.core.service.impl;
 
-import ie.gti.asdl.rey.gtirecord.core.dao.PersonDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.UserDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.UserRolesDao;
+import ie.gti.asdl.rey.gtirecord.core.service.PersonService;
+import ie.gti.asdl.rey.gtirecord.core.service.UserService;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import ie.gti.asdl.rey.gtirecord.model.entity.Role;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
