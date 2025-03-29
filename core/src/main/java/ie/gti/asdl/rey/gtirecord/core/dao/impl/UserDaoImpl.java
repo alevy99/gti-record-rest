@@ -1,5 +1,6 @@
-package ie.gti.asdl.rey.gtirecord.core.dao;
+package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
+import ie.gti.asdl.rey.gtirecord.core.dao.UserDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.RoleMapper;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.UserMapper;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;

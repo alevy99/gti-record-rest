@@ -1,5 +1,6 @@
-package ie.gti.asdl.rey.gtirecord.core.dao;
+package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
+import ie.gti.asdl.rey.gtirecord.core.dao.PersonDao;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;

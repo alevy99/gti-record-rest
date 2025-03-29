@@ -1,8 +1,8 @@
-package ie.gti.asdl.rey.gtirecord.core.dao;
+package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
+import ie.gti.asdl.rey.gtirecord.core.dao.AddressDao;
 import ie.gti.asdl.rey.gtirecord.model.entity.Address;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.*;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
