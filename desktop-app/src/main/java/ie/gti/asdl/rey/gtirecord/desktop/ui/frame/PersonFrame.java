@@ -15,6 +15,7 @@ import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PhoneNumberValidator;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.model.entity.Address;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
+import ie.gti.asdl.rey.gtirecord.model.util.AddressUtils;
 import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
@@ -28,7 +29,6 @@ import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.PERSON
 import static ie.gti.asdl.rey.gtirecord.desktop.util.ImageUtils.resizeIcon;
 
 /**
- *
  * @author Andrei
  */
 public class PersonFrame extends AbstractFrame {
@@ -96,7 +96,6 @@ public class PersonFrame extends AbstractFrame {
         Address address = person.getAddress();
         if (address == null) {
             address = new Address();
-            person.setAddress(address);
         }
         address.setLine1(tfAddressLine1.getText());
         address.setLine2(tfAddressLine2.getText());
@@ -104,6 +103,12 @@ public class PersonFrame extends AbstractFrame {
         address.setCity(tfAddressCity.getText());
         address.setCountry(tfAddressCountry.getText());
         address.setEirCode(tfAddressEircode.getText());
+
+        // Do not add Address object in case address is empty
+        // In this way we won't add address into DB
+        if (!AddressUtils.isAddressEmpty(address)) {
+            person.setAddress(address);
+        }
     }
 
     private void initUI() {
