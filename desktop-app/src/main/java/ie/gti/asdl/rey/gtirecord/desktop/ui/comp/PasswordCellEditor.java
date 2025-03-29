@@ -3,6 +3,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
+import static ie.gti.asdl.rey.gtirecord.desktop.util.ImageUtils.resizeIcon;
+
 public class PasswordCellEditor extends DefaultCellEditor {
     private final JPasswordField passwordField;
     private final JButton toggleButton;
@@ -64,10 +66,6 @@ public class PasswordCellEditor extends DefaultCellEditor {
         return new String(passwordField.getPassword());
     }
 
-    // Resize icon method
-    private Icon resizeIcon(ImageIcon icon, int width, int height) {
-        Image img = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        return new ImageIcon(img);
-    }
+
 }
 

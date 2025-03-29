@@ -16,7 +16,12 @@ public class FrameManager {
     private final ServiceManager serviceManager;
 
     public enum FrameType {
-        LOGIN(LoginFrame.class), MAIN(MainFrame.class), USER(UserFrame.class), TEACHER(TeacherFrame.class), GROUP(GroupFrame.class);
+        LOGIN(LoginFrame.class),
+        MAIN(MainFrame.class),
+        USER(UserFrame.class),
+        PERSON(PersonFrame.class),
+        TEACHER(TeacherFrame.class),
+        GROUP(GroupFrame.class);
 
         private final Class<? extends AbstractFrame> frameClass;
 
