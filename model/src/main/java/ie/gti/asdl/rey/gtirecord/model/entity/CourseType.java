@@ -8,26 +8,27 @@ public class CourseType {
     public enum CourseTypeType {
         FULL_TIME(1, "Full time"),
         PART_TIME(2, "Part time"),
-        ONLINE(3, "Online");
+        ONLINE(3, "Online"),
+        EVENING(4, "Evening");
 
         public final int id;
-        public final String name;
+        public final String type;
 
-        CourseTypeType(int id, String name) {
+        CourseTypeType(int id, String type) {
             this.id = id;
-            this.name = name;
+            this.type = type;
         }
 
         public CourseType asCourseType() {
             CourseType courseType = new CourseType();
             courseType.setId(id);
-            courseType.setName(name);
+            courseType.setType(type);
             return courseType;
         }
     }
 
     private int id;
 
-    private String name;
+    private String type;
 
 }

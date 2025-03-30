@@ -1,8 +1,8 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.UserDao;
-import ie.gti.asdl.rey.gtirecord.core.dao.mapper.RoleMapper;
-import ie.gti.asdl.rey.gtirecord.core.dao.mapper.UserMapper;
+import ie.gti.asdl.rey.gtirecord.core.dao.mapper.RoleRowMapper;
+import ie.gti.asdl.rey.gtirecord.core.dao.mapper.UserRowMapper;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -20,8 +20,8 @@ public class UserDaoImpl implements UserDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final static UserMapper userMapper = new UserMapper();
-    public final static RoleMapper roleMapper = new RoleMapper();
+    private final static UserRowMapper userMapper = new UserRowMapper();
+    public final static RoleRowMapper roleMapper = new RoleRowMapper();
 
     private final static ResultSetExtractor<User> rsExtractor = new ResultSetExtractor<User>() {
         @Override
