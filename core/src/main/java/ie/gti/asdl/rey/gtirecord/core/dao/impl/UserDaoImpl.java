@@ -132,9 +132,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void deleteUsersById(List<Integer> ids) {
-        final String sql =
-                "DELETE FROM user\n" +
-                "WHERE user.id = ?";
+        final String sql = "DELETE FROM user WHERE user.id = ?";
         jdbcTemplate.batchUpdate(sql, ids, ids.size(), new ParameterizedPreparedStatementSetter<Integer>() {
             @Override
             public void setValues(@NonNull PreparedStatement ps, @NonNull Integer id) throws SQLException {

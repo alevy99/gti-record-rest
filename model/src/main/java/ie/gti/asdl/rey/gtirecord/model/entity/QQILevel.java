@@ -6,8 +6,8 @@ import lombok.Data;
 public class QQILevel {
 
     public enum QQILevelType {
-        QQI5(1, "QQI Level 5"),
-        QQI6(2, "QQI Level 6");
+        QQI5(1, "QQI 5"),
+        QQI6(2, "QQI 6");
 
         public final int id;
         public final String name;
