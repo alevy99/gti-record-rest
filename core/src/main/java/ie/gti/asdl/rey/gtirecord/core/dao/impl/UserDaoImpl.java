@@ -48,37 +48,37 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> getById(int id) {
-        final String SQL_GET_USER_BY_ID =
+        final String sql =
                 """
                         SELECT u.id, u.person_id, u.username, u.password, r.id as role_id, r.name as role_name
                         FROM user u
                         LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id\s
                         LEFT OUTER JOIN role r ON r.id = ur.role_id
                         WHERE u.id=?""";
-        return Optional.ofNullable(jdbcTemplate.query(SQL_GET_USER_BY_ID, rsExtractor, id));
+        return Optional.ofNullable(jdbcTemplate.query(sql, rsExtractor, id));
     }
 
     @Override
     public Optional<User> getByUsername(String username) {
-        final String SQL_GET_USER_BY_NAME =
+        final String sql =
                 """
                         SELECT u.id, u.person_id, u.username, u.password, r.id as role_id, r.name as role_name
                         FROM user u
                         LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id\s
                         LEFT OUTER JOIN role r ON r.id = ur.role_id
                         WHERE u.username=?""";
-        return Optional.ofNullable(jdbcTemplate.query(SQL_GET_USER_BY_NAME, rsExtractor, username));
+        return Optional.ofNullable(jdbcTemplate.query(sql, rsExtractor, username));
     }
 
     @Override
     public List<User> getAll() {
-        final String SQL_GET_USER_BY_NAME =
+        final String sql =
                 """
                         SELECT u.id, u.person_id, u.username, u.password, r.id as role_id, r.name as role_name
                         FROM user u
                         LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id
                         LEFT OUTER JOIN role r ON r.id = ur.role_id""";
-        return jdbcTemplate.query(SQL_GET_USER_BY_NAME, new ResultSetExtractor<List<User>>() {
+        return jdbcTemplate.query(sql, new ResultSetExtractor<List<User>>() {
 
             @Override
             public List<User> extractData(@NonNull ResultSet rs) throws SQLException, DataAccessException {
@@ -103,14 +103,14 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<Integer> insert(User user) {
-        final String INSERT_USER_SQL = "INSERT INTO user (username, password) VALUES (?, ?)";
+        final String sql = "INSERT INTO user (username, password) VALUES (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
             @NonNull
             public PreparedStatement createPreparedStatement(@NonNull Connection connection) throws SQLException {
-                PreparedStatement ps = connection.prepareStatement(INSERT_USER_SQL, Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1, user.getUsername());
                 ps.setString(2, user.getPassword());
                 return ps;
@@ -126,16 +126,16 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void delete(int id) {
-        final String DELETE_USER_BY_ID = "DELETE FROM user WHERE user.id = ?";
-        jdbcTemplate.update(DELETE_USER_BY_ID, id);
+        final String sql = "DELETE FROM user WHERE user.id = ?";
+        jdbcTemplate.update(sql, id);
     }
 
     @Override
     public void deleteUsersById(List<Integer> ids) {
-        final String DELETE_USERS_BY_ID =
+        final String sql =
                 "DELETE FROM user\n" +
                 "WHERE user.id = ?";
-        jdbcTemplate.batchUpdate(DELETE_USERS_BY_ID, ids, ids.size(), new ParameterizedPreparedStatementSetter<Integer>() {
+        jdbcTemplate.batchUpdate(sql, ids, ids.size(), new ParameterizedPreparedStatementSetter<Integer>() {
             @Override
             public void setValues(@NonNull PreparedStatement ps, @NonNull Integer id) throws SQLException {
                 ps.setInt(1, id);
@@ -145,8 +145,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void update(User user) {
-        final String UPDATE_USER_SQL = "UPDATE user SET person_id = ?, username = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(UPDATE_USER_SQL, user.getPersonId(), user.getUsername(), user.getPassword(), user.getId());
+        final String sql = "UPDATE user SET person_id = ?, username = ?, password = ? WHERE id = ?";
+        jdbcTemplate.update(sql, user.getPersonId(), user.getUsername(), user.getPassword(), user.getId());
     }
 
 }
