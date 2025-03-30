@@ -28,11 +28,6 @@ public class MainFrame extends AbstractFrame {
 
     private User user;
 
-    @Override
-    protected int getDefaultCloseOperationValue() {
-        return JFrame.HIDE_ON_CLOSE;
-    }
-
     /**
      * Creates new form MainFrame
      */

@@ -16,11 +16,6 @@ import javax.swing.*;
  */
 public class GroupFrame extends AbstractFrame {
 
-    @Override
-    protected int getDefaultCloseOperationValue() {
-        return JFrame.HIDE_ON_CLOSE;
-    }
-
     /**
      * Creates new form GroupFrame
      */

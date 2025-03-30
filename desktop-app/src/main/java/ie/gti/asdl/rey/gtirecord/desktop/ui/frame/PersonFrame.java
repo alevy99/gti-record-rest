@@ -181,11 +181,6 @@ public class PersonFrame extends AbstractFrame {
         datePickerButton.setIcon(dateExampleIcon);
     }
 
-    @Override
-    protected int getDefaultCloseOperationValue() {
-        return JFrame.HIDE_ON_CLOSE;
-    }
-
     public void setPersonId(Integer personId) {
         this.personId = personId;
         initPerson();

@@ -26,11 +26,6 @@ public class TeacherFrame extends AbstractFrame {
 
 //    private final FrameManager frameManager;
     
-    @Override
-    protected int getDefaultCloseOperationValue() {
-        return JFrame.HIDE_ON_CLOSE;
-    }
-
     /**
      * Creates new form TeacherFrame
      */

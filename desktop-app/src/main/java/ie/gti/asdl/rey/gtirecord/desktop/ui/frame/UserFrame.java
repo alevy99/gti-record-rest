@@ -648,9 +648,4 @@ public class UserFrame extends AbstractFrame {
     private javax.swing.JTable jUserTable;
     // End of variables declaration//GEN-END:variables
 
-
-    @Override
-    protected int getDefaultCloseOperationValue() {
-        return JFrame.HIDE_ON_CLOSE;
-    }
 }

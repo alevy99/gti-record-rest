@@ -22,23 +22,15 @@ import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.MAIN;
  */
 public class LoginFrame extends AbstractFrame {
 
-//    private MainFrame mainFrame;
-    
     private boolean isActivated;
 
     private final UserService userService;
 
-//    private final FrameManager frameManager;
-
     public LoginFrame(FrameManager frameManager, ServiceManager serviceManager) {
         super(frameManager);
-//        this.userService = userService;
-//        this.frameManager = frameManager;
         userService = serviceManager.getUserService();
         initComponents();
         initForm();
-//        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//        initSpring();
     }
 
 
@@ -154,34 +146,15 @@ public class LoginFrame extends AbstractFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLoginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jLoginBtnActionPerformed
-
-        // DEBUG
-//        jUsernameTF.setText("rey");
-//
-//        jPasswordTF.setText("12345");
-
         Optional<User> user = userService.getByUsername(jUsernameTF.getText());
 
         if (user.isEmpty() || (! user.get().getPassword().equals(String.valueOf(jPasswordTF.getPassword())))) {
             JOptionPane.showMessageDialog(this, "Invalid username or password");
-//            jUsernameTF.setText("");
-//            jPasswordTF.setText("");
-//            jUsernameTF.requestFocus();
-//            jPasswordTF.requestFocus();
-//            jUsernameTF.selectAll();
-//            jPasswordTF.selectAll();
-//            jUsernameTF.setCaretPosition(0);
-//            jPasswordTF.setCaretPosition(0);
         } else {
-//            if (mainFrame == null) {
-//                mainFrame = new MainFrame();
-//            }
             // user is not empty
             MainFrame mainFrame = getFrameManager().getFrame(MAIN);
             mainFrame.setUser(user.get());
             getFrameManager().showSub(MAIN);
-//            this.setVisible(false);
-//            mainFrame.setLocationRelativeTo(this);
         }
 
     }//GEN-LAST:event_jLoginBtnActionPerformed
@@ -213,48 +186,6 @@ public class LoginFrame extends AbstractFrame {
         System.exit(0);
     }//GEN-LAST:event_jExitBtnActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//        //</editor-fold>
-//        //</editor-fold>
-//        //</editor-fold>
-//        //</editor-fold>
-//        //</editor-fold>
-//        //</editor-fold>
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new LoginFrame().setVisible(true);
-//            }
-//        });
-//    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jExitBtn;
     private javax.swing.JLabel jLabel1;
@@ -264,11 +195,6 @@ public class LoginFrame extends AbstractFrame {
     private javax.swing.JPasswordField jPasswordTF;
     private javax.swing.JTextField jUsernameTF;
     // End of variables declaration//GEN-END:variables
-
-    
-//    private void initSpring() {
-//
-//    }
 
     @Override
     protected int getDefaultCloseOperationValue() {

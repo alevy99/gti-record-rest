@@ -12,7 +12,9 @@ public abstract class AbstractFrame extends JFrame {
 
     private boolean isShownOnceOrMore = false;
 
-    protected abstract int getDefaultCloseOperationValue();
+    protected int getDefaultCloseOperationValue() {
+        return JFrame.HIDE_ON_CLOSE;
+    }
 
     private final FrameManager frameManager;
 
