@@ -14,12 +14,16 @@ public class ServiceManager {
 
     private final ModuleService moduleService;
 
+    private final CourseService courseService;
+
     @Autowired
-    public ServiceManager(UserService userService, PersonService personService, DepartmentService departmentService, ModuleService moduleService) {
+    public ServiceManager(UserService userService, PersonService personService, DepartmentService departmentService,
+                          ModuleService moduleService, CourseService courseService) {
         this.userService = userService;
         this.personService = personService;
         this.departmentService = departmentService;
         this.moduleService = moduleService;
+        this.courseService = courseService;
     }
 
     public UserService getUserService() {
@@ -36,5 +40,9 @@ public class ServiceManager {
 
     public ModuleService getModuleService() {
         return moduleService;
+    }
+
+    public CourseService getCourseService() {
+        return courseService;
     }
 }
