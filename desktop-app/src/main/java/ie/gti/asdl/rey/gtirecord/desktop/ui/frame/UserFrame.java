@@ -96,12 +96,12 @@ public class UserFrame extends AbstractFrame {
         jUserTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         TableColumnModel columnModel = jUserTable.getColumnModel();
-        columnModel.getColumn(USER_TBL_COL.ID.index).setPreferredWidth(20);
-        columnModel.getColumn(USER_TBL_COL.USERNAME.index).setPreferredWidth(60);
-        columnModel.getColumn(USER_TBL_COL.PASSWORD.index).setPreferredWidth(60);
-        columnModel.getColumn(USER_TBL_COL.IS_STUDENT.index).setPreferredWidth(30);
-        columnModel.getColumn(USER_TBL_COL.IS_TEACHER.index).setPreferredWidth(30);
-        columnModel.getColumn(USER_TBL_COL.IS_ADMIN.index).setPreferredWidth(30);
+        columnModel.getColumn(USER_TBL_COL.ID.index).setMaxWidth(35);
+        columnModel.getColumn(USER_TBL_COL.USERNAME.index).setMinWidth(60);
+        columnModel.getColumn(USER_TBL_COL.PASSWORD.index).setMinWidth(60);
+        columnModel.getColumn(USER_TBL_COL.IS_STUDENT.index).setMaxWidth(70);
+        columnModel.getColumn(USER_TBL_COL.IS_TEACHER.index).setMaxWidth(70);
+        columnModel.getColumn(USER_TBL_COL.IS_ADMIN.index).setMaxWidth(70);
 //        columnModel.getColumn(USER_TBL_COL.PERSON_INFO.index).setPreferredWidth(50);
 
         // Add selection listener

@@ -70,9 +70,9 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
         }
 
         TableColumnModel columnModel = getTable().getColumnModel();
-        columnModel.getColumn(0).setMaxWidth(30);
-        columnModel.getColumn(1).setMinWidth(120);
-        columnModel.getColumn(2).setMinWidth(40);
+        columnModel.getColumn(0).setMaxWidth(35);
+        columnModel.getColumn(1).setMinWidth(160);
+        columnModel.getColumn(2).setMaxWidth(80);
     }
 
     /**
