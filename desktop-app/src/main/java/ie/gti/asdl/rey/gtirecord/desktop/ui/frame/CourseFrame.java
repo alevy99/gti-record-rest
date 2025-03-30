@@ -226,7 +226,7 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
             }
         });
 
-        jRevertBtn.setText("Reload users");
+        jRevertBtn.setText("Reload data");
         jRevertBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRevertBtnActionPerformed(evt);
@@ -476,6 +476,12 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     @Override
     protected void doDeleteData(int dataId) {
         courseService.delete(dataId);
+    }
+
+    @Override
+    protected boolean isDataValid(Course data) {
+        return (data != null) && (data.getName() != null) && ! data.getName().isBlank()
+                && data.getDepartment() != null && data.getCourseType() != null && data.getQqiLevel() != null;
     }
 
     @Override

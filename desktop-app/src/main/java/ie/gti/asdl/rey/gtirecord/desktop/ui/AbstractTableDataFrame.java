@@ -47,6 +47,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     protected abstract Optional<Integer> doInsertData(T data);
     protected abstract void doUpdateData(T data);
     protected abstract void doDeleteData(int dataId);
+    protected abstract boolean isDataValid(T data);
 
     protected abstract void fillDataObjectFromTable(T data, Integer row);
     protected abstract void addEmptyRowToModel();
@@ -66,26 +67,43 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     }
 
     protected void onAddSaveData() {
+        List<String> errors = new ArrayList<>();
         rowsInserting.forEach(row -> {
             T newData = createDataInstance();
             fillDataObjectFromTable(newData, row);
+            if (! isDataValid(newData)) {
+                errors.add(newData.toString());
+                return;
+            }
             Optional<Integer> newDepId = doInsertData(newData);
             newDepId.ifPresent(id -> {
                 getTable().setValueAt(id, row, 0);
             });
         });
+        if (!errors.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Insert failed for:\n" + String.join("\n", errors), "Not valid data", JOptionPane.ERROR_MESSAGE);
+        }
         stopInserting();
     }
 
     protected void onUpdateData() {
-        if (!confirmBatchTableAction("Confirm update", "Are you sure want to update departments:")) return;
+        if (isInserting) {
+            return;
+        }
+        if (!confirmBatchTableAction("Confirm update", "Are you sure want to update data:")) return;
 
-        if (! isInserting) {
-            Arrays.stream(getTable().getSelectedRows()).forEach(row -> {
-                T data = createDataInstance();
-                fillDataObjectFromTable(data, row);
-                doUpdateData(data);
-            });
+        List<String> errors = new ArrayList<>();
+        Arrays.stream(getTable().getSelectedRows()).forEach(row -> {
+            T data = createDataInstance();
+            fillDataObjectFromTable(data, row);
+            if (! isDataValid(data)) {
+                errors.add(data.toString());
+                return;
+            }
+            doUpdateData(data);
+        });
+        if (!errors.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Update failed for:\n" + String.join("\n", errors), "Not valid data", JOptionPane.ERROR_MESSAGE);
         }
     }
 

@@ -29,9 +29,19 @@ import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.MODULE
 
 /**
  *
- * @author Andrei
+ * @author Andrei Levchenko
  */
 public class ModuleFrame extends AbstractTableDataFrame<Module> {
+
+    enum COLUMNS {
+        ID(0), NAME(1), CODE(2);
+
+        final int index;
+
+        COLUMNS(int index) {
+            this.index = index;
+        }
+    }
 
     private final ModuleService moduleService;
 
@@ -56,47 +66,28 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
 
         initTableModel();
 
-//        String[] roles = {"Admin", "User", "Moderator", "Guest"};
-
-        comboBox = new JComboBox<>();
-
-        TableColumn courseColumn = getTable().getColumnModel().getColumn(3);
-        courseColumn.setCellEditor(new DefaultCellEditor(comboBox));
-
-        courseColumn.setCellRenderer(new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                if (value instanceof Course) {
-                    setText(((Course) value).getName()); // Отображаем только название курса
-                } else {
-                    setText("");
-                }
-                return this;
-            }
-        });
-
         TableColumnModel columnModel = getTable().getColumnModel();
-        columnModel.getColumn(0).setMaxWidth(35);
-        columnModel.getColumn(1).setMinWidth(160);
-        columnModel.getColumn(2).setMaxWidth(70);
-        columnModel.getColumn(3).setMinWidth(80);
+        columnModel.getColumn(COLUMNS.ID.index).setMaxWidth(35);
+        columnModel.getColumn(COLUMNS.NAME.index).setMinWidth(160);
+        columnModel.getColumn(COLUMNS.CODE.index).setMaxWidth(70);
+//        columnModel.getColumn(3).setMinWidth(80);
     }
 
     private void initTableModel() {
         if (! (getTable().getModel() instanceof DataTableModel)) {
             getTable().setModel(new DataTableModel<Module>(
                     new Object[][]{
-                            {null, null, null, null}
+                            {null, null, null}
                     },
                     new String[]{
-                            "ID", "Name", "Code", "Course"
+                            "ID", "Name", "Code"
                     }
             ) {
                 Class[] types = new Class[]{
-                        java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                        java.lang.Integer.class, java.lang.String.class, java.lang.String.class
                 };
                 boolean[] canEdit = new boolean[]{
-                        false, true, true, true
+                        false, true, true
                 };
                 public boolean isCellEditable(int rowIndex, int columnIndex) {
                     return canEdit[columnIndex];
@@ -223,7 +214,7 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
             }
         });
 
-        jRevertBtn.setText("Reload");
+        jRevertBtn.setText("Reload data");
         jRevertBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRevertBtnActionPerformed(evt);
@@ -427,6 +418,11 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     @Override
     protected void doDeleteData(int dataId) {
         moduleService.delete(dataId);
+    }
+
+    @Override
+    protected boolean isDataValid(Module data) {
+        return (data != null) && (data.getName() != null) && ! data.getName().isBlank();
     }
 
     @Override

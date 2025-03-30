@@ -209,7 +209,7 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
             }
         });
 
-        jRevertBtn.setText("Reload users");
+        jRevertBtn.setText("Reload data");
         jRevertBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRevertBtnActionPerformed(evt);
@@ -502,6 +502,11 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
     @Override
     protected void doDeleteData(int dataId) {
         departmentService.delete(dataId);
+    }
+
+    @Override
+    protected boolean isDataValid(Department data) {
+        return (data != null) && (data.getName() != null) && ! data.getName().isBlank();
     }
 
     @Override
