@@ -1,4 +1,4 @@
-package ie.gti.asdl.rey.gtirecord.desktop.ui.comp;
+package ie.gti.asdl.rey.gtirecord.desktop.ui.comp.unused;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
