@@ -4,10 +4,30 @@
  */
 package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 
+import ie.gti.asdl.rey.gtirecord.core.service.DepartmentService;
+import ie.gti.asdl.rey.gtirecord.core.service.ServiceManager;
+import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractFrame;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.DataTableModel;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PaddedJTable;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PasswordCellEditor;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PasswordCellRenderer;
+import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
+import ie.gti.asdl.rey.gtirecord.model.entity.Department;
+import ie.gti.asdl.rey.gtirecord.model.entity.User;
+import ie.gti.asdl.rey.gtirecord.model.util.UserUtils;
+import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.DEPARTMENT;
+import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.PERSON;
 
 /**
  *
@@ -15,12 +35,70 @@ import javax.swing.table.DefaultTableModel;
  */
 public class DepartmentFrame extends AbstractFrame {
 
+    private final DepartmentService departmentService;
+
+    private final Set<Integer> rowsInserting = new HashSet<>();
+
+    private boolean isInserting = false;
+
     /**
      * Creates new form DepartmentFrame
      */
-    public DepartmentFrame() {
+    public DepartmentFrame(FrameManager frameManager, ServiceManager serviceManager) {
+        super(frameManager);
+        departmentService = serviceManager.getDepartmentService();
         initComponents();
         initForm();
+    }
+
+    @Override
+    protected void initForm() {
+        super.initForm();
+
+        if (! (tblDepartment.getModel() instanceof DataTableModel)) {
+            tblDepartment.setModel(new DataTableModel<Department>(
+                    new Object[][]{
+                            {null, null, null, null, null, null}
+                    },
+                    new String[]{
+                            "ID", "Name"
+                    }
+            ) {
+                Class[] types = new Class[]{
+                        java.lang.Integer.class, java.lang.String.class
+                };
+                boolean[] canEdit = new boolean[]{
+                        false, true
+                };
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit[columnIndex];
+                }
+                public Class getColumnClass(int columnIndex) {
+                    return types[columnIndex];
+                }
+            });
+        }
+
+        tblDepartment.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        TableColumnModel columnModel = tblDepartment.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(20);
+        columnModel.getColumn(1).setPreferredWidth(60);
+
+        // Add selection listener
+        tblDepartment.getSelectionModel().addListSelectionListener(this::updateUI);
+    }
+
+    @Override
+    protected void onFormShown() {
+        super.onFormShown();
+        reloadTableData();
+        updateUI(null);
+    }
+
+    private void updateUI(ListSelectionEvent listSelectionEvent) {
+        jUpdateBtn.setEnabled(tblDepartment.getSelectedRowCount() > 0);
+        jDeleteBtn.setEnabled(tblDepartment.getSelectedRowCount() > 0);
     }
 
     /**
@@ -32,7 +110,7 @@ public class DepartmentFrame extends AbstractFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblDepartment = new javax.swing.JTable();
+        tblDepartment = new PaddedJTable();
         btnClose = new javax.swing.JButton();
         jAddPanel = new javax.swing.JPanel();
         jAddBtn = new javax.swing.JButton();
@@ -42,11 +120,12 @@ public class DepartmentFrame extends AbstractFrame {
         jUpdateBtn = new javax.swing.JButton();
         jRevertBtn = new javax.swing.JButton();
         jDeleteBtn = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        jTitle = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
+        tblDepartment.setAutoCreateRowSorter(true);
         tblDepartment.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         tblDepartment.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -75,6 +154,11 @@ public class DepartmentFrame extends AbstractFrame {
         jScrollPane1.setViewportView(tblDepartment);
 
         btnClose.setText("Close");
+        btnClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCloseActionPerformed(evt);
+            }
+        });
 
         jAddPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -170,15 +254,15 @@ public class DepartmentFrame extends AbstractFrame {
                 .addGap(17, 17, 17))
         );
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("DEPARTMENTS");
+        jTitle.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jTitle.setText("DEPARTMENTS");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 565, Short.MAX_VALUE)
+            .addComponent(jTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 565, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(80, 80, 80)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -195,7 +279,7 @@ public class DepartmentFrame extends AbstractFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addComponent(jLabel1)
+                .addComponent(jTitle)
                 .addGap(27, 27, 27)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -211,9 +295,9 @@ public class DepartmentFrame extends AbstractFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jAddBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddBtnActionPerformed
-        DefaultTableModel model = (DefaultTableModel) tblDepartment.getModel();
+        DataTableModel<Department> model = getTableModel();
 
-        model.addRow(new Object[]{0L, "", "", false, false, false, "Delete"});
+        model.addRow(new Department(), new Object[]{null, "", "", false, false, false});
         int newRow = tblDepartment.getRowCount() - 1;
         tblDepartment.setRowSelectionInterval(newRow, newRow);
         startInserting();
@@ -225,38 +309,86 @@ public class DepartmentFrame extends AbstractFrame {
         ((DefaultTableModel) tblDepartment.getModel()).removeRow(tblDepartment.getRowCount() - 1);
     }//GEN-LAST:event_jAddCancelBtnActionPerformed
 
+    private void startInserting() {
+        rowsInserting.add(tblDepartment.getRowCount() - 1);
+        isInserting = true;
+        // disable all the other buttons
+//        jAddBtn.setEnabled(false);
+        jAddCancelBtn.setEnabled(true);
+        jAddSaveBtn.setEnabled(true);
+
+        jUpdateBtn.setEnabled(false);
+        jDeleteBtn.setEnabled(false);
+//        setTableSelection(false);
+    }
+
+    private void stopInserting() {
+        isInserting = false;
+        // enable all the buttons etc
+//        jAddBtn.setEnabled(true);
+        jAddCancelBtn.setEnabled(false);
+        jAddSaveBtn.setEnabled(false);
+
+        jUpdateBtn.setEnabled(true);
+        jDeleteBtn.setEnabled(true);
+
+        rowsInserting.clear();
+//        setTableSelection(true);
+    }
+
+    private DataTableModel<Department> getTableModel() {
+        return (DataTableModel<Department>) tblDepartment.getModel();
+    }
+
+    private void reloadTableData() {
+        stopInserting();
+        DataTableModel<Department> model = getTableModel();
+        // Clear table
+        model.setRowCount(0);
+
+        List<Department> departments = departmentService.getAll();
+
+        departments.forEach(department -> {
+            model.addRow(department, new Object[]{department.getId(), department.getName()});
+        });
+    }
+
     private void jAddSaveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddSaveBtnActionPerformed
         rowsInserting.forEach(row -> {
-            User newUser = new User();
-            newUser.setUsername(tblDepartment.getValueAt(row, USERNAME_COLUMN).toString());
-            newUser.setPassword(tblDepartment.getValueAt(row, PASSWORD_COLUMN).toString());
+            Department newDepartment = new Department();
+            newDepartment.setName(tblDepartment.getValueAt(row, 1).toString());
 
-            fillUserRoles(row, newUser);
-
-            long newId = userService.insertUser(newUser);
-            tblDepartment.setValueAt(newId, row, 0);
+            Optional<Integer> newDepId = departmentService.insert(newDepartment);
+            newDepId.ifPresent(id -> {
+                tblDepartment.setValueAt(id, row, 0);
+            });
         });
         stopInserting();
     }//GEN-LAST:event_jAddSaveBtnActionPerformed
 
+    private boolean confirmBatchTableAction(String title, String message) {
+        if (tblDepartment.getSelectedRows().length == 0) {
+            return false;
+        }
+        return JOptionPane.showConfirmDialog(this,
+                message + "\n" +
+                        Arrays.stream(tblDepartment.getSelectedRows()).
+                                mapToObj(row -> tblDepartment.getModel().getValueAt(row, 1).toString()).
+                                collect(Collectors.joining(", ")),
+                title,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION;
+    }
+
     private void jUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUpdateBtnActionPerformed
-        if (!confirmBatchTableAction("Confirm update", "Are you sure want to update users:")) return;
+        if (!confirmBatchTableAction("Confirm update", "Are you sure want to update departments:")) return;
 
-        if (isInserting) {
-
-        } else {
+        if (! isInserting) {
             Arrays.stream(tblDepartment.getSelectedRows()).forEach(row -> {
-                User user = new User();
-                user.setId((Long) tblDepartment.getValueAt(row, 0));
-                user.setUsername(tblDepartment.getValueAt(row, 1).toString());
-                user.setPassword(tblDepartment.getValueAt(row, 2).toString());
-
-                fillUserRoles(row, user);
-
-                userService.updateUser(user);
-                //                newUser.setUsername(tblDepartment.getValueAt(row, 1).toString());
-                //                newUser.setPassword(tblDepartment.getValueAt(row, 2).toString());
-                //                long newId = userService.updateUser(newUser);
+                Department department = new Department();
+                department.setId((Integer) tblDepartment.getValueAt(row, 0));
+                department.setName(tblDepartment.getValueAt(row, 1).toString());
+                departmentService.update(department);
             });
         }
     }//GEN-LAST:event_jUpdateBtnActionPerformed
@@ -269,7 +401,7 @@ public class DepartmentFrame extends AbstractFrame {
         if (!confirmBatchTableAction("Confirm delete", "Are you sure want to delete users:")) return;
 
         Arrays.stream(tblDepartment.getSelectedRows()).forEach(row -> {
-            userService.deleteUser((Long) tblDepartment.getModel().getValueAt(row, 0));
+            departmentService.delete((Integer) tblDepartment.getModel().getValueAt(row, 0));
             //            ((DefaultTableModel) tblDepartment.getModel()).removeRow(row);
             //            ids.add((Long) tblDepartment.getModel().getValueAt(row, 0));
         });
@@ -277,37 +409,20 @@ public class DepartmentFrame extends AbstractFrame {
         reloadTableData();
     }//GEN-LAST:event_jDeleteBtnActionPerformed
 
+    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
+        getFrameManager().showParent();
+    }//GEN-LAST:event_btnCloseActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DepartmentFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DepartmentFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DepartmentFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DepartmentFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new DepartmentFrame().setVisible(true);
+                ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, true, args);
+                FrameManager manager = context.getBean(FrameManager.class);
+                manager.showSub(DEPARTMENT);
             }
         });
     }
@@ -319,12 +434,11 @@ public class DepartmentFrame extends AbstractFrame {
     private javax.swing.JPanel jAddPanel;
     private javax.swing.JButton jAddSaveBtn;
     private javax.swing.JButton jDeleteBtn;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JButton jRevertBtn;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel jTitle;
     private javax.swing.JButton jUpdateBtn;
     private javax.swing.JPanel jUpdatePanel;
-    private javax.swing.JTable tblDepartment;
+    private PaddedJTable tblDepartment;
     // End of variables declaration//GEN-END:variables
-
 }

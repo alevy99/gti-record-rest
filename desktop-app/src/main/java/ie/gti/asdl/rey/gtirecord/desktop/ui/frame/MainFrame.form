@@ -199,16 +199,19 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace pref="75" max="32767" attributes="0"/>
-                      <Component id="jUsersBtn" min="-2" pref="151" max="-2" attributes="0"/>
+                      <Component id="btnUser" min="-2" pref="151" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
-                      <Component id="jTeachersBtn" min="-2" pref="151" max="-2" attributes="0"/>
+                      <Component id="btnTeacher" min="-2" pref="151" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
-                      <Component id="jButton2" min="-2" pref="151" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
-                      <Component id="jButton5" min="-2" pref="151" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="172" max="-2" attributes="0"/>
+                      <Component id="btnModule" min="-2" pref="151" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="btnCourse" min="-2" pref="151" max="-2" attributes="0"/>
+                          <Component id="btnDepartment" min="-2" pref="151" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="160" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -217,44 +220,54 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="96" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jButton2" alignment="3" min="-2" pref="84" max="-2" attributes="0"/>
-                          <Component id="jTeachersBtn" alignment="3" min="-2" pref="84" max="-2" attributes="0"/>
-                          <Component id="jUsersBtn" alignment="3" min="-2" pref="84" max="-2" attributes="0"/>
-                          <Component id="jButton5" alignment="3" min="-2" pref="84" max="-2" attributes="0"/>
+                          <Component id="btnModule" alignment="3" min="-2" pref="84" max="-2" attributes="0"/>
+                          <Component id="btnTeacher" alignment="3" min="-2" pref="84" max="-2" attributes="0"/>
+                          <Component id="btnUser" alignment="3" min="-2" pref="84" max="-2" attributes="0"/>
+                          <Component id="btnCourse" alignment="3" min="-2" pref="84" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="420" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
+                      <Component id="btnDepartment" min="-2" pref="84" max="-2" attributes="0"/>
+                      <EmptySpace pref="292" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="jButton2">
+            <Component class="javax.swing.JButton" name="btnModule">
               <Properties>
                 <Property name="text" type="java.lang.String" value="MODULE"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jUsersBtn">
+            <Component class="javax.swing.JButton" name="btnUser">
               <Properties>
                 <Property name="text" type="java.lang.String" value="USERS"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jUsersBtnActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUserActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jTeachersBtn">
+            <Component class="javax.swing.JButton" name="btnTeacher">
               <Properties>
                 <Property name="text" type="java.lang.String" value="TEACHERS"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTeachersBtnActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTeacherActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton5">
+            <Component class="javax.swing.JButton" name="btnDepartment">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="DEPARTMENT"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDepartmentActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnCourse">
               <Properties>
                 <Property name="text" type="java.lang.String" value="COURSE"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton5ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCourseActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

@@ -10,10 +10,13 @@ public class ServiceManager {
 
     private final PersonService personService;
 
+    private final DepartmentService departmentService;
+
     @Autowired
-    public ServiceManager(UserService userService, PersonService personService) {
+    public ServiceManager(UserService userService, PersonService personService, DepartmentService departmentService) {
         this.userService = userService;
         this.personService = personService;
+        this.departmentService = departmentService;
     }
 
     public UserService getUserService() {
@@ -22,5 +25,9 @@ public class ServiceManager {
 
     public PersonService getPersonService() {
         return personService;
+    }
+
+    public DepartmentService getDepartmentService() {
+        return departmentService;
     }
 }

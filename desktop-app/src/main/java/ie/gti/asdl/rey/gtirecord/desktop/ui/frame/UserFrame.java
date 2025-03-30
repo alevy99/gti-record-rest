@@ -4,10 +4,8 @@
  */
 package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 
-import ie.gti.asdl.rey.gtirecord.core.service.PersonService;
 import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.*;
-import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import ie.gti.asdl.rey.gtirecord.model.entity.Role;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import ie.gti.asdl.rey.gtirecord.core.service.ServiceManager;
@@ -37,12 +35,11 @@ import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.USER;
 public class UserFrame extends AbstractFrame {
 
     enum USER_TBL_COL {
-          ID(0), USERNAME(1), PASSWORD(2),
+        ID(0), USERNAME(1), PASSWORD(2),
         IS_STUDENT(3), IS_TEACHER(4), IS_ADMIN(5);
-//        PERSON_INFO(6);
 
-          private int index;
-          private USER_TBL_COL(int index) {
+          private final int index;
+          USER_TBL_COL(int index) {
               this.index = index;
           }
     }
@@ -50,8 +47,6 @@ public class UserFrame extends AbstractFrame {
 //    private static final String PERSON_INFO_BTN_TITLE = "Person info";
 
     private final UserService userService;
-
-    private final PersonService personService;
 
     private boolean isInserting = false;
 
@@ -63,7 +58,6 @@ public class UserFrame extends AbstractFrame {
     public UserFrame(FrameManager frameManager, ServiceManager serviceManager) {
         super(frameManager);
         userService = serviceManager.getUserService();
-        personService = serviceManager.getPersonService();
         initComponents();
         initForm();
     }
@@ -155,6 +149,7 @@ public class UserFrame extends AbstractFrame {
         jPersonInfoBtn.setEnabled(jUserTable.getSelectedRowCount() > 0);
     }
 
+    @Override
     protected void onFormShown() {
         super.onFormShown();
         reloadTableData();
@@ -570,11 +565,9 @@ public class UserFrame extends AbstractFrame {
         if ((Boolean) jUserTable.getValueAt(row, USER_TBL_COL.IS_STUDENT.index)) {
             user.getRoles().add(Role.RoleType.STUDENT.asRole());
         }
-
         if ((Boolean) jUserTable.getValueAt(row, USER_TBL_COL.IS_TEACHER.index)) {
             user.getRoles().add(Role.RoleType.TEACHER.asRole());
         }
-
         if ((Boolean) jUserTable.getValueAt(row, USER_TBL_COL.IS_ADMIN.index)) {
             user.getRoles().add(Role.RoleType.ADMIN.asRole());
         }
