@@ -45,9 +45,9 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
 
     private final ModuleService moduleService;
 
-    private final CourseService courseService;
+//    private final CourseService courseService;
 
-    private JComboBox<Course> comboBox;
+//    private JComboBox<Course> comboBox;
 
     /**
      * Creates new form ModuleFrame
@@ -55,7 +55,7 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     public ModuleFrame(FrameManager frameManager, ServiceManager serviceManager) {
         super(frameManager);
         moduleService = serviceManager.getModuleService();
-        courseService = serviceManager.getCourseService();
+//        courseService = serviceManager.getCourseService();
         initComponents();
         initForm();
     }
@@ -392,13 +392,13 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
 
     @Override
     protected void doReloadData() {
-        comboBox.removeAllItems();
-        courseService.getAllGroupedByDepartment().forEach((department, courses) -> {
-//            String comboItem = department.getName();
-            courses.forEach(course -> {
-                comboBox.addItem(course);
-            });
-        });
+//        comboBox.removeAllItems();
+//        courseService.getAllGroupedByDepartment().forEach((department, courses) -> {
+////            String comboItem = department.getName();
+//            courses.forEach(course -> {
+//                comboBox.addItem(course);
+//            });
+//        });
 
         moduleService.getAll().forEach(module -> {
             getTableModel().addRow(module, new Object[]{module.getId(), module.getName(), module.getCode()});
