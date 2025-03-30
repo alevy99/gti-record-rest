@@ -5,31 +5,22 @@
 package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 
 import ie.gti.asdl.rey.gtirecord.core.service.DepartmentService;
-import ie.gti.asdl.rey.gtirecord.core.service.ServiceManager;
+import ie.gti.asdl.rey.gtirecord.core.ServiceManager;
 import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractTableDataFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.DataTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PaddedJTable;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PasswordCellEditor;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PasswordCellRenderer;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.model.entity.Department;
-import ie.gti.asdl.rey.gtirecord.model.entity.Module;
-import ie.gti.asdl.rey.gtirecord.model.entity.User;
-import ie.gti.asdl.rey.gtirecord.model.util.UserUtils;
 import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.DEPARTMENT;
-import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.PERSON;
 
 /**
  *

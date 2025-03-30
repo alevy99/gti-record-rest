@@ -8,7 +8,7 @@ import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.*;
 import ie.gti.asdl.rey.gtirecord.model.entity.Role;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
-import ie.gti.asdl.rey.gtirecord.core.service.ServiceManager;
+import ie.gti.asdl.rey.gtirecord.core.ServiceManager;
 import ie.gti.asdl.rey.gtirecord.core.service.UserService;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;

@@ -1,7 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.desktop.ui;
 
 import ie.gti.asdl.rey.gtirecord.desktop.ui.frame.*;
-import ie.gti.asdl.rey.gtirecord.core.service.ServiceManager;
+import ie.gti.asdl.rey.gtirecord.core.ServiceManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

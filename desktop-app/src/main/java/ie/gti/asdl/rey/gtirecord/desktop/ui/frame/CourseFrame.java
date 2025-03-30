@@ -6,7 +6,7 @@ package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 
 import ie.gti.asdl.rey.gtirecord.core.service.CourseService;
 import ie.gti.asdl.rey.gtirecord.core.service.DepartmentService;
-import ie.gti.asdl.rey.gtirecord.core.service.ServiceManager;
+import ie.gti.asdl.rey.gtirecord.core.ServiceManager;
 import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractTableDataFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
@@ -17,10 +17,8 @@ import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import java.awt.*;
 import java.util.Optional;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.COURSE;

@@ -1,5 +1,6 @@
-package ie.gti.asdl.rey.gtirecord.core.service;
+package ie.gti.asdl.rey.gtirecord.core;
 
+import ie.gti.asdl.rey.gtirecord.core.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

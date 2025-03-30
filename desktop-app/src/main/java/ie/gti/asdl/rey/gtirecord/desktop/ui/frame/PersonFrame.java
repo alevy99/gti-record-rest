@@ -7,7 +7,7 @@ package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import ie.gti.asdl.rey.gtirecord.core.service.PersonService;
-import ie.gti.asdl.rey.gtirecord.core.service.ServiceManager;
+import ie.gti.asdl.rey.gtirecord.core.ServiceManager;
 import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
