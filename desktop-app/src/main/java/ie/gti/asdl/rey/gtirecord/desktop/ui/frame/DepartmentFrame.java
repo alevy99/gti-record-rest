@@ -162,7 +162,7 @@ public class DepartmentFrame extends AbstractFrame {
 
         jAddPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jAddBtn.setText("Add new user");
+        jAddBtn.setText("Add new");
         jAddBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jAddBtnActionPerformed(evt);
@@ -176,7 +176,7 @@ public class DepartmentFrame extends AbstractFrame {
             }
         });
 
-        jAddSaveBtn.setText("Save new user(s)");
+        jAddSaveBtn.setText("Save new");
         jAddSaveBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jAddSaveBtnActionPerformed(evt);
