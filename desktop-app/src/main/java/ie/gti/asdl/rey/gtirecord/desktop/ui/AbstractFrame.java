@@ -52,10 +52,6 @@ public abstract class AbstractFrame extends JFrame {
 
     }
 
-    protected boolean isTestMode() {
-        return SpringGuiRunner.isTestMode();
-    }
-
     protected void initForm() {
         setDefaultCloseOperation(getDefaultCloseOperationValue()); // Hide instead of closing
     }

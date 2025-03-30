@@ -614,7 +614,7 @@ public class UserFrame extends AbstractFrame {
 //                );
 //                ApplicationContext context = SpringApplication.run(GtiRecordDesktopGuiApp.class, args);
 //                ApplicationContext context = SpringApplication.run(UserFrame.class, args);
-                ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, true, args);
+                ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, args);
                 FrameManager manager = context.getBean(FrameManager.class);
                 manager.showSub(USER);
             }

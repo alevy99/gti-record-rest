@@ -29,7 +29,7 @@ public class GtiRecordDesktopGuiApp {
         System.setProperty("java.awt.headless", "false");
 //        ApplicationContext context = SpringApplication.run(GtiRecordDesktopGuiApp.class, args);
 
-        ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, false, args);
+        ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, args);
 
 //        SpringApplication app = new SpringApplication(GtiRecordDesktopGuiApp.class);
 //        // Disable Tomcat based on active profile

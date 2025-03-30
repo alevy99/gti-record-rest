@@ -370,7 +370,7 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, true, args);
+                ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, args);
                 FrameManager manager = context.getBean(FrameManager.class);
                 manager.showSub(COURSE);
             }
