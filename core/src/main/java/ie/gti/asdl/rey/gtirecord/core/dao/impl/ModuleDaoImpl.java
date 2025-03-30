@@ -1,8 +1,8 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
-import ie.gti.asdl.rey.gtirecord.core.dao.DepartmentDao;
-import ie.gti.asdl.rey.gtirecord.model.entity.Address;
+import ie.gti.asdl.rey.gtirecord.core.dao.ModuleDao;
 import ie.gti.asdl.rey.gtirecord.model.entity.Department;
+import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,33 +21,33 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class DepartmentDaoImpl implements DepartmentDao {
+public class ModuleDaoImpl implements ModuleDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private static final RowMapper<Department> departmentRowMapper = new BeanPropertyRowMapper<Department>(Department.class);
+    private static final RowMapper<Module> moduleRowMapper = new BeanPropertyRowMapper<Module>(Module.class);
 
     @Autowired
-    public DepartmentDaoImpl(JdbcTemplate jdbcTemplate) {
+    public ModuleDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public Optional<Department> getById(int id) {
-        final String sql = "SELECT * FROM department WHERE id = ?";
-        List<Department> departments = jdbcTemplate.query(sql, departmentRowMapper, id);
-        return departments.isEmpty() ? Optional.empty() : Optional.of(departments.getFirst());
+    public Optional<Module> getById(int id) {
+        final String sql = "SELECT * FROM module WHERE id = ?";
+        List<Module> modules = jdbcTemplate.query(sql, moduleRowMapper, id);
+        return modules.isEmpty() ? Optional.empty() : Optional.of(modules.getFirst());
     }
 
     @Override
-    public List<Department> getAll() {
-        final String sql = "SELECT * FROM department";
-        return jdbcTemplate.query(sql, departmentRowMapper);
+    public List<Module> getAll() {
+        final String sql = "SELECT * FROM module";
+        return jdbcTemplate.query(sql, moduleRowMapper);
     }
 
     @Override
-    public Optional<Integer> insert(Department department) {
-        final String sql = "INSERT INTO department (name) VALUES (?)";
+    public Optional<Integer> insert(Module module) {
+        final String sql = "INSERT INTO module (name, code) VALUES (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(new PreparedStatementCreator() {
@@ -55,7 +55,8 @@ public class DepartmentDaoImpl implements DepartmentDao {
             @NonNull
             public PreparedStatement createPreparedStatement(@NonNull Connection connection) throws SQLException {
                 PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, department.getName());
+                ps.setString(1, module.getName());
+                ps.setString(2, module.getCode());
                 return ps;
             }
         }, keyHolder);
@@ -68,14 +69,14 @@ public class DepartmentDaoImpl implements DepartmentDao {
     }
 
     @Override
-    public void update(Department department) {
-        final String sql = "UPDATE department SET name = ? WHERE id = ?";
-        jdbcTemplate.update(sql, department.getName(), department.getId());
+    public void update(Module module) {
+        final String sql = "UPDATE module SET name = ?, code = ?  WHERE id = ?";
+        jdbcTemplate.update(sql, module.getName(), module.getCode(), module.getId());
     }
 
     @Override
     public void delete(int id) {
-        final String sql = "DELETE FROM department WHERE id = ?";
+        final String sql = "DELETE FROM module WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

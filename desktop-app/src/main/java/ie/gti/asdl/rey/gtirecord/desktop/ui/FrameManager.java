@@ -27,7 +27,8 @@ public class FrameManager {
         PERSON(PersonFrame.class),
         TEACHER(TeacherFrame.class),
         GROUP(GroupFrame.class),
-        DEPARTMENT(DepartmentFrame.class);
+        DEPARTMENT(DepartmentFrame.class),
+        MODULE(ModuleFrame.class);
 
         private final Class<? extends AbstractFrame> frameClass;
 

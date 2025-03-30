@@ -439,7 +439,7 @@ public class UserFrame extends AbstractFrame {
             model.addRow(user, new Object[]{user.getId(), user.getUsername(), user.getPassword(),
                     UserUtils.isStudent(user), UserUtils.isTeacher(user), UserUtils.isAdmin(user)});
         });
-
+        updateUI(null);
 //        setTableSelection(true);
     }
 

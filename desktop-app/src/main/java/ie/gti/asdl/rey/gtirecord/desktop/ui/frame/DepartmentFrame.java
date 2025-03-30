@@ -8,6 +8,7 @@ import ie.gti.asdl.rey.gtirecord.core.service.DepartmentService;
 import ie.gti.asdl.rey.gtirecord.core.service.ServiceManager;
 import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractFrame;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractTableDataFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.DataTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PaddedJTable;
@@ -15,6 +16,7 @@ import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PasswordCellEditor;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PasswordCellRenderer;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.model.entity.Department;
+import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import ie.gti.asdl.rey.gtirecord.model.util.UserUtils;
 import org.springframework.context.ApplicationContext;
@@ -33,13 +35,13 @@ import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.PERSON
  *
  * @author Andrei
  */
-public class DepartmentFrame extends AbstractFrame {
+public class DepartmentFrame extends AbstractTableDataFrame<Department> {
 
     private final DepartmentService departmentService;
 
-    private final Set<Integer> rowsInserting = new HashSet<>();
-
-    private boolean isInserting = false;
+//    private final Set<Integer> rowsInserting = new HashSet<>();
+//
+//    private boolean isInserting = false;
 
     /**
      * Creates new form DepartmentFrame
@@ -58,7 +60,7 @@ public class DepartmentFrame extends AbstractFrame {
         if (! (tblDepartment.getModel() instanceof DataTableModel)) {
             tblDepartment.setModel(new DataTableModel<Department>(
                     new Object[][]{
-                            {null, null, null, null, null, null}
+                            {null, null}
                     },
                     new String[]{
                             "ID", "Name"
@@ -79,11 +81,11 @@ public class DepartmentFrame extends AbstractFrame {
             });
         }
 
-        tblDepartment.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tblDepartment.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         TableColumnModel columnModel = tblDepartment.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(20);
-        columnModel.getColumn(1).setPreferredWidth(60);
+        columnModel.getColumn(0).setMaxWidth(30);
+        columnModel.getColumn(1).setMinWidth(120);
 
         // Add selection listener
         tblDepartment.getSelectionModel().addListSelectionListener(this::updateUI);
@@ -295,102 +297,106 @@ public class DepartmentFrame extends AbstractFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jAddBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddBtnActionPerformed
-        DataTableModel<Department> model = getTableModel();
-
-        model.addRow(new Department(), new Object[]{null, "", "", false, false, false});
-        int newRow = tblDepartment.getRowCount() - 1;
-        tblDepartment.setRowSelectionInterval(newRow, newRow);
-        startInserting();
+        onAddData();
+//        DataTableModel<Department> model = getTableModel();
+//
+//        model.addRow(new Department(), new Object[]{null, "", "", false, false, false});
+//        int newRow = tblDepartment.getRowCount() - 1;
+//        tblDepartment.setRowSelectionInterval(newRow, newRow);
+//        startInserting();
     }//GEN-LAST:event_jAddBtnActionPerformed
 
     private void jAddCancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddCancelBtnActionPerformed
-        stopInserting();
-        // Delete last row
-        ((DefaultTableModel) tblDepartment.getModel()).removeRow(tblDepartment.getRowCount() - 1);
+        onCancelAddData();
+//        stopInserting();
+//        // Delete last row
+//        ((DefaultTableModel) tblDepartment.getModel()).removeRow(tblDepartment.getRowCount() - 1);
     }//GEN-LAST:event_jAddCancelBtnActionPerformed
 
-    private void startInserting() {
-        rowsInserting.add(tblDepartment.getRowCount() - 1);
-        isInserting = true;
-        // disable all the other buttons
-//        jAddBtn.setEnabled(false);
-        jAddCancelBtn.setEnabled(true);
-        jAddSaveBtn.setEnabled(true);
+//    private void startInserting() {
+//        rowsInserting.add(tblDepartment.getRowCount() - 1);
+//        isInserting = true;
+//        // disable all the other buttons
+////        jAddBtn.setEnabled(false);
+//        jAddCancelBtn.setEnabled(true);
+//        jAddSaveBtn.setEnabled(true);
+//
+//        jUpdateBtn.setEnabled(false);
+//        jDeleteBtn.setEnabled(false);
+////        setTableSelection(false);
+//    }
 
-        jUpdateBtn.setEnabled(false);
-        jDeleteBtn.setEnabled(false);
-//        setTableSelection(false);
-    }
+//    private void stopInserting() {
+//        isInserting = false;
+//        // enable all the buttons etc
+////        jAddBtn.setEnabled(true);
+//        jAddCancelBtn.setEnabled(false);
+//        jAddSaveBtn.setEnabled(false);
+//
+//        jUpdateBtn.setEnabled(true);
+//        jDeleteBtn.setEnabled(true);
+//
+//        rowsInserting.clear();
+////        setTableSelection(true);
+//    }
 
-    private void stopInserting() {
-        isInserting = false;
-        // enable all the buttons etc
-//        jAddBtn.setEnabled(true);
-        jAddCancelBtn.setEnabled(false);
-        jAddSaveBtn.setEnabled(false);
+//    private DataTableModel<Department> getTableModel() {
+//        return (DataTableModel<Department>) tblDepartment.getModel();
+//    }
 
-        jUpdateBtn.setEnabled(true);
-        jDeleteBtn.setEnabled(true);
-
-        rowsInserting.clear();
-//        setTableSelection(true);
-    }
-
-    private DataTableModel<Department> getTableModel() {
-        return (DataTableModel<Department>) tblDepartment.getModel();
-    }
-
-    private void reloadTableData() {
-        stopInserting();
-        DataTableModel<Department> model = getTableModel();
-        // Clear table
-        model.setRowCount(0);
-
-        List<Department> departments = departmentService.getAll();
-
-        departments.forEach(department -> {
-            model.addRow(department, new Object[]{department.getId(), department.getName()});
-        });
-    }
+//    private void reloadTableData() {
+//        stopInserting();
+//        DataTableModel<Department> model = getTableModel();
+//        // Clear table
+//        model.setRowCount(0);
+//
+//        List<Department> departments = departmentService.getAll();
+//
+//        departments.forEach(department -> {
+//            model.addRow(department, new Object[]{department.getId(), department.getName()});
+//        });
+//    }
 
     private void jAddSaveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddSaveBtnActionPerformed
-        rowsInserting.forEach(row -> {
-            Department newDepartment = new Department();
-            newDepartment.setName(tblDepartment.getValueAt(row, 1).toString());
-
-            Optional<Integer> newDepId = departmentService.insert(newDepartment);
-            newDepId.ifPresent(id -> {
-                tblDepartment.setValueAt(id, row, 0);
-            });
-        });
-        stopInserting();
+        onAddSaveData();
+//        rowsInserting.forEach(row -> {
+//            Department newDepartment = new Department();
+//            newDepartment.setName(tblDepartment.getValueAt(row, 1).toString());
+//
+//            Optional<Integer> newDepId = departmentService.insert(newDepartment);
+//            newDepId.ifPresent(id -> {
+//                tblDepartment.setValueAt(id, row, 0);
+//            });
+//        });
+//        stopInserting();
     }//GEN-LAST:event_jAddSaveBtnActionPerformed
 
-    private boolean confirmBatchTableAction(String title, String message) {
-        if (tblDepartment.getSelectedRows().length == 0) {
-            return false;
-        }
-        return JOptionPane.showConfirmDialog(this,
-                message + "\n" +
-                        Arrays.stream(tblDepartment.getSelectedRows()).
-                                mapToObj(row -> tblDepartment.getModel().getValueAt(row, 1).toString()).
-                                collect(Collectors.joining(", ")),
-                title,
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION;
-    }
+//    private boolean confirmBatchTableAction(String title, String message) {
+//        if (tblDepartment.getSelectedRows().length == 0) {
+//            return false;
+//        }
+//        return JOptionPane.showConfirmDialog(this,
+//                message + "\n" +
+//                        Arrays.stream(tblDepartment.getSelectedRows()).
+//                                mapToObj(row -> tblDepartment.getModel().getValueAt(row, 1).toString()).
+//                                collect(Collectors.joining(", ")),
+//                title,
+//                JOptionPane.YES_NO_OPTION,
+//                JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION;
+//    }
 
     private void jUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUpdateBtnActionPerformed
-        if (!confirmBatchTableAction("Confirm update", "Are you sure want to update departments:")) return;
-
-        if (! isInserting) {
-            Arrays.stream(tblDepartment.getSelectedRows()).forEach(row -> {
-                Department department = new Department();
-                department.setId((Integer) tblDepartment.getValueAt(row, 0));
-                department.setName(tblDepartment.getValueAt(row, 1).toString());
-                departmentService.update(department);
-            });
-        }
+        onUpdateData();
+//        if (!confirmBatchTableAction("Confirm update", "Are you sure want to update departments:")) return;
+//
+//        if (! isInserting) {
+//            Arrays.stream(tblDepartment.getSelectedRows()).forEach(row -> {
+//                Department department = new Department();
+//                department.setId((Integer) tblDepartment.getValueAt(row, 0));
+//                department.setName(tblDepartment.getValueAt(row, 1).toString());
+//                departmentService.update(department);
+//            });
+//        }
     }//GEN-LAST:event_jUpdateBtnActionPerformed
 
     private void jRevertBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRevertBtnActionPerformed
@@ -398,15 +404,16 @@ public class DepartmentFrame extends AbstractFrame {
     }//GEN-LAST:event_jRevertBtnActionPerformed
 
     private void jDeleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jDeleteBtnActionPerformed
-        if (!confirmBatchTableAction("Confirm delete", "Are you sure want to delete users:")) return;
-
-        Arrays.stream(tblDepartment.getSelectedRows()).forEach(row -> {
-            departmentService.delete((Integer) tblDepartment.getModel().getValueAt(row, 0));
-            //            ((DefaultTableModel) tblDepartment.getModel()).removeRow(row);
-            //            ids.add((Long) tblDepartment.getModel().getValueAt(row, 0));
-        });
-        //        userDao.deleteUsersById(ids);
-        reloadTableData();
+        onDeleteData();
+//        if (!confirmBatchTableAction("Confirm delete", "Are you sure want to delete users:")) return;
+//
+//        Arrays.stream(tblDepartment.getSelectedRows()).forEach(row -> {
+//            departmentService.delete((Integer) tblDepartment.getModel().getValueAt(row, 0));
+//            //            ((DefaultTableModel) tblDepartment.getModel()).removeRow(row);
+//            //            ids.add((Long) tblDepartment.getModel().getValueAt(row, 0));
+//        });
+//        //        userDao.deleteUsersById(ids);
+//        reloadTableData();
     }//GEN-LAST:event_jDeleteBtnActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
@@ -441,4 +448,77 @@ public class DepartmentFrame extends AbstractFrame {
     private javax.swing.JPanel jUpdatePanel;
     private PaddedJTable tblDepartment;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    protected PaddedJTable getTable() {
+        return tblDepartment;
+    }
+
+    @Override
+    protected JButton getAddBtn() {
+        return jAddBtn;
+    }
+
+    @Override
+    protected JButton getDeleteBtn() {
+        return jDeleteBtn;
+    }
+
+    @Override
+    protected JButton getUpdateBtn() {
+        return jUpdateBtn;
+    }
+
+    @Override
+    protected JButton getAddCancelBtn() {
+        return jAddCancelBtn;
+    }
+
+    @Override
+    protected JButton getAddSaveBtn() {
+        return jAddSaveBtn;
+    }
+
+    @Override
+    protected int getDataDescriptionColumn() {
+        return 1;
+    }
+
+    @Override
+    protected Department createDataInstance() {
+        return new Department();
+    }
+
+    @Override
+    protected void doReloadData() {
+        List<Department> departments = departmentService.getAll();
+
+        departments.forEach(department -> {
+            getTableModel().addRow(department, new Object[]{department.getId(), department.getName()});
+        });
+    }
+
+    @Override
+    protected Optional<Integer> doInsertData(Department data) {
+        return departmentService.insert(data);
+    }
+
+    @Override
+    protected void doUpdateData(Department data) {
+        departmentService.update(data);
+    }
+
+    @Override
+    protected void doDeleteData(int dataId) {
+        departmentService.delete(dataId);
+    }
+
+    @Override
+    protected void fillDataObjectFromTable(Department data, Integer row) {
+        if (getTable().getValueAt(row, 0) instanceof Integer id) {
+            data.setId(id);
+        }
+        data.setName(getTable().getValueAt(row, 1).toString());
+    }
+
 }
