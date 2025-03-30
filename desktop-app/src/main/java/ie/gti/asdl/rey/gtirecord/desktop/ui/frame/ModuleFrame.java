@@ -4,25 +4,19 @@
  */
 package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 
-import ie.gti.asdl.rey.gtirecord.core.service.CourseService;
-import ie.gti.asdl.rey.gtirecord.core.service.ModuleService;
 import ie.gti.asdl.rey.gtirecord.core.ServiceManager;
+import ie.gti.asdl.rey.gtirecord.core.service.ModuleService;
 import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractTableDataFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.DataTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PaddedJTable;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
-import ie.gti.asdl.rey.gtirecord.model.entity.Course;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-
-import java.awt.*;
 import java.util.Optional;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.MODULE;
@@ -62,9 +56,8 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
 
     @Override
     protected void initForm() {
+        initTableModel(); // Init Table Model first
         super.initForm();
-
-        initTableModel();
 
         TableColumnModel columnModel = getTable().getColumnModel();
         columnModel.getColumn(COLUMNS.ID.index).setMaxWidth(35);
@@ -119,6 +112,9 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
         jRevertBtn = new javax.swing.JButton();
         jDeleteBtn = new javax.swing.JButton();
         jTitle = new javax.swing.JLabel();
+        pnlTableFilter = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        tfTableFilter = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -256,22 +252,59 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
         jTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jTitle.setText("MODULES");
 
+        pnlTableFilter.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnlTableFilter.setPreferredSize(new java.awt.Dimension(197, 150));
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Table Filter");
+
+        tfTableFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfTableFilterActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlTableFilterLayout = new javax.swing.GroupLayout(pnlTableFilter);
+        pnlTableFilter.setLayout(pnlTableFilterLayout);
+        pnlTableFilterLayout.setHorizontalGroup(
+            pnlTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTableFilterLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(pnlTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tfTableFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
+        pnlTableFilterLayout.setVerticalGroup(
+            pnlTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTableFilterLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(80, 80, 80)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(81, 81, 81)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jAddPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 564, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(90, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jAddPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(pnlTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(61, 61, 61))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -281,12 +314,15 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
                 .addGap(27, 27, 27)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jAddPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jAddPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pnlTableFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
                 .addComponent(btnClose)
-                .addGap(19, 19, 19))
+                .addGap(33, 33, 33))
         );
 
         pack();
@@ -320,6 +356,10 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
         onDeleteData();
     }//GEN-LAST:event_jDeleteBtnActionPerformed
 
+    private void tfTableFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfTableFilterActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfTableFilterActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -341,12 +381,15 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     private javax.swing.JPanel jAddPanel;
     private javax.swing.JButton jAddSaveBtn;
     private javax.swing.JButton jDeleteBtn;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JButton jRevertBtn;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel jTitle;
     private javax.swing.JButton jUpdateBtn;
     private javax.swing.JPanel jUpdatePanel;
+    private javax.swing.JPanel pnlTableFilter;
     private PaddedJTable tblModule;
+    private javax.swing.JTextField tfTableFilter;
     // End of variables declaration//GEN-END:variables
 
 
@@ -378,6 +421,11 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     @Override
     protected JButton getAddSaveBtn() {
         return jAddSaveBtn;
+    }
+
+    @Override
+    protected JTextField getTableFilterField() {
+        return tfTableFilter;
     }
 
     @Override

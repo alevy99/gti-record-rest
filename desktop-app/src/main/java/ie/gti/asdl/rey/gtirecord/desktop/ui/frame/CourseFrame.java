@@ -62,9 +62,8 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
 
     @Override
     protected void initForm() {
-        super.initForm();
-
         initTableModel();
+        super.initForm();
 
         TableColumn departmentColumn = getTable().getColumnModel().getColumn(COLUMNS.DEPARTMENT.index);
         departmentColumn.setCellEditor(new DefaultCellEditor(departmentCombo));
@@ -139,6 +138,9 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
         jDeleteBtn = new javax.swing.JButton();
         jTitle = new javax.swing.JLabel();
         btnClose = new javax.swing.JButton();
+        pnlTableFilter = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        tfTableFilter = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -275,6 +277,39 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
             }
         });
 
+        pnlTableFilter.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnlTableFilter.setPreferredSize(new java.awt.Dimension(197, 150));
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Table Filter");
+
+        tfTableFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfTableFilterActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlTableFilterLayout = new javax.swing.GroupLayout(pnlTableFilter);
+        pnlTableFilter.setLayout(pnlTableFilterLayout);
+        pnlTableFilterLayout.setHorizontalGroup(
+            pnlTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTableFilterLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(pnlTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tfTableFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
+        pnlTableFilterLayout.setVerticalGroup(
+            pnlTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTableFilterLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -290,6 +325,8 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
                         .addComponent(jAddPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(pnlTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -309,7 +346,9 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
                         .addComponent(jAddPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(28, 28, 28))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jUpdatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(pnlTableFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(btnClose)
                 .addGap(23, 23, 23))
@@ -363,6 +402,10 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
         onDeleteData();
     }//GEN-LAST:event_jDeleteBtnActionPerformed
 
+    private void tfTableFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfTableFilterActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfTableFilterActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -384,13 +427,16 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     private javax.swing.JPanel jAddPanel;
     private javax.swing.JButton jAddSaveBtn;
     private javax.swing.JButton jDeleteBtn;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton jRevertBtn;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel jTitle;
     private javax.swing.JButton jUpdateBtn;
     private javax.swing.JPanel jUpdatePanel;
+    private javax.swing.JPanel pnlTableFilter;
     private PaddedJTable tblCourse;
+    private javax.swing.JTextField tfTableFilter;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -424,8 +470,13 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     }
 
     @Override
+    protected JTextField getTableFilterField() {
+        return tfTableFilter;
+    }
+
+    @Override
     protected int getDataDescriptionColumn() {
-        return 1;
+        return COLUMNS.NAME.index;
     }
 
     @Override

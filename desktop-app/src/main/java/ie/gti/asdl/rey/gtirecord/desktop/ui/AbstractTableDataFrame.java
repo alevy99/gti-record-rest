@@ -7,6 +7,7 @@ import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PaddedJTable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,34 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
 
         // Add selection listener
         getTable().getSelectionModel().addListSelectionListener(this::updateUI);
+
+        TableRowSorter<DataTableModel<T>> sorter = new TableRowSorter<>(getTableModel());
+
+        getTable().setRowSorter(sorter);
+
+
+        getTableFilterField().getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                filterTable();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                filterTable();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                filterTable();
+            }
+
+            private void filterTable() {
+                String text = getTableFilterField().getText();
+                if (text.trim().isEmpty()) {
+                    sorter.setRowFilter(null);
+                } else {
+                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+        });
     }
 
     protected abstract PaddedJTable getTable();
@@ -36,6 +65,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     protected abstract JButton getUpdateBtn();
     protected abstract JButton getAddCancelBtn();
     protected abstract JButton getAddSaveBtn();
+    protected abstract JTextField getTableFilterField();
     protected abstract int getDataDescriptionColumn();
 
     protected int getDataIDColumn() {
