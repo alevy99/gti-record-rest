@@ -499,13 +499,13 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
     }
 
     @Override
-    protected Optional<Integer> doInsertData(Department data) {
-        return departmentService.insert(data);
+    protected Optional<Integer> doInsertData(Department department) {
+        return departmentService.insert(department);
     }
 
     @Override
-    protected void doUpdateData(Department data) {
-        departmentService.update(data);
+    protected void doUpdateData(Department department) {
+        departmentService.update(department);
     }
 
     @Override
@@ -514,11 +514,16 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
     }
 
     @Override
-    protected void fillDataObjectFromTable(Department data, Integer row) {
+    protected void fillDataObjectFromTable(Department department, Integer row) {
         if (getTable().getValueAt(row, 0) instanceof Integer id) {
-            data.setId(id);
+            department.setId(id);
         }
-        data.setName(getTable().getValueAt(row, 1).toString());
+        department.setName(getTable().getValueAt(row, 1).toString());
+    }
+
+    @Override
+    protected void addEmptyRowToModel() {
+        getTableModel().addRow(createDataInstance(), new Object[]{null, ""});
     }
 
 }

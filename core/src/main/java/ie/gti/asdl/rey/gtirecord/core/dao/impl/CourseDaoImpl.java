@@ -3,6 +3,7 @@ package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 import ie.gti.asdl.rey.gtirecord.core.dao.CourseDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.CourseRowMapper;
 import ie.gti.asdl.rey.gtirecord.model.entity.Course;
+import ie.gti.asdl.rey.gtirecord.model.entity.Department;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,8 +15,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class CourseDaoImpl implements CourseDao {
@@ -47,6 +47,32 @@ public class CourseDaoImpl implements CourseDao {
                     WHERE c.department_id = d.id and c.course_type_id = ct.id and c.qqi_level_id = q.id
                 """;
         return jdbcTemplate.query(sql, courseRowMapper);
+    }
+
+    @Override
+    public Map<Department, List<Course>> getAllGroupedByDepartment() {
+        final String sql = """
+                    SELECT c.id, c.department_id, c.course_type_id, c.qqi_level_id, c.name, c.code, d.name as department_name, ct.type, q.name as qqi_name
+                    FROM course c, department d, course_type ct, qqi_level q
+                    WHERE c.department_id = d.id and c.course_type_id = ct.id and c.qqi_level_id = q.id
+                    ORDER BY c.department_id;
+                """;
+        return jdbcTemplate.query(sql,
+                new ResultSetExtractor<Map<Department, List<Course>>>() {
+                    @Override
+                    public Map<Department, List<Course>> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        Map<Department, List<Course>> map = new HashMap<>();
+                        int rowNum = 0;
+                        while (rs.next()) {
+                            Course course = courseRowMapper.mapRow(rs, rowNum);
+                            assert course != null;
+                            map.computeIfAbsent(course.getDepartment(), k -> new ArrayList<>()).add(course);
+                            rowNum++;
+                        }
+                        return map;
+                    }
+                }
+        );
     }
 
     @Override

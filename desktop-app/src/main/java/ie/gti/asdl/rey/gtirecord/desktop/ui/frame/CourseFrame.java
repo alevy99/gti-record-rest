@@ -5,15 +5,14 @@
 package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 
 import ie.gti.asdl.rey.gtirecord.core.service.CourseService;
-import ie.gti.asdl.rey.gtirecord.core.service.ModuleService;
+import ie.gti.asdl.rey.gtirecord.core.service.DepartmentService;
 import ie.gti.asdl.rey.gtirecord.core.service.ServiceManager;
 import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractTableDataFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.DataTableModel;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PaddedJTable;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.*;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
-import ie.gti.asdl.rey.gtirecord.model.entity.Course;
+import ie.gti.asdl.rey.gtirecord.model.entity.*;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import org.springframework.context.ApplicationContext;
 
@@ -21,32 +20,44 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-
 import java.awt.*;
-import java.util.List;
 import java.util.Optional;
 
-import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.MODULE;
+import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.COURSE;
 
 /**
  *
  * @author Andrei
  */
-public class ModuleFrame extends AbstractTableDataFrame<Module> {
+public class CourseFrame extends AbstractTableDataFrame<Course> {
 
-    private final ModuleService moduleService;
+    enum COLUMNS {
+        ID(0), NAME(1), CODE(2),
+        DEPARTMENT(3), TYPE(4), QQI_LEVEL(5);
+
+        final int index;
+        COLUMNS(int index) {
+            this.index = index;
+        }
+    }
+
+    private final JComboBox<Department> departmentCombo = new JComboBox<>();
+
+    private final JComboBox<CourseType> courseTypeCombo = new JComboBox<>();
+
+    private final JComboBox<QQILevel> qqiLevelCombo = new JComboBox<>();
 
     private final CourseService courseService;
 
-    private JComboBox<Course> comboBox;
+    private final DepartmentService departmentService;
 
     /**
-     * Creates new form ModuleFrame
+     * Creates new form CourseFrame
      */
-    public ModuleFrame(FrameManager frameManager, ServiceManager serviceManager) {
+    public CourseFrame(FrameManager frameManager, ServiceManager serviceManager) {
         super(frameManager);
-        moduleService = serviceManager.getModuleService();
         courseService = serviceManager.getCourseService();
+        departmentService = serviceManager.getDepartmentService();
         initComponents();
         initForm();
     }
@@ -57,47 +68,47 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
 
         initTableModel();
 
-//        String[] roles = {"Admin", "User", "Moderator", "Guest"};
+        TableColumn departmentColumn = getTable().getColumnModel().getColumn(COLUMNS.DEPARTMENT.index);
+        departmentColumn.setCellEditor(new DefaultCellEditor(departmentCombo));
 
-        comboBox = new JComboBox<>();
+        departmentColumn.setCellRenderer(new PaddedDataCellRenderer());
 
-        TableColumn courseColumn = getTable().getColumnModel().getColumn(3);
-        courseColumn.setCellEditor(new DefaultCellEditor(comboBox));
+        TableColumn courseTypeColumn = getTable().getColumnModel().getColumn(COLUMNS.TYPE.index);
+        courseTypeColumn.setCellEditor(new DefaultCellEditor(courseTypeCombo));
 
-        courseColumn.setCellRenderer(new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                if (value instanceof Course) {
-                    setText(((Course) value).getName()); // Отображаем только название курса
-                } else {
-                    setText("");
-                }
-                return this;
-            }
-        });
+        courseTypeColumn.setCellRenderer(new PaddedDataCellRenderer());
+
+        //---------------------------
+
+        TableColumn qqiLevelColumn = getTable().getColumnModel().getColumn(COLUMNS.QQI_LEVEL.index);
+        qqiLevelColumn.setCellEditor(new DefaultCellEditor(qqiLevelCombo));
+
+        qqiLevelColumn.setCellRenderer(new PaddedDataCellRenderer());
 
         TableColumnModel columnModel = getTable().getColumnModel();
-        columnModel.getColumn(0).setMaxWidth(35);
-        columnModel.getColumn(1).setMinWidth(160);
-        columnModel.getColumn(2).setMaxWidth(70);
-        columnModel.getColumn(3).setMinWidth(80);
+        columnModel.getColumn(COLUMNS.ID.index)         .setMaxWidth(35);
+        columnModel.getColumn(COLUMNS.NAME.index)       .setMinWidth(160);
+        columnModel.getColumn(COLUMNS.CODE.index)       .setMaxWidth(70);
+        columnModel.getColumn(COLUMNS.DEPARTMENT.index) .setMinWidth(120);
+        columnModel.getColumn(COLUMNS.TYPE.index)       .setMaxWidth(80);
+        columnModel.getColumn(COLUMNS.QQI_LEVEL.index)  .setMinWidth(80);
     }
 
     private void initTableModel() {
         if (! (getTable().getModel() instanceof DataTableModel)) {
             getTable().setModel(new DataTableModel<Module>(
                     new Object[][]{
-                            {null, null, null, null}
+                            {null, null, null, null, null, null}
                     },
                     new String[]{
-                            "ID", "Name", "Code", "Course"
+                            "ID", "Name", "Code", "Department", "Type", "QQI Level"
                     }
             ) {
                 Class[] types = new Class[]{
-                        java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                        java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
                 };
                 boolean[] canEdit = new boolean[]{
-                        false, true, true, true
+                        false, true, true, true, true, true
                 };
                 public boolean isCellEditable(int rowIndex, int columnIndex) {
                     return canEdit[columnIndex];
@@ -117,9 +128,9 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblModule = new PaddedJTable();
-        btnClose = new javax.swing.JButton();
+        tblCourse = new PaddedJTable();
         jAddPanel = new javax.swing.JPanel();
         jAddBtn = new javax.swing.JButton();
         jAddCancelBtn = new javax.swing.JButton();
@@ -129,26 +140,26 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
         jRevertBtn = new javax.swing.JButton();
         jDeleteBtn = new javax.swing.JButton();
         jTitle = new javax.swing.JLabel();
+        btnClose = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setResizable(false);
 
-        tblModule.setAutoCreateRowSorter(true);
-        tblModule.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        tblModule.setModel(new javax.swing.table.DefaultTableModel(
+        tblCourse.setAutoCreateRowSorter(true);
+        tblCourse.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        tblCourse.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Name", "Code"
+                "ID", "Name", "Code", "Department", "Type", "QQI Level"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true, true
+                false, true, true, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -159,14 +170,7 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tblModule);
-
-        btnClose.setText("Close");
-        btnClose.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCloseActionPerformed(evt);
-            }
-        });
+        jScrollPane1.setViewportView(tblCourse);
 
         jAddPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -199,8 +203,8 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
                 .addContainerGap()
                 .addGroup(jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jAddSaveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                    .addComponent(jAddBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                    .addComponent(jAddCancelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
+                    .addComponent(jAddBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jAddCancelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(17, Short.MAX_VALUE))
         );
         jAddPanelLayout.setVerticalGroup(
@@ -210,7 +214,7 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
                 .addComponent(jAddBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jAddSaveBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addComponent(jAddCancelBtn)
                 .addGap(18, 18, 18))
         );
@@ -224,7 +228,7 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
             }
         });
 
-        jRevertBtn.setText("Reload");
+        jRevertBtn.setText("Reload users");
         jRevertBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRevertBtnActionPerformed(evt);
@@ -246,8 +250,8 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
                 .addGap(17, 17, 17)
                 .addGroup(jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jUpdateBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                    .addComponent(jDeleteBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                    .addComponent(jRevertBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
+                    .addComponent(jDeleteBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jRevertBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         jUpdatePanelLayout.setVerticalGroup(
@@ -264,39 +268,70 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
 
         jTitle.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jTitle.setText("MODULES");
+        jTitle.setText("COURSES");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        btnClose.setText("Close");
+        btnClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCloseActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(80, 80, 80)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jAddPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 564, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(90, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 725, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jAddPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addComponent(jTitle)
                 .addGap(27, 27, 27)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jAddPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jAddPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(28, 28, 28))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(btnClose)
-                .addGap(19, 19, 19))
+                .addGap(23, 23, 23))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(7, Short.MAX_VALUE))
         );
 
         pack();
@@ -339,7 +374,7 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
             public void run() {
                 ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, true, args);
                 FrameManager manager = context.getBean(FrameManager.class);
-                manager.showSub(MODULE);
+                manager.showSub(COURSE);
             }
         });
     }
@@ -351,18 +386,18 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     private javax.swing.JPanel jAddPanel;
     private javax.swing.JButton jAddSaveBtn;
     private javax.swing.JButton jDeleteBtn;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JButton jRevertBtn;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel jTitle;
     private javax.swing.JButton jUpdateBtn;
     private javax.swing.JPanel jUpdatePanel;
-    private PaddedJTable tblModule;
+    private PaddedJTable tblCourse;
     // End of variables declaration//GEN-END:variables
-
 
     @Override
     protected PaddedJTable getTable() {
-        return tblModule;
+        return tblCourse;
     }
 
     @Override
@@ -396,52 +431,84 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     }
 
     @Override
-    protected Module createDataInstance() {
-        return new Module();
+    protected Course createDataInstance() {
+        return new Course();
     }
 
     @Override
     protected void doReloadData() {
-        comboBox.removeAllItems();
-        courseService.getAllGroupedByDepartment().forEach((department, courses) -> {
-//            String comboItem = department.getName();
-            courses.forEach(course -> {
-                comboBox.addItem(course);
+        departmentCombo.removeAllItems();
+        departmentService.getAll().forEach(departmentCombo::addItem);
+
+        qqiLevelCombo.removeAllItems();
+        qqiLevelCombo.addItem(QQILevel.QQILevelType.QQI5.asQQILevel());
+        qqiLevelCombo.addItem(QQILevel.QQILevelType.QQI6.asQQILevel());
+
+        courseTypeCombo.removeAllItems();
+        courseTypeCombo.addItem(CourseType.CourseTypeType.FULL_TIME.asCourseType());
+        courseTypeCombo.addItem(CourseType.CourseTypeType.PART_TIME.asCourseType());
+        courseTypeCombo.addItem(CourseType.CourseTypeType.ONLINE.asCourseType());
+        courseTypeCombo.addItem(CourseType.CourseTypeType.EVENING.asCourseType());
+
+//        courseService.getAllGroupedByDepartment().forEach((department, courses) -> {
+////            String comboItem = department.getName();
+//            courses.forEach(course -> {
+//                departmentCombo.addItem(course);
+//            });
+//        });
+
+        courseService.getAll().forEach(course -> {
+            getTableModel().addRow(course, new Object[]{
+                    course.getId(), course.getName(), course.getCode(),
+                    course.getDepartment(), course.getCourseType(), course.getQqiLevel()
             });
         });
-
-        moduleService.getAll().forEach(module -> {
-            getTableModel().addRow(module, new Object[]{module.getId(), module.getName(), module.getCode()});
-        });
     }
 
     @Override
-    protected Optional<Integer> doInsertData(Module module) {
-        return moduleService.insert(module);
+    protected Optional<Integer> doInsertData(Course data) {
+        return courseService.insert(data);
     }
 
     @Override
-    protected void doUpdateData(Module module) {
-        moduleService.update(module);
+    protected void doUpdateData(Course data) {
+        courseService.update(data);
     }
 
     @Override
     protected void doDeleteData(int dataId) {
-        moduleService.delete(dataId);
+        courseService.delete(dataId);
     }
 
     @Override
-    protected void fillDataObjectFromTable(Module module, Integer row) {
-        if (getTable().getValueAt(row, 0) instanceof Integer id) {
-            module.setId(id);
+    protected void fillDataObjectFromTable(Course course, Integer row) {
+        if (getTable().getValueAt(row, COLUMNS.ID.index) instanceof Integer id) {
+            course.setId(id);
         }
 
-        module.setName(getTable().getValueAt(row, 1).toString());
-        module.setCode(getTable().getValueAt(row, 2).toString());
+        course.setName(getTable().getValueAt(row, COLUMNS.NAME.index).toString());
+        course.setCode(getTable().getValueAt(row, COLUMNS.CODE.index).toString());
+
+
+        Department department = (Department) getTable().getValueAt(row, COLUMNS.DEPARTMENT.index);
+        if (department != null) {
+            course.setDepartment(department);
+        }
+
+        CourseType courseType = (CourseType) getTable().getValueAt(row, COLUMNS.TYPE.index);
+        if (courseType != null) {
+            course.setCourseType(courseType);
+        }
+
+        QQILevel qqiLevel = (QQILevel) getTable().getValueAt(row, COLUMNS.QQI_LEVEL.index);
+        if (qqiLevel != null) {
+            course.setQqiLevel(qqiLevel);
+        }
     }
 
     @Override
     protected void addEmptyRowToModel() {
-        getTableModel().addRow(createDataInstance(), new Object[]{null, "", ""});
+        getTableModel().addRow(createDataInstance(), new Object[]{null, "", "", null, null, null});
     }
+
 }

@@ -29,4 +29,9 @@ public class QQILevel {
 
     private String name;
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
 }

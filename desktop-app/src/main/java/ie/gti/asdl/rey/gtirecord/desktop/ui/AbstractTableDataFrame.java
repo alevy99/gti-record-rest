@@ -3,13 +3,10 @@ package ie.gti.asdl.rey.gtirecord.desktop.ui;
 
 import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.DataTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PaddedJTable;
-import ie.gti.asdl.rey.gtirecord.model.entity.Department;
-import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -52,11 +49,11 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     protected abstract void doDeleteData(int dataId);
 
     protected abstract void fillDataObjectFromTable(T data, Integer row);
+    protected abstract void addEmptyRowToModel();
 
     protected void onAddData() {
         DataTableModel<T> model = getTableModel();
-
-        model.addRow(createDataInstance(), new Object[]{null, "", "", false, false, false});
+        addEmptyRowToModel();
         int newRow = getTable().getRowCount() - 1;
         getTable().setRowSelectionInterval(newRow, newRow);
         startInserting();
@@ -72,9 +69,6 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         rowsInserting.forEach(row -> {
             T newData = createDataInstance();
             fillDataObjectFromTable(newData, row);
-//            newDepartment.setName(getTable().getValueAt(row, 1).toString());
-
-//            Optional<Integer> newDepId = departmentService.insert(newDepartment);
             Optional<Integer> newDepId = doInsertData(newData);
             newDepId.ifPresent(id -> {
                 getTable().setValueAt(id, row, 0);
@@ -90,11 +84,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
             Arrays.stream(getTable().getSelectedRows()).forEach(row -> {
                 T data = createDataInstance();
                 fillDataObjectFromTable(data, row);
-//                Department department = new Department();
-//                department.setId((Integer) getTable().getValueAt(row, 0));
-//                department.setName(getTable().getValueAt(row, 1).toString());
                 doUpdateData(data);
-//                departmentService.update(department);
             });
         }
     }
@@ -104,11 +94,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
 
         Arrays.stream(getTable().getSelectedRows()).forEach(row -> {
             doDeleteData((Integer) getTable().getModel().getValueAt(row, getDataIDColumn()));
-//            departmentService.delete();
-            //            ((DefaultTableModel) tblDepartment.getModel()).removeRow(row);
-            //            ids.add((Long) tblDepartment.getModel().getValueAt(row, 0));
         });
-        //        userDao.deleteUsersById(ids);
         reloadTableData();
     }
 
@@ -183,18 +169,5 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         getUpdateBtn().setEnabled(getTable().getSelectedRowCount() > 0);
         getDeleteBtn().setEnabled(getTable().getSelectedRowCount() > 0);
     }
-
-    protected void addRow() {
-        DataTableModel<T> model = getTableModel();
-
-        model.addRow(createDataInstance(), new Object[]{null, "", "", false, false, false});
-        int newRow = getTable().getRowCount() - 1;
-        getTable().setRowSelectionInterval(newRow, newRow);
-        startInserting();
-    }
-
-
-
-
 
 }

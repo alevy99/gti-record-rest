@@ -31,4 +31,9 @@ public class CourseType {
 
     private String type;
 
+    @Override
+    public String toString() {
+        return type;
+    }
+
 }

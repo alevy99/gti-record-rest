@@ -1,5 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.model.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
@@ -11,8 +12,6 @@ public class Course {
     
     private String code;
     
-    private boolean isFullTime;
-
     private CourseType courseType;
 
     private Department department;
