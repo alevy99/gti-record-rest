@@ -2,6 +2,7 @@ package ie.gti.asdl.rey.gtirecord.desktop.ui;
 
 import ie.gti.asdl.rey.gtirecord.desktop.ui.frame.*;
 import ie.gti.asdl.rey.gtirecord.core.ServiceManager;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +32,7 @@ public class FrameManager {
         MODULE(ModuleFrame.class),
         COURSE(CourseFrame.class);
 
+        @Getter
         private final Class<? extends AbstractFrame> frameClass;
 
         FrameType(Class<? extends AbstractFrame> frameClass) {

@@ -178,7 +178,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
 //        });
     }
 
-    private void updateUI(ListSelectionEvent listSelectionEvent) {
+    protected void updateUI(ListSelectionEvent listSelectionEvent) {
         getUpdateBtn().setEnabled(getTable().getSelectedRowCount() > 0);
         getDeleteBtn().setEnabled(getTable().getSelectedRowCount() > 0);
     }

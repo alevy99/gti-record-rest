@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.COURSE;
+import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.MODULE;
 import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.confirmBatchTableAction;
 
 /**
@@ -598,7 +599,25 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     }//GEN-LAST:event_tfModuleTableFilterActionPerformed
 
     private void btnAddModuleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddModuleActionPerformed
+        if (selectedCourse == null) {
+            return;
+        }
+        ModuleFrame moduleFrame = getFrameManager().getFrame(MODULE);
 
+        moduleFrame.reset();
+
+        ModuleFrame.ModuleFilter moduleFilter = moduleFrame.getModuleFilter();
+        moduleFilter.setCourse(selectedCourse);
+
+        Arrays.stream(tblModule.getSelectedRows()).forEach(row -> {
+            moduleFilter.getExceptModules().add(getModuleTableModel().getData(row));
+        });
+
+        moduleFrame.setSelectionMode(true);
+
+        getFrameManager().showSub(MODULE);
+
+//        moduleFrame.getModuleFilter().getExceptModules().addAll(tblModule.getSelectedRows());
     }//GEN-LAST:event_btnAddModuleActionPerformed
 
     /**
@@ -747,7 +766,6 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
 
         course.setName(getTable().getValueAt(row, COLUMNS.NAME.index).toString());
         course.setCode(getTable().getValueAt(row, COLUMNS.CODE.index).toString());
-
 
         Department department = (Department) getTable().getValueAt(row, COLUMNS.DEPARTMENT.index);
         if (department != null) {
