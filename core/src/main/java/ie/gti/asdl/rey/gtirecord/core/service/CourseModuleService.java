@@ -1,4 +1,4 @@
-package ie.gti.asdl.rey.gtirecord.core.dao;
+package ie.gti.asdl.rey.gtirecord.core.service;
 
 import org.springframework.stereotype.Repository;
 
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
  * @author Andrei Levchenko
  */
 @Repository
-public interface CourseModuleDao {
+public interface CourseModuleService {
 
     void delete(int courseId, int moduleId);
 

@@ -4,6 +4,7 @@
  */
 package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 
+import ie.gti.asdl.rey.gtirecord.core.service.CourseModuleService;
 import ie.gti.asdl.rey.gtirecord.core.service.CourseService;
 import ie.gti.asdl.rey.gtirecord.core.service.DepartmentService;
 import ie.gti.asdl.rey.gtirecord.core.ServiceManager;
@@ -54,6 +55,8 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
 
     private final CourseService courseService;
 
+    private final CourseModuleService courseModuleService;
+
     private final DepartmentService departmentService;
 
     /**
@@ -64,6 +67,7 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
         courseService = serviceManager.getCourseService();
         departmentService = serviceManager.getDepartmentService();
         moduleService = serviceManager.getModuleService();
+        courseModuleService = serviceManager.getCourseModuleService();
         initComponents();
         initForm();
     }
@@ -566,7 +570,9 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
 
     private void btnDeleteModuleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteModuleActionPerformed
         Arrays.stream(tblModule.getSelectedRows()).forEach(row -> {
-
+            courseModuleService.delete(
+                    (Integer) tblCourse.getValueAt(row, COLUMNS.ID.index),
+                    (Integer) tblModule.getValueAt(row, ModuleFrame.COLUMNS.ID.index));
         });
     }//GEN-LAST:event_btnDeleteModuleActionPerformed
 

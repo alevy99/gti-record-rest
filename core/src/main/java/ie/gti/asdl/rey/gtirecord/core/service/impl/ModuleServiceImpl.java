@@ -1,10 +1,12 @@
 package ie.gti.asdl.rey.gtirecord.core.service.impl;
 
+import ie.gti.asdl.rey.gtirecord.core.dao.CourseModuleDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.ModuleDao;
 import ie.gti.asdl.rey.gtirecord.core.service.ModuleService;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,9 +16,12 @@ public class ModuleServiceImpl implements ModuleService {
 
     private final ModuleDao moduleDao;
 
+    private final CourseModuleDao courseModuleDao;
+
     @Autowired
-    public ModuleServiceImpl(ModuleDao moduleDao) {
+    public ModuleServiceImpl(ModuleDao moduleDao, CourseModuleDao courseModuleDao) {
         this.moduleDao = moduleDao;
+        this.courseModuleDao = courseModuleDao;
     }
 
     @Override
@@ -44,8 +49,10 @@ public class ModuleServiceImpl implements ModuleService {
         moduleDao.update(module);
     }
 
+    @Transactional
     @Override
     public void delete(int id) {
+        courseModuleDao.deleteByModuleId(id);
         moduleDao.delete(id);
     }
 }
