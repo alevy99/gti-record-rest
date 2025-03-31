@@ -18,7 +18,7 @@ public class FrameManager {
 
     private FrameType activeFrameType = FrameType.NO_FRAME;
 
-    private Stack<FrameType> parentFrameStack = new Stack<>();
+    private final Stack<FrameType> parentFrameStack = new Stack<>();
 
     public enum FrameType {
         NO_FRAME(null),
@@ -32,7 +32,6 @@ public class FrameManager {
         MODULE(ModuleFrame.class),
         COURSE(CourseFrame.class);
 
-        @Getter
         private final Class<? extends AbstractFrame> frameClass;
 
         FrameType(Class<? extends AbstractFrame> frameClass) {
