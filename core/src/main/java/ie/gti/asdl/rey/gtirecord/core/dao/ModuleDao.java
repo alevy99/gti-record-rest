@@ -11,6 +11,8 @@ public interface ModuleDao {
 
     Optional<Module> getById(int id);
 
+    List<Module> getByCourseId(int courseId);
+
     List<Module> getAll();
 
     Optional<Integer> insert(Module module);
@@ -18,5 +20,6 @@ public interface ModuleDao {
     void update(Module module);
 
     void delete(int id);
+
 
 }

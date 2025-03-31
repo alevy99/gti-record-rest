@@ -3,6 +3,7 @@ package ie.gti.asdl.rey.gtirecord.desktop.ui;
 
 import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.DataTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PaddedJTable;
+import ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -29,33 +30,34 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         // Add selection listener
         getTable().getSelectionModel().addListSelectionListener(this::updateUI);
 
-        TableRowSorter<DataTableModel<T>> sorter = new TableRowSorter<>(getTableModel());
+        SwingUIUtils.addTableFilter(getTable(), getTableFilterField());
 
-        getTable().setRowSorter(sorter);
+//        TableRowSorter<DataTableModel<T>> sorter = new TableRowSorter<>(getTableModel());
+//
+//        getTable().setRowSorter(sorter);
 
-
-        getTableFilterField().getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) {
-                filterTable();
-            }
-
-            public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                filterTable();
-            }
-
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {
-                filterTable();
-            }
-
-            private void filterTable() {
-                String text = getTableFilterField().getText();
-                if (text.trim().isEmpty()) {
-                    sorter.setRowFilter(null);
-                } else {
-                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
-                }
-            }
-        });
+//        getTableFilterField().getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+//            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+//                filterTable();
+//            }
+//
+//            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+//                filterTable();
+//            }
+//
+//            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+//                filterTable();
+//            }
+//
+//            private void filterTable() {
+//                String text = getTableFilterField().getText();
+//                if (text.trim().isEmpty()) {
+//                    sorter.setRowFilter(null);
+//                } else {
+//                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+//                }
+//            }
+//        });
     }
 
     protected abstract PaddedJTable getTable();
@@ -200,9 +202,10 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
 
     protected void reloadTableData() {
         stopInserting();
-        DataTableModel<T> model = getTableModel();
-        // Clear table
-        model.setRowCount(0);
+//        DataTableModel<T> model = getTableModel();
+//        // Clear table
+//        model.setRowCount(0);
+        getTable().clear();
 
         doReloadData();
         updateUI(null);

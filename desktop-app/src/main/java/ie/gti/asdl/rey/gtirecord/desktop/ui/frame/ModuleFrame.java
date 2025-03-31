@@ -10,6 +10,7 @@ import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractTableDataFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.DataTableModel;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.ModuleTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PaddedJTable;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
@@ -56,40 +57,19 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
 
     @Override
     protected void initForm() {
-        initTableModel(); // Init Table Model first
+        initTable(getTable()); // Init Table Model first
         super.initForm();
+    }
 
-        TableColumnModel columnModel = getTable().getColumnModel();
+    static void initTable(PaddedJTable table) {
+        if (! (table.getModel() instanceof DataTableModel)) {
+            table.setModel(new ModuleTableModel());
+        }
+
+        TableColumnModel columnModel = table.getColumnModel();
         columnModel.getColumn(COLUMNS.ID.index).setMaxWidth(35);
         columnModel.getColumn(COLUMNS.NAME.index).setMinWidth(160);
         columnModel.getColumn(COLUMNS.CODE.index).setMaxWidth(70);
-//        columnModel.getColumn(3).setMinWidth(80);
-    }
-
-    private void initTableModel() {
-        if (! (getTable().getModel() instanceof DataTableModel)) {
-            getTable().setModel(new DataTableModel<Module>(
-                    new Object[][]{
-                            {null, null, null}
-                    },
-                    new String[]{
-                            "ID", "Name", "Code"
-                    }
-            ) {
-                Class[] types = new Class[]{
-                        java.lang.Integer.class, java.lang.String.class, java.lang.String.class
-                };
-                boolean[] canEdit = new boolean[]{
-                        false, true, true
-                };
-                public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return canEdit[columnIndex];
-                }
-                public Class getColumnClass(int columnIndex) {
-                    return types[columnIndex];
-                }
-            });
-        }
     }
 
     /**

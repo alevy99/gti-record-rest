@@ -25,6 +25,11 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
+    public List<Module> getByCourseId(int courseId) {
+        return moduleDao.getByCourseId(courseId);
+    }
+
+    @Override
     public List<Module> getAll() {
         return moduleDao.getAll();
     }

@@ -11,6 +11,8 @@ public interface ModuleService {
 
     Optional<Module> getById(int id);
 
+    List<Module> getByCourseId(int courseId);
+
     List<Module> getAll();
 
     Optional<Integer> insert(Module module);

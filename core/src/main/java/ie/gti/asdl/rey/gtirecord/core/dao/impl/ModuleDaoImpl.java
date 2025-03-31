@@ -40,6 +40,16 @@ public class ModuleDaoImpl implements ModuleDao {
     }
 
     @Override
+    public List<Module> getByCourseId(int courseId) {
+        final String sql = """
+                SELECT m.id,  m.name, m.code
+                FROM module m, course_has_module cm
+                WHERE m.id = cm.module_id and cm.course_id = ?;
+            """;
+        return jdbcTemplate.query(sql, moduleRowMapper, courseId);
+    }
+
+    @Override
     public List<Module> getAll() {
         final String sql = "SELECT * FROM module";
         return jdbcTemplate.query(sql, moduleRowMapper);
