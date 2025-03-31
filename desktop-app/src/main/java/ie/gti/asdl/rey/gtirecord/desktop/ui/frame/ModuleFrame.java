@@ -36,7 +36,6 @@ import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.MODULE
 public class ModuleFrame extends AbstractTableDataFrame<Module> {
 
     public static class ModuleFilter {
-
         @Getter
         private final List<Module> exceptModules = new ArrayList<>();
 
@@ -48,8 +47,6 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
             course = null;
         }
     }
-
-//    Module selected
 
     enum COLUMNS {
         ID(0), NAME(1), CODE(2);
@@ -128,7 +125,7 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblModule = new PaddedJTable();
+        tblModule = new javax.swing.JTable();
         btnClose = new javax.swing.JButton();
         jAddPanel = new javax.swing.JPanel();
         jAddBtn = new javax.swing.JButton();
@@ -307,9 +304,8 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
                 .addGap(16, 16, 16)
                 .addGroup(pnlTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnSelect, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
-                    .addGroup(pnlTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(tfTableFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tfTableFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         pnlTableFilterLayout.setVerticalGroup(
@@ -358,7 +354,7 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(pnlTableFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(pnlTableFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(btnClose)
                 .addGap(33, 33, 33))
@@ -437,7 +433,7 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     private javax.swing.JButton jUpdateBtn;
     private javax.swing.JPanel jUpdatePanel;
     private javax.swing.JPanel pnlTableFilter;
-    private PaddedJTable tblModule;
+    private javax.swing.JTable tblModule;
     private javax.swing.JTextField tfTableFilter;
     // End of variables declaration//GEN-END:variables
 

@@ -61,7 +61,7 @@
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="jUpdatePanel" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="pnlTableFilter" max="32767" attributes="0"/>
+                  <Component id="pnlTableFilter" pref="214" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="btnClose" min="-2" max="-2" attributes="0"/>
@@ -261,10 +261,8 @@
                   <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="btnSelect" pref="161" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jLabel1" alignment="0" max="32767" attributes="0"/>
-                          <Component id="tfTableFilter" alignment="0" pref="161" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="jLabel1" alignment="0" max="32767" attributes="0"/>
+                      <Component id="tfTableFilter" alignment="0" pref="161" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace pref="16" max="32767" attributes="0"/>
               </Group>
