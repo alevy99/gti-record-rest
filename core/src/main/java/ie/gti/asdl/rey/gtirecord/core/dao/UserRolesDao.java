@@ -10,7 +10,7 @@ public interface UserRolesDao {
 
     void insert(int userID, List<Role> roles);
 
-    void delete(int userID, List<Role> roles);
+    void deleteByUserId(int userID, List<Role> roles);
 
-    void delete(int userID);
+    void deleteByUserId(int userID);
 }

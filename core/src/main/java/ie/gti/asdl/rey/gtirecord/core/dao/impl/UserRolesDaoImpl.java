@@ -35,7 +35,7 @@ public class UserRolesDaoImpl implements UserRolesDao {
     }
 
     @Override
-    public void delete(int userID, List<Role> roles) {
+    public void deleteByUserId(int userID, List<Role> roles) {
         final String sql = "DELETE FROM users_roles WHERE user_ID = ? and role_ID = ?";
         jdbcTemplate.batchUpdate(sql, roles, roles.size(), new ParameterizedPreparedStatementSetter<Role>() {
             @Override
@@ -47,7 +47,7 @@ public class UserRolesDaoImpl implements UserRolesDao {
     }
 
     @Override
-    public void delete(int userID) {
+    public void deleteByUserId(int userID) {
         final String sql = "DELETE FROM users_roles WHERE user_ID = ?";
         jdbcTemplate.update(sql, userID);
     }

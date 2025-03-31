@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
                     .map(Role::getName)
                     .collect(Collectors.joining(", ")));
 
-            userRolesDao.delete(user.getId(), rolesToDelete);
+            userRolesDao.deleteByUserId(user.getId(), rolesToDelete);
         }, () -> {
             throw new RuntimeException("User was not found: ID = " + user.getId());
         });
@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(int id) {
         // Roles are deleted first
-        userRolesDao.delete(id);
+        userRolesDao.deleteByUserId(id);
         userDao.delete(id);
     }
 
