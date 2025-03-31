@@ -5,6 +5,9 @@ import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 
 import javax.swing.*;
 import javax.swing.table.TableRowSorter;
+import java.awt.*;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * @author Andrei Levchenko
@@ -36,6 +39,20 @@ public class SwingUIUtils {
                 }
             });
         }
+    }
+
+    public static boolean confirmBatchTableAction(Component component, JTable table, int descriptionColumn, String title, String message) {
+        if (table.getSelectedRows().length == 0) {
+            return false;
+        }
+        return JOptionPane.showConfirmDialog(component,
+                message + "\n" +
+                        Arrays.stream(table.getSelectedRows()).
+                                mapToObj(row -> table.getModel().getValueAt(row, descriptionColumn).toString()).
+                                collect(Collectors.joining(", ")),
+                title,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION;
     }
 
 }

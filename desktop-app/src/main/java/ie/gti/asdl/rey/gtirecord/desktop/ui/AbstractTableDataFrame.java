@@ -9,7 +9,8 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 import java.util.*;
-import java.util.stream.Collectors;
+
+import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.confirmBatchTableAction;
 
 public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
 
@@ -94,7 +95,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         if (isInserting) {
             return;
         }
-        if (!confirmBatchTableAction("Confirm update", "Are you sure want to update data:")) return;
+        if (!confirmBatchTableAction(this, getTable(), getDataDescriptionColumn(), "Confirm update", "Are you sure want to update data:")) return;
 
         List<String> errors = new ArrayList<>();
         Arrays.stream(getTable().getSelectedRows()).forEach(row -> {
@@ -112,26 +113,15 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     }
 
     protected void onDeleteData() {
-        if (!confirmBatchTableAction("Confirm delete", "Are you sure want to delete users:")) return;
+        if (!confirmBatchTableAction(this, getTable(), getDataDescriptionColumn(),
+                "Confirm delete", "Are you sure want to delete data:")) {
+            return;
+        }
 
         Arrays.stream(getTable().getSelectedRows()).forEach(row -> {
             doDeleteData((Integer) getTable().getModel().getValueAt(row, getDataIDColumn()));
         });
         reloadTableData();
-    }
-
-    private boolean confirmBatchTableAction(String title, String message) {
-        if (getTable().getSelectedRows().length == 0) {
-            return false;
-        }
-        return JOptionPane.showConfirmDialog(this,
-                message + "\n" +
-                        Arrays.stream(getTable().getSelectedRows()).
-                                mapToObj(row -> getTable().getModel().getValueAt(row, getDataDescriptionColumn()).toString()).
-                                collect(Collectors.joining(", ")),
-                title,
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION;
     }
 
     private void startInserting() {

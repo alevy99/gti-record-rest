@@ -17,8 +17,8 @@ public class DataTableModel<T> extends DefaultTableModel {
         this.dataList.add(data);
     }
 
-    public T getData(int index) {
-        return dataList.get(index);
+    public T getData(int row) {
+        return dataList.get(row);
     }
 
 //    public void setData(T data) {

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.COURSE;
+import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.confirmBatchTableAction;
 
 /**
  *
@@ -58,6 +59,8 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     private final CourseModuleService courseModuleService;
 
     private final DepartmentService departmentService;
+
+    private Course selectedCourse;
 
     /**
      * Creates new form CourseFrame
@@ -109,12 +112,19 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
 
     private void onCourseSelect(ListSelectionEvent listSelectionEvent) {
         tblModule.clear();
+
+        // Show modules for the first course
         Arrays.stream(getTable().getSelectedRows()).findFirst().ifPresent(row -> {
-            List<Module> modules = moduleService.getByCourseId((Integer) tblCourse.getValueAt(row, COLUMNS.ID.index));
+            selectedCourse = getTableModel().getData(row);
+            List<Module> modules = moduleService.getByCourseId(selectedCourse.getId());
             modules.forEach(module -> {
                 getModuleTableModel().addRow(module, new Object[] {module.getId(), module.getName(), module.getCode()});
             });
         });
+    }
+
+    private void reloadModules() {
+        onCourseSelect(null);
     }
 
     private void initTableModel() {
@@ -153,7 +163,7 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     }
 
     private void updateModuleUI(ListSelectionEvent listSelectionEvent) {
-        btnDeleteModule.setEnabled(tblModule.getSelectedRow() > 0);
+        btnDeleteModule.setEnabled(tblModule.getSelectedRowCount() > 0);
     }
 
     protected DataTableModel<Module> getModuleTableModel() {
@@ -569,11 +579,18 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     }//GEN-LAST:event_tfTableFilterActionPerformed
 
     private void btnDeleteModuleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteModuleActionPerformed
+        if (!confirmBatchTableAction(this, tblModule, ModuleFrame.COLUMNS.NAME.index,
+                "Confirm delete", "Are you sure want to delete modules:")) {
+            return;
+        }
+
         Arrays.stream(tblModule.getSelectedRows()).forEach(row -> {
             courseModuleService.delete(
-                    (Integer) tblCourse.getValueAt(row, COLUMNS.ID.index),
+                    selectedCourse.getId(),
                     (Integer) tblModule.getValueAt(row, ModuleFrame.COLUMNS.ID.index));
         });
+
+        reloadModules();
     }//GEN-LAST:event_btnDeleteModuleActionPerformed
 
     private void tfModuleTableFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfModuleTableFilterActionPerformed
