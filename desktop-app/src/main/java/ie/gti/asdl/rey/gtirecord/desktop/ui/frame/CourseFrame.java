@@ -22,7 +22,6 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableRowSorter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -102,10 +101,6 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
         tblCourse.getSelectionModel().addListSelectionListener(this::onCourseSelect);
 
         initModuleTable();
-//        TableColumnModel moduleColumnModel = tblCourseModule.getColumnModel();
-//        moduleColumnModel.getColumn(ModuleFrame.COLUMNS.ID.index).setMaxWidth(35);
-//        moduleColumnModel.getColumn(ModuleFrame.COLUMNS.NAME.index).setMinWidth(160);
-//        moduleColumnModel.getColumn(ModuleFrame.COLUMNS.CODE.index).setMaxWidth(70);
     }
 
     private void onCourseSelect(ListSelectionEvent listSelectionEvent) {
@@ -149,6 +144,12 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
         ModuleFrame.initTable(tblModule);
 
         SwingUIUtils.addTableFilter(tblModule, tfModuleTableFilter);
+
+        tblModule.getSelectionModel().addListSelectionListener(this::updateModuleUI);
+    }
+
+    private void updateModuleUI(ListSelectionEvent listSelectionEvent) {
+        btnDeleteModule.setEnabled(tblModule.getSelectedRow() > 0);
     }
 
     protected DataTableModel<Module> getModuleTableModel() {
@@ -378,6 +379,11 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
         jLabel2.setText("Course Modules");
 
         btnAddModule.setText("Add module");
+        btnAddModule.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddModuleActionPerformed(evt);
+            }
+        });
 
         btnDeleteModule.setText("Delete module");
         btnDeleteModule.addActionListener(new java.awt.event.ActionListener() {
@@ -559,12 +565,18 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     }//GEN-LAST:event_tfTableFilterActionPerformed
 
     private void btnDeleteModuleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteModuleActionPerformed
-        // TODO add your handling code here:
+        Arrays.stream(tblModule.getSelectedRows()).forEach(row -> {
+
+        });
     }//GEN-LAST:event_btnDeleteModuleActionPerformed
 
     private void tfModuleTableFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfModuleTableFilterActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tfModuleTableFilterActionPerformed
+
+    private void btnAddModuleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddModuleActionPerformed
+
+    }//GEN-LAST:event_btnAddModuleActionPerformed
 
     /**
      * @param args the command line arguments

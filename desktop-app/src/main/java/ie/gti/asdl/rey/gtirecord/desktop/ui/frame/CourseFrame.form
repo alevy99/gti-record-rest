@@ -401,6 +401,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Add module"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddModuleActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnDeleteModule">
               <Properties>
