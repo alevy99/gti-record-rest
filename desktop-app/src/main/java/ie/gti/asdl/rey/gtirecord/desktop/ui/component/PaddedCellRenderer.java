@@ -1,5 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.desktop.ui.component;
 
+import lombok.Setter;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -8,9 +10,10 @@ import java.util.Arrays;
 import java.util.function.IntConsumer;
 import java.util.function.Supplier;
 
+@Setter
 public class PaddedCellRenderer extends DefaultTableCellRenderer {
 
-    private final Supplier<Integer> highlightedRowSupplier;
+    private Supplier<Integer> highlightedRowSupplier;
 
     private static final int PADDING = 5;
 

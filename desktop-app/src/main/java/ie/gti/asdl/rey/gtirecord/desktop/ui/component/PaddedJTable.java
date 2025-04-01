@@ -37,6 +37,12 @@ public class PaddedJTable extends JTable {
 //        });
     }
 
+    public void setHighlightedRowSupplier(Supplier<Integer> highlightedRowSupplier) {
+        if (highlightedRowSupplier != null && getDefaultRenderer(Object.class) instanceof PaddedCellRenderer renderer) {
+            renderer.setHighlightedRowSupplier(highlightedRowSupplier);
+        }
+    }
+
     public void clear() {
         if (getModel() instanceof DefaultTableModel model) {
             model.setRowCount(0);

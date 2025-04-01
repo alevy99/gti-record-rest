@@ -87,6 +87,8 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
         initTableModel();
         super.initForm();
 
+        tblCourse.setHighlightedRowSupplier(() -> highlightedRow);
+
         // Set Department custom JComboBox Renderer and Editor
         TableColumn departmentColumn = getTable().getColumnModel().getColumn(COLUMNS.DEPARTMENT.index);
         departmentColumn.setCellEditor(new DefaultCellEditor(departmentCombo));
@@ -233,7 +235,7 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblCourse = new PaddedJTable(() -> highlightedRow);
+        tblCourse = new PaddedJTable();
         jAddPanel = new javax.swing.JPanel();
         jAddBtn = new javax.swing.JButton();
         jAddCancelBtn = new javax.swing.JButton();

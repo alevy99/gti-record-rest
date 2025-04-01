@@ -171,7 +171,7 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="tfFirstName" min="-2" pref="146" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lblError" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblFNValidStatus" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="43" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -181,7 +181,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="tfFirstName" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblError" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
+                      <Component id="lblFNValidStatus" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -197,7 +197,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfFirstNameActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JLabel" name="lblError">
+            <Component class="javax.swing.JLabel" name="lblFNValidStatus">
             </Component>
           </SubComponents>
         </Container>
