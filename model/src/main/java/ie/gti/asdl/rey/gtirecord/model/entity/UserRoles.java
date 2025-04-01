@@ -10,6 +10,7 @@ import java.util.List;
 public class UserRoles {
 
     private User user;
+
     private List<Role> roles;
 
 }

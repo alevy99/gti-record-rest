@@ -4,19 +4,17 @@ package ie.gti.asdl.rey.gtirecord.desktop.ui;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedJTable;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils;
+import ie.gti.asdl.rey.gtirecord.model.annotation.KeyUtil;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.confirmBatchTableAction;
 import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeListener;
 
 public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
-
-    private final Set<Integer> rowsInserting = new HashSet<>();
-
-    private boolean isInserting = false;
 
     public AbstractTableDataFrame(FrameManager frameManager) {
         super(frameManager);
@@ -35,10 +33,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
 
     protected abstract PaddedJTable getTable();
 
-    protected abstract JButton getAddBtn();
     protected abstract JButton getDeleteBtn();
-    protected abstract JButton getUpdateBtn();
-    protected abstract JButton getAddCancelBtn();
     protected abstract JButton getAddSaveBtn();
     protected abstract JTextField getTableFilterField();
     protected abstract int getDataDescriptionColumn();
@@ -51,64 +46,47 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     protected abstract void doReloadData();
     protected abstract Optional<Integer> doInsertData(T data);
     protected abstract void doUpdateData(T data);
-    protected abstract void doDeleteData(int dataId);
+    protected abstract void doDeleteData(Integer dataId);
     protected abstract boolean isDataValid(T data);
 
     protected abstract void fillDataObjectFromTable(T data, Integer row);
     protected abstract void addEmptyRowToModel();
 
     protected void onAddData() {
-        DataTableModel<T> model = getTableModel();
         addEmptyRowToModel();
         int newRow = getTable().getRowCount() - 1;
         getTable().setRowSelectionInterval(newRow, newRow);
-        startInserting();
-    }
-
-    protected void onCancelAddData() {
-        stopInserting();
-        // Delete last row
-        ((DefaultTableModel) getTable().getModel()).removeRow(getTable().getRowCount() - 1);
+        // Scroll to the new row
+        Rectangle rect = getTable().getCellRect(newRow, 0, true);
+        getTable().scrollRectToVisible(rect);
     }
 
     protected void onAddSaveData() {
+        if (!confirmBatchTableAction(this, getTable(), getDataDescriptionColumn(), "Confirm save", "Are you sure want to save data:")) return;
         List<String> errors = new ArrayList<>();
-        rowsInserting.forEach(row -> {
-            T newData = createDataInstance();
-            fillDataObjectFromTable(newData, row);
-            if (! isDataValid(newData)) {
-                errors.add(newData.toString());
-                return;
-            }
-            Optional<Integer> newDepId = doInsertData(newData);
-            newDepId.ifPresent(id -> {
-                getTable().setValueAt(id, row, 0);
-            });
-        });
-        if (!errors.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Insert failed for:\n" + String.join("\n", errors), "Not valid data", JOptionPane.ERROR_MESSAGE);
-        }
-        stopInserting();
-    }
 
-    protected void onUpdateData() {
-        if (isInserting) {
-            return;
-        }
-        if (!confirmBatchTableAction(this, getTable(), getDataDescriptionColumn(), "Confirm update", "Are you sure want to update data:")) return;
-
-        List<String> errors = new ArrayList<>();
         Arrays.stream(getTable().getSelectedRows()).forEach(row -> {
-            T data = createDataInstance();
+            T data = getTableModel().getData(getTable().convertRowIndexToModel(row));
+
             fillDataObjectFromTable(data, row);
+
             if (! isDataValid(data)) {
                 errors.add(data.toString());
                 return;
             }
-            doUpdateData(data);
+
+            if (KeyUtil.hasKey(data)) {
+                doUpdateData(data);
+            } else {
+                doInsertData(data).ifPresentOrElse((newId -> {
+                    KeyUtil.setKey(data, newId);
+                    getTable().setValueAt(newId, row, 0);
+                }), () -> errors.add(data.toString()));
+            }
         });
+
         if (!errors.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Update failed for:\n" + String.join("\n", errors), "Not valid data", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Insert failed for:\n" + String.join("\n", errors), "Not valid data", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -118,37 +96,24 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
             return;
         }
 
+        List<Integer> modelRows = new ArrayList<>();
+
         Arrays.stream(getTable().getSelectedRows()).forEach(row -> {
-            doDeleteData((Integer) getTable().getModel().getValueAt(row, getDataIDColumn()));
+            T data = getTableModel().getData(getTable().convertRowIndexToModel(row));
+
+            // data has key -> call delete service
+            if (KeyUtil.hasKey(data)) {
+                doDeleteData(KeyUtil.getKey(data));
+            } else {
+                // No key - just delete the corresponding row
+                modelRows.add(getTable().convertRowIndexToModel(row));
+            }
         });
+        // Delete from the model in reverse order
+        modelRows.sort(Comparator.reverseOrder());
+        modelRows.forEach(modelRow -> getTableModel().removeRow(modelRow));
+
         reloadTableData();
-    }
-
-    private void startInserting() {
-        rowsInserting.add(getTable().getRowCount() - 1);
-        isInserting = true;
-        // disable all the other buttons
-//        getAddBtn().setEnabled(false);
-        getAddCancelBtn().setEnabled(true);
-        getAddSaveBtn().setEnabled(true);
-
-        getUpdateBtn().setEnabled(false);
-        getDeleteBtn().setEnabled(false);
-//        setTableSelection(false);
-    }
-
-    private void stopInserting() {
-        isInserting = false;
-        // enable all the buttons etc
-//        getAddBtn().setEnabled(true);
-        getAddCancelBtn().setEnabled(false);
-        getAddSaveBtn().setEnabled(false);
-
-        getUpdateBtn().setEnabled(true);
-        getDeleteBtn().setEnabled(true);
-
-        rowsInserting.clear();
-//        setTableSelection(true);
     }
 
     protected DataTableModel<T> getTableModel() {
@@ -163,7 +128,6 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     }
 
     protected void reloadTableData() {
-        stopInserting();
         getTable().clear();
 
         doReloadData();
@@ -171,15 +135,8 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     }
 
     protected void updateUI() {
-        getUpdateBtn().setEnabled(getTable().getSelectedRowCount() > 0);
+        getAddSaveBtn().setEnabled(getTable().getSelectedRowCount() > 0);
         getDeleteBtn().setEnabled(getTable().getSelectedRowCount() > 0);
-//        if (isSelectFirstRow()) {
-//            getTableModel()
-//        }
-    }
-
-    protected boolean isSelectFirstRow() {
-        return true;
     }
 
 }

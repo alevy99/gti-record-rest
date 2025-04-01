@@ -1,13 +1,15 @@
 package ie.gti.asdl.rey.gtirecord.model.entity;
 
+import ie.gti.asdl.rey.gtirecord.model.annotation.KeyField;
+import ie.gti.asdl.rey.gtirecord.model.annotation.ShortDescriptionField;
 import lombok.Data;
 
 @Data
 public class QQILevel {
 
     public enum QQILevelType {
-        QQI5(1, "QQI 5"),
-        QQI6(2, "QQI 6");
+        QQI5(1, "Level 5"),
+        QQI6(2, "Level 6");
 
         public final int id;
         public final String name;
@@ -25,8 +27,10 @@ public class QQILevel {
         }
     }
 
-    private int id;
+    @KeyField
+    private Integer id;
 
+    @ShortDescriptionField
     private String name;
 
     @Override

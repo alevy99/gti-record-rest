@@ -1,6 +1,5 @@
 package ie.gti.asdl.rey.gtirecord.desktop.ui;
 
-import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,6 @@ public abstract class AbstractFrame extends JFrame {
     public AbstractFrame(FrameManager frameManager) {
         super();
         this.frameManager = frameManager;
-//        setLocationRelativeTo(this);
         init();
     }
 
@@ -33,22 +31,7 @@ public abstract class AbstractFrame extends JFrame {
                 frameManager.showParent();
             }
         });
-
-//        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Prevent default close action
-//
-//        // Add a window listener
-//        addWindowListener(new WindowAdapter() {
-//            @Override
-//            public void windowClosing(WindowEvent e) {
-//                // Hide the frame instead of closing
-//                setVisible(false);
-//            }
-//        });
     }
-
-//    protected void onWindowClosing(WindowEvent e) {
-//
-//    }
 
     protected void shownFirstTime() {
 
@@ -75,13 +58,11 @@ public abstract class AbstractFrame extends JFrame {
 
     protected void onFormHidden() {
         logger.debug("{} WINDOW IS HIDDEN", this.getClass().getSimpleName());
-        //mainFrame.setVisible(true);
     }
 
 
     protected void onFormShown() {
         logger.debug("{} WINDOW IS VISIBLE", this.getClass().getSimpleName());
-//        initTableData();
     }
 
     public void showForm() {
@@ -91,12 +72,4 @@ public abstract class AbstractFrame extends JFrame {
         });
     }
 
-
-//    protected boolean isShownOnce() {
-//        return isShownOnce;
-//    }
-//
-//    protected void setShownOnce(boolean shownOnce) {
-//        isShownOnce = shownOnce;
-//    }
 }

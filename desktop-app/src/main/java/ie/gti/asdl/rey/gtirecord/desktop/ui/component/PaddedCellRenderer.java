@@ -10,12 +10,17 @@ import java.util.Arrays;
 import java.util.function.IntConsumer;
 import java.util.function.Supplier;
 
+
 @Setter
 public class PaddedCellRenderer extends DefaultTableCellRenderer {
 
     private Supplier<Integer> highlightedRowSupplier;
 
     private static final int PADDING = 5;
+
+    public PaddedCellRenderer() {
+        super();
+    }
 
     public PaddedCellRenderer(Supplier<Integer> highlightedRowSupplier) {
         this.highlightedRowSupplier = highlightedRowSupplier;

@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class GroupModule {
 
-    private int id;
+    private Integer id;
 
     private Group group;
 

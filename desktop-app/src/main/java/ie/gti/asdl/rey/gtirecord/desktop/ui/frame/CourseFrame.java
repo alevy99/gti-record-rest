@@ -12,11 +12,10 @@ import ie.gti.asdl.rey.gtirecord.core.service.ModuleService;
 import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractTableDataFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataTableModel;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedDataCellRenderer;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedJTable;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.component.*;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils;
+import ie.gti.asdl.rey.gtirecord.model.annotation.DescriptionUtil;
 import ie.gti.asdl.rey.gtirecord.model.entity.*;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import org.springframework.context.ApplicationContext;
@@ -24,8 +23,9 @@ import org.springframework.context.ApplicationContext;
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import java.awt.*;
 import java.util.*;
-import java.util.function.Supplier;
+import java.util.List;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.COURSE;
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.MODULE;
@@ -89,20 +89,26 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
 
         tblCourse.setHighlightedRowSupplier(() -> highlightedRow);
 
+        DataListCellRendered listCellRendered = new DataListCellRendered();
+        PaddedDataCellRenderer dataCellRenderer = new PaddedDataCellRenderer(() -> highlightedRow);
+
         // Set Department custom JComboBox Renderer and Editor
         TableColumn departmentColumn = getTable().getColumnModel().getColumn(COLUMNS.DEPARTMENT.index);
+        departmentCombo.setRenderer(listCellRendered);
         departmentColumn.setCellEditor(new DefaultCellEditor(departmentCombo));
-        departmentColumn.setCellRenderer(new PaddedDataCellRenderer(() -> highlightedRow));
+        departmentColumn.setCellRenderer(dataCellRenderer);
 
         // Set Course Type custom JComboBox Renderer and Editor
         TableColumn courseTypeColumn = getTable().getColumnModel().getColumn(COLUMNS.TYPE.index);
+        courseTypeCombo.setRenderer(listCellRendered);
         courseTypeColumn.setCellEditor(new DefaultCellEditor(courseTypeCombo));
-        courseTypeColumn.setCellRenderer(new PaddedDataCellRenderer(() -> highlightedRow));
+        courseTypeColumn.setCellRenderer(dataCellRenderer);
 
         // Set QQI level custom JComboBox Renderer and Editor
         TableColumn qqiLevelColumn = getTable().getColumnModel().getColumn(COLUMNS.QQI_LEVEL.index);
+        qqiLevelCombo.setRenderer(listCellRendered);
         qqiLevelColumn.setCellEditor(new DefaultCellEditor(qqiLevelCombo));
-        qqiLevelColumn.setCellRenderer(new PaddedDataCellRenderer(() -> highlightedRow));
+        qqiLevelColumn.setCellRenderer(dataCellRenderer);
 
         TableColumnModel columnModel = getTable().getColumnModel();
         columnModel.getColumn(COLUMNS.ID.index)         .setMaxWidth(35);
@@ -128,10 +134,10 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
 
         // Show modules for the first course
         Arrays.stream(tblCourse.getSelectedRows()).findFirst().ifPresentOrElse(row -> {
-            highlightedRow = row;
+            highlightedRow = row; // Set new highlighted row
+            tblCourse.repaint(); // Repaint after we changed highlightedRow
             selectedCourse = getTableModel().getData(tblCourse.convertRowIndexToModel(row));
             courseModules = moduleService.getByCourseId(selectedCourse.getId());
-            tblCourse.repaint(); // Repaint after we changed highlightedRow
         }, () -> {
             if (courseModules != null) {
                 courseModules.clear();
@@ -707,7 +713,6 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     }//GEN-LAST:event_jAddBtnActionPerformed
 
     private void jAddCancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddCancelBtnActionPerformed
-        onCancelAddData();
     }//GEN-LAST:event_jAddCancelBtnActionPerformed
 
     private void jAddSaveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddSaveBtnActionPerformed
@@ -715,7 +720,6 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     }//GEN-LAST:event_jAddSaveBtnActionPerformed
 
     private void jUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUpdateBtnActionPerformed
-        onUpdateData();
     }//GEN-LAST:event_jUpdateBtnActionPerformed
 
     private void jRevertBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRevertBtnActionPerformed
@@ -834,23 +838,8 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     }
 
     @Override
-    protected JButton getAddBtn() {
-        return jAddBtn;
-    }
-
-    @Override
     protected JButton getDeleteBtn() {
         return jDeleteBtn;
-    }
-
-    @Override
-    protected JButton getUpdateBtn() {
-        return jUpdateBtn;
-    }
-
-    @Override
-    protected JButton getAddCancelBtn() {
-        return jAddCancelBtn;
     }
 
     @Override
@@ -914,8 +903,10 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     }
 
     @Override
-    protected void doDeleteData(int dataId) {
-        courseService.delete(dataId);
+    protected void doDeleteData(Integer dataId) {
+        if (dataId != null) {
+            courseService.delete(dataId);
+        }
     }
 
     @Override

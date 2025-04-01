@@ -3,8 +3,17 @@ package ie.gti.asdl.rey.gtirecord.desktop.ui.component;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.util.function.Supplier;
 
-public class PasswordCellRenderer extends DefaultTableCellRenderer {
+public class PasswordCellRenderer extends PaddedCellRenderer {
+
+    public PasswordCellRenderer() {
+        super();
+    }
+
+    public PasswordCellRenderer(Supplier<Integer> highlightedRowSupplier) {
+        super(highlightedRowSupplier);
+    }
 
     @Override
     protected void setValue(Object value) {

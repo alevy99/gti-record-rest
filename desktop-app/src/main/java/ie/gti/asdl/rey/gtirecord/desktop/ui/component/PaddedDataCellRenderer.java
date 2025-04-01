@@ -1,5 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.desktop.ui.component;
 
+import ie.gti.asdl.rey.gtirecord.model.annotation.DescriptionUtil;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Supplier;
@@ -19,7 +21,7 @@ public class PaddedDataCellRenderer extends PaddedCellRenderer {
         Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         if (c instanceof JLabel) {
             if (value != null) {
-                ((JLabel) c).setText(value.toString()); // Show only department name
+                ((JLabel) c).setText(DescriptionUtil.getShortDescription(value));
             } else {
                 ((JLabel) c).setText("");
             }

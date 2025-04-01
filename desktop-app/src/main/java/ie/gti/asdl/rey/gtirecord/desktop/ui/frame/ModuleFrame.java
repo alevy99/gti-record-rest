@@ -13,17 +13,11 @@ import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.ModuleTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedJTable;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
-import ie.gti.asdl.rey.gtirecord.model.entity.Course;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.MODULE;
@@ -52,7 +46,6 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     public ModuleFrame(FrameManager frameManager, ServiceManager serviceManager) {
         super(frameManager);
         moduleService = serviceManager.getModuleService();
-//        courseService = serviceManager.getCourseService();
         initComponents();
         initForm();
     }
@@ -319,7 +312,6 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     }//GEN-LAST:event_jAddBtnActionPerformed
 
     private void jAddCancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddCancelBtnActionPerformed
-        onCancelAddData();
     }//GEN-LAST:event_jAddCancelBtnActionPerformed
 
     private void jAddSaveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddSaveBtnActionPerformed
@@ -327,7 +319,6 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     }//GEN-LAST:event_jAddSaveBtnActionPerformed
 
     private void jUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUpdateBtnActionPerformed
-        onUpdateData();
     }//GEN-LAST:event_jUpdateBtnActionPerformed
 
     private void jRevertBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRevertBtnActionPerformed
@@ -381,23 +372,8 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     }
 
     @Override
-    protected JButton getAddBtn() {
-        return jAddBtn;
-    }
-
-    @Override
     protected JButton getDeleteBtn() {
         return jDeleteBtn;
-    }
-
-    @Override
-    protected JButton getUpdateBtn() {
-        return jUpdateBtn;
-    }
-
-    @Override
-    protected JButton getAddCancelBtn() {
-        return jAddCancelBtn;
     }
 
     @Override
@@ -422,14 +398,6 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
 
     @Override
     protected void doReloadData() {
-//        comboBox.removeAllItems();
-//        courseService.getAllGroupedByDepartment().forEach((department, courses) -> {
-////            String comboItem = department.getName();
-//            courses.forEach(course -> {
-//                comboBox.addItem(course);
-//            });
-//        });
-
         moduleService.getAll().forEach(module -> {
             getTableModel().addRow(module, new Object[]{module.getId(), module.getName(), module.getCode()});
         });
@@ -446,8 +414,10 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     }
 
     @Override
-    protected void doDeleteData(int dataId) {
-        moduleService.delete(dataId);
+    protected void doDeleteData(Integer dataId) {
+        if (dataId != null) {
+            moduleService.delete(dataId);
+        }
     }
 
     @Override

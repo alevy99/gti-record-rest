@@ -4,25 +4,26 @@
  */
 package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 
-import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.component.*;
-import ie.gti.asdl.rey.gtirecord.model.entity.Role;
-import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import ie.gti.asdl.rey.gtirecord.core.ServiceManager;
 import ie.gti.asdl.rey.gtirecord.core.service.UserService;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractFrame;
+import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractTableDataFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataTableModel;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedJTable;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PasswordCellEditor;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PasswordCellRenderer;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
+import ie.gti.asdl.rey.gtirecord.model.entity.Role;
+import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import ie.gti.asdl.rey.gtirecord.model.util.UserUtils;
 import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.PERSON;
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.USER;
@@ -32,7 +33,7 @@ import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.USER;
  */
 /// Do not apply SpringBootApp, if we use 'web' profile
 //@Profile("!web")
-public class UserFrame extends AbstractFrame {
+public class UserFrame extends AbstractTableDataFrame<User> {
 
     enum USER_TBL_COL {
         ID(0), USERNAME(1), PASSWORD(2),
@@ -44,13 +45,11 @@ public class UserFrame extends AbstractFrame {
           }
     }
 
-//    private static final String PERSON_INFO_BTN_TITLE = "Person info";
-
     private final UserService userService;
 
-    private boolean isInserting = false;
+    private Integer highlightedRow;
 
-    private final Set<Integer> rowsInserting = new HashSet<>();
+    private User selectedUser;
 
     /**
      * Creates new form PersonFrame
@@ -64,12 +63,41 @@ public class UserFrame extends AbstractFrame {
 
     @Override
     protected void initForm() {
-//        final int CELL_PAD = 5;
-
+        initModel();
         super.initForm();
 
-        if (! (jUserTable.getModel() instanceof DataTableModel)) {
-            jUserTable.setModel(new DataTableModel<User>(
+        tblUsers.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+        tblUsers.setHighlightedRowSupplier(() -> highlightedRow);
+
+        TableColumnModel columnModel = tblUsers.getColumnModel();
+        columnModel.getColumn(USER_TBL_COL.ID.index).setMaxWidth(35);
+        columnModel.getColumn(USER_TBL_COL.USERNAME.index).setMinWidth(60);
+        columnModel.getColumn(USER_TBL_COL.PASSWORD.index).setMinWidth(60);
+        columnModel.getColumn(USER_TBL_COL.IS_STUDENT.index).setMaxWidth(70);
+        columnModel.getColumn(USER_TBL_COL.IS_TEACHER.index).setMaxWidth(70);
+        columnModel.getColumn(USER_TBL_COL.IS_ADMIN.index).setMaxWidth(70);
+
+        tblUsers.getSelectionModel().addListSelectionListener(event -> onUserSelect());
+
+        tblUsers.getColumnModel().getColumn(USER_TBL_COL.PASSWORD.index).setCellRenderer(new PasswordCellRenderer(() -> highlightedRow));
+        tblUsers.getColumnModel().getColumn(USER_TBL_COL.PASSWORD.index).setCellEditor(new PasswordCellEditor());
+    }
+
+    private void onUserSelect() {
+        // Show modules for the first course
+        Arrays.stream(tblUsers.getSelectedRows()).findFirst().ifPresentOrElse(row -> {
+            highlightedRow = row; // Set new highlighted row
+            tblUsers.repaint(); // Repaint after we changed highlightedRow
+            selectedUser = getTableModel().getData(tblUsers.convertRowIndexToModel(row));
+        }, () -> {
+            selectedUser = null;
+        });
+    }
+
+    private void initModel() {
+        if (! (tblUsers.getModel() instanceof DataTableModel)) {
+            tblUsers.setModel(new DataTableModel<User>(
                     new Object[][]{
                             {null, null, null, null, null, null}
                     },
@@ -78,7 +106,7 @@ public class UserFrame extends AbstractFrame {
                     }
             ) {
                 Class[] types = new Class[]{
-                        java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class
+                        Integer.class, String.class, String.class, Boolean.class, Boolean.class, Boolean.class
                 };
                 boolean[] canEdit = new boolean[]{
                         false, true, true, true, true, true
@@ -91,69 +119,12 @@ public class UserFrame extends AbstractFrame {
                 }
             });
         }
-
-//        jUserTable.setCellSelectionEnabled(false);
-        jUserTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        TableColumnModel columnModel = jUserTable.getColumnModel();
-        columnModel.getColumn(USER_TBL_COL.ID.index).setMaxWidth(35);
-        columnModel.getColumn(USER_TBL_COL.USERNAME.index).setMinWidth(60);
-        columnModel.getColumn(USER_TBL_COL.PASSWORD.index).setMinWidth(60);
-        columnModel.getColumn(USER_TBL_COL.IS_STUDENT.index).setMaxWidth(70);
-        columnModel.getColumn(USER_TBL_COL.IS_TEACHER.index).setMaxWidth(70);
-        columnModel.getColumn(USER_TBL_COL.IS_ADMIN.index).setMaxWidth(70);
-//        columnModel.getColumn(USER_TBL_COL.PERSON_INFO.index).setPreferredWidth(50);
-
-        // Add selection listener
-        jUserTable.getSelectionModel().addListSelectionListener(this::updateUI);
-
-//        // Add padding to cells
-//        PaddedCellRenderer paddedCellRenderer = new PaddedCellRenderer(CELL_PAD);
-//
-//        // Apply to all text columns
-//        for (int i = 0; i < IS_STUDENT_COLUMN; i++) {
-//            jUserTable.getColumnModel().getColumn(i).setCellRenderer(paddedCellRenderer);
-//        }
-//
-//        // Set cell editor with paddings
-//        JTextField textField = new JTextField();
-//        textField.setBorder(new EmptyBorder(0, CELL_PAD, 0, CELL_PAD)); // Apply padding inside the editor
-//
-//        DefaultCellEditor cellEditor = new DefaultCellEditor(textField);
-//        jUserTable.setDefaultEditor(Object.class, cellEditor); // Apply to all cells
-//
-//        // Add sorter to the table
-//        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(jUserTable.getModel());
-//        jUserTable.setRowSorter(sorter);
-
-        jUserTable.getColumnModel().getColumn(USER_TBL_COL.PASSWORD.index).setCellRenderer(new PasswordCellRenderer());
-        jUserTable.getColumnModel().getColumn(USER_TBL_COL.PASSWORD.index).setCellEditor(new PasswordCellEditor());
-
-//        jUserTable.getColumnModel().getColumn(USER_TBL_COL.PERSON_INFO.index).setCellRenderer(new ButtonCellRenderer());
-//        jUserTable.getColumnModel().getColumn(USER_TBL_COL.PERSON_INFO.index).setCellEditor(new ButtonCellEditor<User>(new ActionPerformer<Integer>() {
-//            @Override
-//            public void actionPerformed(ActionEvent e, Integer row) {
-//                System.out.println("BTN CLICK for USER: " + getTableModel().getData(row).getId());
-////                System.out.println("Button clicked for UserID: " + data.getData().getId());
-//            }
-//        }));
-    }
-
-    private DataTableModel<User> getTableModel() {
-        return (DataTableModel<User>) jUserTable.getModel();
-    }
-
-    private void updateUI(ListSelectionEvent listSelectionEvent) {
-        jUpdateBtn.setEnabled(jUserTable.getSelectedRowCount() > 0);
-        jDeleteBtn.setEnabled(jUserTable.getSelectedRowCount() > 0);
-        jPersonInfoBtn.setEnabled(jUserTable.getSelectedRowCount() > 0);
     }
 
     @Override
-    protected void onFormShown() {
-        super.onFormShown();
-        reloadTableData();
-        updateUI(null);
+    protected void updateUI() {
+        super.updateUI();
+        btnPersonInfo.setEnabled(tblUsers.getSelectedRowCount() > 0);
     }
 
     /**
@@ -167,20 +138,20 @@ public class UserFrame extends AbstractFrame {
         jPanel1 = new javax.swing.JPanel();
         jPasswordField1 = new javax.swing.JPasswordField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jUserTable = new PaddedJTable();
-        jCloseBtn = new javax.swing.JButton();
+        tblUsers = new PaddedJTable();
+        btnClose = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jButtonsPanel = new javax.swing.JPanel();
-        jAddPanel = new javax.swing.JPanel();
-        jAddBtn = new javax.swing.JButton();
-        jAddCancelBtn = new javax.swing.JButton();
-        jAddSaveBtn = new javax.swing.JButton();
+        pnlControls = new javax.swing.JPanel();
+        btnAddNew = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
         jUpdatePanel = new javax.swing.JPanel();
-        jUpdateBtn = new javax.swing.JButton();
-        jReloadBtn = new javax.swing.JButton();
-        jDeleteBtn = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        tfTableFilter = new javax.swing.JTextField();
+        btnReload = new javax.swing.JButton();
         jPersonDetailsPanel = new javax.swing.JPanel();
-        jPersonInfoBtn = new javax.swing.JButton();
+        btnPersonInfo = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -205,9 +176,9 @@ public class UserFrame extends AbstractFrame {
             }
         });
 
-        jUserTable.setAutoCreateRowSorter(true);
-        jUserTable.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        jUserTable.setModel(new javax.swing.table.DefaultTableModel(
+        tblUsers.setAutoCreateRowSorter(true);
+        tblUsers.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        tblUsers.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null}
             },
@@ -223,16 +194,16 @@ public class UserFrame extends AbstractFrame {
                 return types [columnIndex];
             }
         });
-        jUserTable.setFillsViewportHeight(true);
-        jUserTable.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        jUserTable.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        jUserTable.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jUserTable);
+        tblUsers.setFillsViewportHeight(true);
+        tblUsers.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        tblUsers.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        tblUsers.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(tblUsers);
 
-        jCloseBtn.setText("Close");
-        jCloseBtn.addActionListener(new java.awt.event.ActionListener() {
+        btnClose.setText("Close");
+        btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCloseBtnActionPerformed(evt);
+                btnCloseActionPerformed(evt);
             }
         });
 
@@ -240,73 +211,69 @@ public class UserFrame extends AbstractFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("USERS");
 
-        jAddPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnlControls.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jAddBtn.setText("Add new user");
-        jAddBtn.addActionListener(new java.awt.event.ActionListener() {
+        btnAddNew.setText("Add new user");
+        btnAddNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jAddBtnActionPerformed(evt);
+                btnAddNewActionPerformed(evt);
             }
         });
 
-        jAddCancelBtn.setText("Cancel");
-        jAddCancelBtn.addActionListener(new java.awt.event.ActionListener() {
+        btnSave.setText("Save selected");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jAddCancelBtnActionPerformed(evt);
+                btnSaveActionPerformed(evt);
             }
         });
 
-        jAddSaveBtn.setText("Save new user(s)");
-        jAddSaveBtn.addActionListener(new java.awt.event.ActionListener() {
+        btnDelete.setText("Delete selected");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jAddSaveBtnActionPerformed(evt);
+                btnDeleteActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jAddPanelLayout = new javax.swing.GroupLayout(jAddPanel);
-        jAddPanel.setLayout(jAddPanelLayout);
-        jAddPanelLayout.setHorizontalGroup(
-            jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jAddPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout pnlControlsLayout = new javax.swing.GroupLayout(pnlControls);
+        pnlControls.setLayout(pnlControlsLayout);
+        pnlControlsLayout.setHorizontalGroup(
+            pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlControlsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jAddSaveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
-                    .addComponent(jAddBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jAddCancelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btnAddNew, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
-        jAddPanelLayout.setVerticalGroup(
-            jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jAddPanelLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(jAddBtn)
+        pnlControlsLayout.setVerticalGroup(
+            pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlControlsLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(btnAddNew, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jAddSaveBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jAddCancelBtn)
-                .addGap(15, 15, 15))
+                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         jUpdatePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jUpdateBtn.setText("Update selected");
-        jUpdateBtn.addActionListener(new java.awt.event.ActionListener() {
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("User filter:");
+
+        tfTableFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jUpdateBtnActionPerformed(evt);
+                tfTableFilterActionPerformed(evt);
             }
         });
 
-        jReloadBtn.setText("Reload users");
-        jReloadBtn.addActionListener(new java.awt.event.ActionListener() {
+        btnReload.setText("Reload users");
+        btnReload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jReloadBtnActionPerformed(evt);
-            }
-        });
-
-        jDeleteBtn.setText("Delete selected");
-        jDeleteBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jDeleteBtnActionPerformed(evt);
+                btnReloadActionPerformed(evt);
             }
         });
 
@@ -315,32 +282,38 @@ public class UserFrame extends AbstractFrame {
         jUpdatePanelLayout.setHorizontalGroup(
             jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jUpdatePanelLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jUpdateBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
-                    .addComponent(jDeleteBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jReloadBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addGap(15, 15, 15)
+                .addGroup(jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jUpdatePanelLayout.createSequentialGroup()
+                        .addComponent(tfTableFilter)
+                        .addGap(15, 15, 15))
+                    .addGroup(jUpdatePanelLayout.createSequentialGroup()
+                        .addGroup(jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jUpdatePanelLayout.createSequentialGroup()
+                                .addGap(39, 39, 39)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(18, Short.MAX_VALUE))))
         );
         jUpdatePanelLayout.setVerticalGroup(
             jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jUpdatePanelLayout.createSequentialGroup()
-                .addGap(13, 13, 13)
-                .addComponent(jUpdateBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jDeleteBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                .addComponent(jReloadBtn)
-                .addGap(17, 17, 17))
+                .addContainerGap()
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(23, 23, 23))
         );
 
-        jPersonDetailsPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPersonDetailsPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        jPersonInfoBtn.setText("Personal details");
-        jPersonInfoBtn.setName(""); // NOI18N
-        jPersonInfoBtn.addActionListener(new java.awt.event.ActionListener() {
+        btnPersonInfo.setText("Personal details");
+        btnPersonInfo.setName(""); // NOI18N
+        btnPersonInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jPersonInfoBtnActionPerformed(evt);
+                btnPersonInfoActionPerformed(evt);
             }
         });
 
@@ -350,14 +323,14 @@ public class UserFrame extends AbstractFrame {
             jPersonDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPersonDetailsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPersonInfoBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
-                .addGap(12, 12, 12))
+                .addComponent(btnPersonInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         jPersonDetailsPanelLayout.setVerticalGroup(
             jPersonDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPersonDetailsPanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jPersonInfoBtn)
+                .addGap(16, 16, 16)
+                .addComponent(btnPersonInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -366,24 +339,22 @@ public class UserFrame extends AbstractFrame {
         jButtonsPanelLayout.setHorizontalGroup(
             jButtonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jButtonsPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jAddPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(7, Short.MAX_VALUE)
+                .addComponent(pnlControls, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(36, 36, 36)
                 .addComponent(jPersonDetailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
+                .addContainerGap())
         );
         jButtonsPanelLayout.setVerticalGroup(
             jButtonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jButtonsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jButtonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jAddPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jButtonsPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPersonDetailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(pnlControls, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPersonDetailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jUpdatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(21, 21, 21))
         );
 
@@ -397,8 +368,8 @@ public class UserFrame extends AbstractFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jCloseBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButtonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 848, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(45, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -410,195 +381,86 @@ public class UserFrame extends AbstractFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(57, 57, 57)
-                .addComponent(jCloseBtn)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addGap(24, 24, 24)
+                .addComponent(btnClose)
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-//        makeHidden();
     }//GEN-LAST:event_formWindowClosed
 
-    private void setTableSelection(boolean isEnabled) {
-        jUserTable.setRowSelectionAllowed(isEnabled);
-        jUserTable.setColumnSelectionAllowed(isEnabled);
-    }
-
-    private void reloadTableData() {
-        stopInserting();
-        DataTableModel<User> model = getTableModel();
-        // Clear table
-        model.setRowCount(0);
-
-        List<User> users = userService.getAll();
-
-        users.forEach(user -> {
-            model.addRow(user, new Object[]{user.getId(), user.getUsername(), user.getPassword(),
-                    UserUtils.isStudent(user), UserUtils.isTeacher(user), UserUtils.isAdmin(user)});
-        });
-        updateUI(null);
-//        setTableSelection(true);
-    }
+//    private void setTableSelection(boolean isEnabled) {
+//        tblUsers.setRowSelectionAllowed(isEnabled);
+//        tblUsers.setColumnSelectionAllowed(isEnabled);
+//    }
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         System.out.println("WINDOW OPENED");
     }//GEN-LAST:event_formWindowOpened
 
-    private void jReloadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRevertBtnActionPerformed
-        reloadTableData();
-    }//GEN-LAST:event_jRevertBtnActionPerformed
-
-    private void jCloseBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCloseBtnActionPerformed
+    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
         getFrameManager().showParent();
-    }//GEN-LAST:event_jCloseBtnActionPerformed
+    }//GEN-LAST:event_btnCloseActionPerformed
 
 
-    private void jDeleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jDeleteBtnActionPerformed
-        if (!confirmBatchTableAction("Confirm delete", "Are you sure want to delete users:")) return;
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        onDeleteData();
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
-        Arrays.stream(jUserTable.getSelectedRows()).forEach(row -> {
-            userService.delete((Integer) jUserTable.getModel().getValueAt(row, 0));
-//            ((DefaultTableModel) jUserTable.getModel()).removeRow(row);
-//            ids.add((Long) jUserTable.getModel().getValueAt(row, 0));
-        });
-//        userDao.deleteUsersById(ids);
-        reloadTableData();
-    }//GEN-LAST:event_jDeleteBtnActionPerformed
+    private void btnAddNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewActionPerformed
+        onAddData();
+    }//GEN-LAST:event_btnAddNewActionPerformed
 
-    private boolean confirmBatchTableAction(String title, String message) {
-        if (jUserTable.getSelectedRows().length == 0) {
-            return false;
-        }
-        return JOptionPane.showConfirmDialog(this,
-                message + "\n" +
-                        Arrays.stream(jUserTable.getSelectedRows()).
-                                mapToObj(row -> jUserTable.getModel().getValueAt(row, USER_TBL_COL.USERNAME.index).toString()).
-                                collect(Collectors.joining(", ")),
-                title,
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION;
+    private Optional<Integer> doInsert(User user) {
+        return userService.insert(user);
     }
 
-    private void jAddBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddBtnActionPerformed
-        DataTableModel<User> model = getTableModel();
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        onAddSaveData();
+    }//GEN-LAST:event_btnSaveActionPerformed
 
-        model.addRow(new User(), new Object[]{null, "", "", false, false, false});
-        int newRow = jUserTable.getRowCount() - 1;
-        jUserTable.setRowSelectionInterval(newRow, newRow);
-        startInserting();
-    }//GEN-LAST:event_jAddBtnActionPerformed
+    private void tfTableFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfTableFilterActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfTableFilterActionPerformed
 
-    private void jUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUpdateBtnActionPerformed
-        if (!confirmBatchTableAction("Confirm update", "Are you sure want to update users:")) return;
+    private void btnPersonInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPersonInfoActionPerformed
+        onShowPersonInfo();
+    }//GEN-LAST:event_btnPersonInfoActionPerformed
 
-        if (! isInserting) {
-            Arrays.stream(jUserTable.getSelectedRows()).forEach(row -> {
-                User user = getTableModel().getData(jUserTable.convertRowIndexToModel(row));
-                user.setId((Integer) jUserTable.getValueAt(row, USER_TBL_COL.ID.index));
-                user.setUsername(jUserTable.getValueAt(row, USER_TBL_COL.USERNAME.index).toString());
-                user.setPassword(jUserTable.getValueAt(row, USER_TBL_COL.PASSWORD.index).toString());
+    private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
+        reloadTableData();
+    }//GEN-LAST:event_btnReloadActionPerformed
 
-                fillUserRoles(row, user);
-
-                userService.updateUserWithRoles(user);
-            });
-        }
-    }//GEN-LAST:event_jUpdateBtnActionPerformed
-
-    private void jAddCancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddCancelBtnActionPerformed
-        stopInserting();
-        // Delete last row
-        ((DefaultTableModel) jUserTable.getModel()).removeRow(jUserTable.getRowCount() - 1);
-    }//GEN-LAST:event_jAddCancelBtnActionPerformed
-
-    private void jAddSaveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddSaveBtnActionPerformed
-        List<String> errorUsers = new ArrayList<>();
-        rowsInserting.forEach(row -> {
-            User newUser = getTableModel().getData(jUserTable.convertRowIndexToModel(row));
-            newUser.setUsername(jUserTable.getValueAt(row, USER_TBL_COL.USERNAME.index).toString());
-            newUser.setPassword(jUserTable.getValueAt(row, USER_TBL_COL.PASSWORD.index).toString());
-
-            fillUserRoles(row, newUser);
-
-            Optional<Integer> newId = userService.insert(newUser);
-            if (newId.isEmpty()) {
-                errorUsers.add(newUser.getUsername());
-            } else {
-                jUserTable.setValueAt(newId.get(), row, USER_TBL_COL.ID.index);
-//                jUserTable.setValueAt(PERSON_INFO_BTN_TITLE, row, USER_TBL_COL.PERSON_INFO.index);
-            }
-        });
-        if (!errorUsers.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Error while inserting users: " + String.join(", ", errorUsers), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        stopInserting();
-    }//GEN-LAST:event_jAddSaveBtnActionPerformed
-
-    private void jPersonInfoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPersonInfoBtnActionPerformed
-        int[] rows = jUserTable.getSelectedRows();
-        if (rows.length == 0) {
+    private void onShowPersonInfo() {
+        if (selectedUser == null) {
+            btnPersonInfo.setEnabled(false);
             return;
         }
-        User user = getTableModel().getData(jUserTable.convertRowIndexToModel(rows[0]));
-        PersonFrame personFrame = getFrameManager().getFrame(PERSON);
-//        Integer personId = null;
-//        if (user.getPerson() != null) {
-//            personId = user.getPerson().getId();
-//        }
-        userService.insertPersonToUser(user);
-//        if (user.getPersonId() == null) {
-//            Person person = new Person();
-//            Optional<Integer> newPersonIdOpt = personService.insert(person);
-//            newPersonIdOpt.ifPresent(personId -> {
-//                user.setPersonId(personId);
-//                userService.updateUser(user);
-//            });
-//        }
-        personFrame.setPersonId(user.getPersonId());
-        getFrameManager().showSub(PERSON);
-    }//GEN-LAST:event_jPersonInfoBtnActionPerformed
+        // Show modules for the first course
+//        Arrays.stream(tblUsers.getSelectedRows()).findFirst().ifPresentOrElse(row -> {
+//            User user = getTableModel().getData(tblUsers.convertRowIndexToModel(row));
+            PersonFrame personFrame = getFrameManager().getFrame(PERSON);
+
+            userService.insertPersonToUser(selectedUser);
+
+            personFrame.setPersonId(selectedUser.getPersonId());
+            getFrameManager().showSub(PERSON);
+//        }, () -> btnPersonInfo.setEnabled(false));
+    }
 
     private void fillUserRoles(int row, User user) {
-        if ((Boolean) jUserTable.getValueAt(row, USER_TBL_COL.IS_STUDENT.index)) {
+        if ((Boolean) tblUsers.getValueAt(row, USER_TBL_COL.IS_STUDENT.index)) {
             user.getRoles().add(Role.RoleType.STUDENT.asRole());
         }
-        if ((Boolean) jUserTable.getValueAt(row, USER_TBL_COL.IS_TEACHER.index)) {
+        if ((Boolean) tblUsers.getValueAt(row, USER_TBL_COL.IS_TEACHER.index)) {
             user.getRoles().add(Role.RoleType.TEACHER.asRole());
         }
-        if ((Boolean) jUserTable.getValueAt(row, USER_TBL_COL.IS_ADMIN.index)) {
+        if ((Boolean) tblUsers.getValueAt(row, USER_TBL_COL.IS_ADMIN.index)) {
             user.getRoles().add(Role.RoleType.ADMIN.asRole());
         }
-    }
-
-
-    private void startInserting() {
-        rowsInserting.add(jUserTable.getRowCount() - 1);
-        isInserting = true;
-        // disable all the other buttons
-//        jAddBtn.setEnabled(false);
-        jAddCancelBtn.setEnabled(true);
-        jAddSaveBtn.setEnabled(true);
-
-        jUpdateBtn.setEnabled(false);
-        jDeleteBtn.setEnabled(false);
-//        setTableSelection(false);
-    }
-
-    private void stopInserting() {
-        isInserting = false;
-        // enable all the buttons etc
-//        jAddBtn.setEnabled(true);
-        jAddCancelBtn.setEnabled(false);
-        jAddSaveBtn.setEnabled(false);
-
-        jUpdateBtn.setEnabled(true);
-        jDeleteBtn.setEnabled(true);
-
-        rowsInserting.clear();
-//        setTableSelection(true);
     }
 
     /**
@@ -608,12 +470,6 @@ public class UserFrame extends AbstractFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-//                UserFrame frame = new UserFrame();
-//                AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-//                        ApplicationConfig.class
-//                );
-//                ApplicationContext context = SpringApplication.run(GtiRecordDesktopGuiApp.class, args);
-//                ApplicationContext context = SpringApplication.run(UserFrame.class, args);
                 ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, args);
                 FrameManager manager = context.getBean(FrameManager.class);
                 manager.showSub(USER);
@@ -622,23 +478,97 @@ public class UserFrame extends AbstractFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jAddBtn;
-    private javax.swing.JButton jAddCancelBtn;
-    private javax.swing.JPanel jAddPanel;
-    private javax.swing.JButton jAddSaveBtn;
+    private javax.swing.JButton btnAddNew;
+    private javax.swing.JButton btnClose;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnPersonInfo;
+    private javax.swing.JButton btnReload;
+    private javax.swing.JButton btnSave;
     private javax.swing.JPanel jButtonsPanel;
-    private javax.swing.JButton jCloseBtn;
-    private javax.swing.JButton jDeleteBtn;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JPanel jPersonDetailsPanel;
-    private javax.swing.JButton jPersonInfoBtn;
-    private javax.swing.JButton jReloadBtn;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton jUpdateBtn;
     private javax.swing.JPanel jUpdatePanel;
-    private javax.swing.JTable jUserTable;
+    private javax.swing.JPanel pnlControls;
+    private PaddedJTable tblUsers;
+    private javax.swing.JTextField tfTableFilter;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    protected PaddedJTable getTable() {
+        return tblUsers;
+    }
+
+    @Override
+    protected JButton getDeleteBtn() {
+        return btnDelete;
+    }
+
+    @Override
+    protected JButton getAddSaveBtn() {
+        return btnSave;
+    }
+
+    @Override
+    protected JTextField getTableFilterField() {
+        return tfTableFilter;
+    }
+
+    @Override
+    protected int getDataDescriptionColumn() {
+        return 1;
+    }
+
+    @Override
+    protected User createDataInstance() {
+        return new User();
+    }
+
+    @Override
+    protected void doReloadData() {
+        List<User> users = userService.getAll();
+
+        users.forEach(user -> {
+            getTableModel().addRow(user, new Object[]{user.getId(), user.getUsername(), user.getPassword(),
+                    UserUtils.isStudent(user), UserUtils.isTeacher(user), UserUtils.isAdmin(user)});
+        });
+    }
+
+    @Override
+    protected Optional<Integer> doInsertData(User user) {
+        return userService.insert(user);
+    }
+
+    @Override
+    protected void doUpdateData(User user) {
+        userService.updateUserWithRoles(user);
+    }
+
+    @Override
+    protected void doDeleteData(Integer dataId) {
+        if (dataId != null) {
+            userService.delete(dataId);
+        }
+    }
+
+    @Override
+    protected boolean isDataValid(User data) {
+        return true; //(data != null) && (data.getName() != null) && ! data.getName().isBlank();
+    }
+
+    @Override
+    protected void fillDataObjectFromTable(User user, Integer row) {
+        user.setUsername(tblUsers.getValueAt(row, USER_TBL_COL.USERNAME.index).toString());
+        user.setPassword(tblUsers.getValueAt(row, USER_TBL_COL.PASSWORD.index).toString());
+        fillUserRoles(row, user);
+    }
+
+    @Override
+    protected void addEmptyRowToModel() {
+        getTableModel().addRow(new User(), new Object[]{null, "", "", false, false, false});
+    }
 
 }

@@ -1,6 +1,8 @@
 package ie.gti.asdl.rey.gtirecord.model.entity;
 
 
+import ie.gti.asdl.rey.gtirecord.model.annotation.KeyField;
+import ie.gti.asdl.rey.gtirecord.model.annotation.ShortDescriptionField;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -8,10 +10,12 @@ import java.time.LocalDateTime;
 @Data
 public class Assignment {
 
-    private int id;
+    @KeyField
+    private Integer id;
 
     private GroupModule groupModule;
 
+    @ShortDescriptionField
     private String name;
 
     private Double weighting;

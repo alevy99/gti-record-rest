@@ -54,7 +54,7 @@ public class SwingUIUtils {
                 message + "\n" +
                         Arrays.stream(table.getSelectedRows()).
                                 mapToObj(row -> table.getModel().getValueAt(row, descriptionColumn).toString()).
-                                collect(Collectors.joining(", ")),
+                                collect(Collectors.joining("\n")),
                 title,
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION;

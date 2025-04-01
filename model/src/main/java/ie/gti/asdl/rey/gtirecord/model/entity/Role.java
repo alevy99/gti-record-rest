@@ -1,5 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.model.entity;
 
+import ie.gti.asdl.rey.gtirecord.model.annotation.KeyField;
+import ie.gti.asdl.rey.gtirecord.model.annotation.ShortDescriptionField;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -28,8 +30,10 @@ public class Role implements Serializable {
         }
     }
 
-    private int id;
+    @KeyField
+    private Integer id;
 
+    @ShortDescriptionField
     private String name;
 
 }

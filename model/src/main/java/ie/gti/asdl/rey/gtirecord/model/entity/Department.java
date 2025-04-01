@@ -1,18 +1,16 @@
 package ie.gti.asdl.rey.gtirecord.model.entity;
 
-import lombok.AllArgsConstructor;
+import ie.gti.asdl.rey.gtirecord.model.annotation.KeyField;
+import ie.gti.asdl.rey.gtirecord.model.annotation.ShortDescriptionField;
 import lombok.Data;
 
 @Data
 public class Department {
 
-    private int id;
+    @KeyField
+    private Integer id;
 
+    @ShortDescriptionField
     private String name;
-
-    @Override
-    public String toString() {
-        return name;
-    }
 
 }

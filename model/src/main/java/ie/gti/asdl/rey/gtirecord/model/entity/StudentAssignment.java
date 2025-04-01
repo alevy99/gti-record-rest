@@ -2,6 +2,8 @@ package ie.gti.asdl.rey.gtirecord.model.entity;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class StudentAssignment {
 
@@ -13,6 +15,8 @@ public class StudentAssignment {
 
     private Boolean isGraded;
 
-    private Double mark;
+    private Double grade;
+
+    private LocalDateTime submitDate;
     
 }

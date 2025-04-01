@@ -19,8 +19,9 @@ public class PaddedJTable extends JTable {
 //        java.awt.EventQueue.invokeLater(() -> {
             setRowHeight(25); // Increase row height for better spacing
             setDefaultRenderer(Object.class, new PaddedCellRenderer(highlightedRowSupplier));
+            setDefaultRenderer(String.class, new PaddedCellRenderer(highlightedRowSupplier));
             setDefaultRenderer(Integer.class, new PaddedCellRenderer(highlightedRowSupplier));
-            setDefaultRenderer(Boolean.class, new BooleanCellRenderer());
+            setDefaultRenderer(Boolean.class, new BooleanCellRenderer(highlightedRowSupplier));
             setDefaultEditor(Object.class, new PaddedCellEditor());
             // Add sorter to the table
             if (getRowSorter() == null) {
@@ -38,7 +39,19 @@ public class PaddedJTable extends JTable {
     }
 
     public void setHighlightedRowSupplier(Supplier<Integer> highlightedRowSupplier) {
-        if (highlightedRowSupplier != null && getDefaultRenderer(Object.class) instanceof PaddedCellRenderer renderer) {
+        if (highlightedRowSupplier == null) {
+            return;
+        }
+        if (getDefaultRenderer(Object.class) instanceof PaddedCellRenderer renderer) {
+            renderer.setHighlightedRowSupplier(highlightedRowSupplier);
+        }
+        if (getDefaultRenderer(String.class) instanceof PaddedCellRenderer renderer) {
+            renderer.setHighlightedRowSupplier(highlightedRowSupplier);
+        }
+        if (getDefaultRenderer(Integer.class) instanceof PaddedCellRenderer renderer) {
+            renderer.setHighlightedRowSupplier(highlightedRowSupplier);
+        }
+        if (getDefaultRenderer(Boolean.class) instanceof BooleanCellRenderer renderer) {
             renderer.setHighlightedRowSupplier(highlightedRowSupplier);
         }
     }
@@ -58,31 +71,6 @@ public class PaddedJTable extends JTable {
         public PaddedCellEditor() {
             super(new JTextField());
             ((JTextField) getComponent()).setBorder(new EmptyBorder(0, 5, 0, 5)); // Add padding to the editor
-        }
-    }
-
-    // Custom Renderer for Boolean Cells (CheckBoxes)
-    private static class BooleanCellRenderer extends JCheckBox implements TableCellRenderer {
-        public BooleanCellRenderer() {
-            setHorizontalAlignment(CENTER); // Center the checkbox
-            setOpaque(true); // Allow background color changes
-        }
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            if (value instanceof Boolean) {
-                setSelected((Boolean) value);
-            }
-
-            // Apply alternating row colors
-            if (!isSelected) {
-                Color bg = (row % 2 == 0) ? GuiConsts.EVEN_ROW_COLOR : GuiConsts.ODD_ROW_COLOR; // Match Nimbus striping
-                setBackground(bg);
-            } else {
-                setBackground(table.getSelectionBackground()); // Keep selection color
-            }
-
-            return this;
         }
     }
 
