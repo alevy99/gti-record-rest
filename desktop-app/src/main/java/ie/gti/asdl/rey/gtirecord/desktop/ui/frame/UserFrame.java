@@ -5,7 +5,7 @@
 package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 
 import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.*;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.component.*;
 import ie.gti.asdl.rey.gtirecord.model.entity.Role;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import ie.gti.asdl.rey.gtirecord.core.ServiceManager;
@@ -496,7 +496,7 @@ public class UserFrame extends AbstractFrame {
 
         if (! isInserting) {
             Arrays.stream(jUserTable.getSelectedRows()).forEach(row -> {
-                User user = getTableModel().getData(row);
+                User user = getTableModel().getData(jUserTable.convertRowIndexToModel(row));
                 user.setId((Integer) jUserTable.getValueAt(row, USER_TBL_COL.ID.index));
                 user.setUsername(jUserTable.getValueAt(row, USER_TBL_COL.USERNAME.index).toString());
                 user.setPassword(jUserTable.getValueAt(row, USER_TBL_COL.PASSWORD.index).toString());
@@ -517,7 +517,7 @@ public class UserFrame extends AbstractFrame {
     private void jAddSaveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddSaveBtnActionPerformed
         List<String> errorUsers = new ArrayList<>();
         rowsInserting.forEach(row -> {
-            User newUser = getTableModel().getData(row);
+            User newUser = getTableModel().getData(jUserTable.convertRowIndexToModel(row));
             newUser.setUsername(jUserTable.getValueAt(row, USER_TBL_COL.USERNAME.index).toString());
             newUser.setPassword(jUserTable.getValueAt(row, USER_TBL_COL.PASSWORD.index).toString());
 
@@ -542,7 +542,7 @@ public class UserFrame extends AbstractFrame {
         if (rows.length == 0) {
             return;
         }
-        User user = getTableModel().getData(rows[0]);
+        User user = getTableModel().getData(jUserTable.convertRowIndexToModel(rows[0]));
         PersonFrame personFrame = getFrameManager().getFrame(PERSON);
 //        Integer personId = null;
 //        if (user.getPerson() != null) {

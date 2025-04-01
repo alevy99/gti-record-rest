@@ -9,14 +9,13 @@ import ie.gti.asdl.rey.gtirecord.core.ServiceManager;
 import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractTableDataFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.DataTableModel;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PaddedJTable;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataTableModel;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedJTable;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.model.entity.Department;
 import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableColumnModel;
 import java.util.*;
 
@@ -56,7 +55,7 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
         columnModel.getColumn(1).setMinWidth(120);
 
         // Add selection listener
-        tblDepartment.getSelectionModel().addListSelectionListener(this::updateUI);
+        tblDepartment.getSelectionModel().addListSelectionListener(listener -> updateUI());
     }
 
     private void initTableModel() {
@@ -83,13 +82,6 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
                 }
             });
         }
-    }
-
-    @Override
-    protected void onFormShown() {
-        super.onFormShown();
-        reloadTableData();
-        updateUI(null);
     }
 
     /**

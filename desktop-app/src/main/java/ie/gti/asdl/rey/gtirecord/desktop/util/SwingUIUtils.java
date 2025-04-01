@@ -1,12 +1,12 @@
 package ie.gti.asdl.rey.gtirecord.desktop.util;
 
-import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.DataTableModel;
-import ie.gti.asdl.rey.gtirecord.model.entity.Module;
-
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -53,6 +53,14 @@ public class SwingUIUtils {
                 title,
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION;
+    }
+
+    public static ListSelectionListener createSafeListener(Consumer<ListSelectionEvent> consumer) {
+        return event -> {
+            if (!event.getValueIsAdjusting()) {
+                consumer.accept(event);
+            }
+        };
     }
 
 }

@@ -19,6 +19,11 @@ public class CourseModuleServiceImpl implements CourseModuleService {
     }
 
     @Override
+    public void insert(int courseId, int moduleId) {
+        courseModuleDao.insert(courseId, moduleId);
+    }
+
+    @Override
     public void delete(int courseId, int moduleId) {
         courseModuleDao.delete(courseId, moduleId);
     }

@@ -1,4 +1,4 @@
-package ie.gti.asdl.rey.gtirecord.desktop.ui.comp;
+package ie.gti.asdl.rey.gtirecord.desktop.ui.component;
 
 public abstract class TableRowData<T> {
     private int row;

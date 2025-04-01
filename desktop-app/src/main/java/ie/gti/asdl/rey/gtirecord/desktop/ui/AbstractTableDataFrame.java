@@ -1,16 +1,16 @@
 package ie.gti.asdl.rey.gtirecord.desktop.ui;
 
 
-import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.DataTableModel;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PaddedJTable;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataTableModel;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedJTable;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 import java.util.*;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.confirmBatchTableAction;
+import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeListener;
 
 public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
 
@@ -28,7 +28,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         getTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         // Add selection listener
-        getTable().getSelectionModel().addListSelectionListener(this::updateUI);
+        getTable().getSelectionModel().addListSelectionListener(createSafeListener(event -> updateUI()));
 
         SwingUIUtils.addTableFilter(getTable(), getTableFilterField());
     }
@@ -159,28 +159,27 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     protected void onFormShown() {
         super.onFormShown();
         reloadTableData();
-        updateUI(null);
+        updateUI();
     }
 
     protected void reloadTableData() {
         stopInserting();
-//        DataTableModel<T> model = getTableModel();
-//        // Clear table
-//        model.setRowCount(0);
         getTable().clear();
 
         doReloadData();
-        updateUI(null);
-//        List<T> departments = departmentService.getAll();
-//
-//        departments.forEach(department -> {
-//            model.addRow(department, new Object[]{department.getId(), department.getName()});
-//        });
+        updateUI();
     }
 
-    protected void updateUI(ListSelectionEvent listSelectionEvent) {
+    protected void updateUI() {
         getUpdateBtn().setEnabled(getTable().getSelectedRowCount() > 0);
         getDeleteBtn().setEnabled(getTable().getSelectedRowCount() > 0);
+//        if (isSelectFirstRow()) {
+//            getTableModel()
+//        }
+    }
+
+    protected boolean isSelectFirstRow() {
+        return true;
     }
 
 }

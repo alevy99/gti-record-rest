@@ -9,9 +9,9 @@ import ie.gti.asdl.rey.gtirecord.core.service.ModuleService;
 import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractTableDataFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.DataTableModel;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.ModuleTableModel;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.comp.PaddedJTable;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataTableModel;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.component.ModuleTableModel;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedJTable;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.model.entity.Course;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
@@ -20,7 +20,6 @@ import lombok.Setter;
 import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableColumnModel;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -111,10 +110,10 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
         }
     }
 
-    protected void updateUI(ListSelectionEvent listSelectionEvent) {
-        super.updateUI(listSelectionEvent);
-        btnSelect.setEnabled(tblModule.getSelectedRowCount() > 0);
-    }
+//    protected void updateUI(ListSelectionEvent listSelectionEvent) {
+//        super.updateUI(listSelectionEvent);
+//        btnSelect.setEnabled(tblModule.getSelectedRowCount() > 0);
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The
@@ -125,7 +124,7 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblModule = new javax.swing.JTable();
+        tblModule = new PaddedJTable();
         btnClose = new javax.swing.JButton();
         jAddPanel = new javax.swing.JPanel();
         jAddBtn = new javax.swing.JButton();
@@ -396,12 +395,12 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     }//GEN-LAST:event_tfTableFilterActionPerformed
 
     private void btnSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectActionPerformed
-        if (tblModule.getSelectedRowCount() == 0) {
-            return;
-        }
-        Arrays.stream(tblModule.getSelectedRows()).findFirst().ifPresent(row -> {
-            getTableModel().getData(row);
-        });
+//        if (tblModule.getSelectedRowCount() == 0) {
+//            return;
+//        }
+//        Arrays.stream(tblModule.getSelectedRows()).findFirst().ifPresent(row -> {
+//            getTableModel().getData(row);
+//        });
     }//GEN-LAST:event_btnSelectActionPerformed
 
     /**
@@ -433,7 +432,7 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     private javax.swing.JButton jUpdateBtn;
     private javax.swing.JPanel jUpdatePanel;
     private javax.swing.JPanel pnlTableFilter;
-    private javax.swing.JTable tblModule;
+    private PaddedJTable tblModule;
     private javax.swing.JTextField tfTableFilter;
     // End of variables declaration//GEN-END:variables
 

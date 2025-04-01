@@ -19,6 +19,12 @@ public class CourseModuleDaoImpl implements CourseModuleDao {
     }
 
     @Override
+    public void insert(int courseId, int moduleId) {
+        final String sql = "INSERT INTO course_has_module (course_id, module_id) VALUES (?, ?)";
+        jdbcTemplate.update(sql, courseId, moduleId);
+    }
+
+    @Override
     public void delete(int courseId, int moduleId) {
         final String sql = "DELETE FROM course_has_module WHERE course_id = ? and module_id = ?";
         jdbcTemplate.update(sql, courseId, moduleId);

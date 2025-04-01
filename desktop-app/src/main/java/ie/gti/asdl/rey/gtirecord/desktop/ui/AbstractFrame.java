@@ -1,6 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.desktop.ui;
 
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,7 @@ public abstract class AbstractFrame extends JFrame {
         return JFrame.HIDE_ON_CLOSE;
     }
 
+    @Getter
     private final FrameManager frameManager;
 
     public AbstractFrame(FrameManager frameManager) {
@@ -83,14 +85,10 @@ public abstract class AbstractFrame extends JFrame {
     }
 
     public void showForm() {
-//        SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> {
             setVisible(true);
             toFront();
-//        });
-    }
-
-    public FrameManager getFrameManager() {
-        return frameManager;
+        });
     }
 
 

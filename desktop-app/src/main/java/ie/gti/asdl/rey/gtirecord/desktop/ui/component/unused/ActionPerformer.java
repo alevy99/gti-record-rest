@@ -1,4 +1,4 @@
-package ie.gti.asdl.rey.gtirecord.desktop.ui.comp.unused;
+package ie.gti.asdl.rey.gtirecord.desktop.ui.component.unused;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

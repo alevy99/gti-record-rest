@@ -1,9 +1,11 @@
-package ie.gti.asdl.rey.gtirecord.desktop.ui.comp;
+package ie.gti.asdl.rey.gtirecord.desktop.ui.component;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.util.Arrays;
+import java.util.function.IntConsumer;
 
 public class PaddedCellRenderer extends DefaultTableCellRenderer {
 
@@ -22,12 +24,14 @@ public class PaddedCellRenderer extends DefaultTableCellRenderer {
             setHorizontalAlignment(SwingConstants.LEFT); // Default alignment for other types
         }
 
-        // Apply alternating row colors
-        if (!isSelected) {
+        if (isSelected) {
+            // Keep selection color
+            setBackground(table.getSelectionBackground());
+
+        } else {
+            // Apply alternating row colors
             Color bg = (row % 2 == 0) ? GuiConsts.EVEN_ROW_COLOR : GuiConsts.ODD_ROW_COLOR;
             setBackground(bg);
-        } else {
-            setBackground(table.getSelectionBackground()); // Keep selection color
         }
 
         return c;
