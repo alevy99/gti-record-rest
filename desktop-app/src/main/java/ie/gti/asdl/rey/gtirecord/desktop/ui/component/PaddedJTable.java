@@ -4,22 +4,27 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.*;
 import java.awt.*;
+import java.util.function.Supplier;
 
 import static javax.swing.SwingConstants.CENTER;
 
 public class PaddedJTable extends JTable {
 
     public PaddedJTable() {
+        this(null);
+    }
+
+    public PaddedJTable(Supplier<Integer> highlightedRowSupplier) {
         super();
 //        java.awt.EventQueue.invokeLater(() -> {
             setRowHeight(25); // Increase row height for better spacing
-            setDefaultRenderer(Object.class, new PaddedCellRenderer());
-            setDefaultRenderer(Integer.class, new PaddedCellRenderer());
+            setDefaultRenderer(Object.class, new PaddedCellRenderer(highlightedRowSupplier));
+            setDefaultRenderer(Integer.class, new PaddedCellRenderer(highlightedRowSupplier));
             setDefaultRenderer(Boolean.class, new BooleanCellRenderer());
             setDefaultEditor(Object.class, new PaddedCellEditor());
             // Add sorter to the table
             if (getRowSorter() == null) {
-                setRowSorter(new TableRowSorter<TableModel>(this.getModel()));
+                setRowSorter(new TableRowSorter<>(this.getModel()));
             }
 
             JTableHeader header = getTableHeader();

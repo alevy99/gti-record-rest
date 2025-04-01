@@ -25,6 +25,7 @@ import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.util.*;
+import java.util.function.Supplier;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.COURSE;
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.MODULE;
@@ -65,6 +66,8 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     List<Module> allModules;
     List<Module> courseModules;
 
+    private Integer highlightedRow;
+
     /**
      * Creates new form CourseFrame
      */
@@ -87,17 +90,17 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
         // Set Department custom JComboBox Renderer and Editor
         TableColumn departmentColumn = getTable().getColumnModel().getColumn(COLUMNS.DEPARTMENT.index);
         departmentColumn.setCellEditor(new DefaultCellEditor(departmentCombo));
-        departmentColumn.setCellRenderer(new PaddedDataCellRenderer());
+        departmentColumn.setCellRenderer(new PaddedDataCellRenderer(() -> highlightedRow));
 
         // Set Course Type custom JComboBox Renderer and Editor
         TableColumn courseTypeColumn = getTable().getColumnModel().getColumn(COLUMNS.TYPE.index);
         courseTypeColumn.setCellEditor(new DefaultCellEditor(courseTypeCombo));
-        courseTypeColumn.setCellRenderer(new PaddedDataCellRenderer());
+        courseTypeColumn.setCellRenderer(new PaddedDataCellRenderer(() -> highlightedRow));
 
         // Set QQI level custom JComboBox Renderer and Editor
         TableColumn qqiLevelColumn = getTable().getColumnModel().getColumn(COLUMNS.QQI_LEVEL.index);
         qqiLevelColumn.setCellEditor(new DefaultCellEditor(qqiLevelCombo));
-        qqiLevelColumn.setCellRenderer(new PaddedDataCellRenderer());
+        qqiLevelColumn.setCellRenderer(new PaddedDataCellRenderer(() -> highlightedRow));
 
         TableColumnModel columnModel = getTable().getColumnModel();
         columnModel.getColumn(COLUMNS.ID.index)         .setMaxWidth(35);
@@ -123,8 +126,10 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
 
         // Show modules for the first course
         Arrays.stream(tblCourse.getSelectedRows()).findFirst().ifPresentOrElse(row -> {
+            highlightedRow = row;
             selectedCourse = getTableModel().getData(tblCourse.convertRowIndexToModel(row));
             courseModules = moduleService.getByCourseId(selectedCourse.getId());
+            tblCourse.repaint(); // Repaint after we changed highlightedRow
         }, () -> {
             if (courseModules != null) {
                 courseModules.clear();
@@ -228,7 +233,7 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblCourse = new PaddedJTable();
+        tblCourse = new PaddedJTable(() -> highlightedRow);
         jAddPanel = new javax.swing.JPanel();
         jAddBtn = new javax.swing.JButton();
         jAddCancelBtn = new javax.swing.JButton();
