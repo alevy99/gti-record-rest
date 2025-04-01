@@ -104,6 +104,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
             // data has key -> call delete service
             if (KeyUtil.hasKey(data)) {
                 doDeleteData(KeyUtil.getKey(data));
+                modelRows.add(getTable().convertRowIndexToModel(row));
             } else {
                 // No key - just delete the corresponding row
                 modelRows.add(getTable().convertRowIndexToModel(row));
@@ -113,7 +114,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         modelRows.sort(Comparator.reverseOrder());
         modelRows.forEach(modelRow -> getTableModel().removeRow(modelRow));
 
-        reloadTableData();
+//        reloadTableData();
     }
 
     protected DataTableModel<T> getTableModel() {
@@ -129,7 +130,6 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
 
     protected void reloadTableData() {
         getTable().clear();
-
         doReloadData();
         updateUI();
     }

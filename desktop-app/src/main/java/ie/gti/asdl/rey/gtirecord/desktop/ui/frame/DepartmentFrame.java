@@ -94,16 +94,13 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
         btnClose = new javax.swing.JButton();
         jAddPanel = new javax.swing.JPanel();
         jAddBtn = new javax.swing.JButton();
-        jAddCancelBtn = new javax.swing.JButton();
         jAddSaveBtn = new javax.swing.JButton();
-        jUpdatePanel = new javax.swing.JPanel();
-        jUpdateBtn = new javax.swing.JButton();
-        jRevertBtn = new javax.swing.JButton();
         jDeleteBtn = new javax.swing.JButton();
-        jTitle = new javax.swing.JLabel();
-        pnlTableFilter = new javax.swing.JPanel();
+        jUpdatePanel = new javax.swing.JPanel();
+        jRevertBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         tfTableFilter = new javax.swing.JTextField();
+        jTitle = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -152,57 +149,10 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
             }
         });
 
-        jAddCancelBtn.setText("Cancel");
-        jAddCancelBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jAddCancelBtnActionPerformed(evt);
-            }
-        });
-
         jAddSaveBtn.setText("Save new");
         jAddSaveBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jAddSaveBtnActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jAddPanelLayout = new javax.swing.GroupLayout(jAddPanel);
-        jAddPanel.setLayout(jAddPanelLayout);
-        jAddPanelLayout.setHorizontalGroup(
-            jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jAddPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jAddSaveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                    .addComponent(jAddBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                    .addComponent(jAddCancelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
-                .addContainerGap(17, Short.MAX_VALUE))
-        );
-        jAddPanelLayout.setVerticalGroup(
-            jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jAddPanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jAddBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jAddSaveBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
-                .addComponent(jAddCancelBtn)
-                .addGap(18, 18, 18))
-        );
-
-        jUpdatePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jUpdateBtn.setText("Update selected");
-        jUpdateBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jUpdateBtnActionPerformed(evt);
-            }
-        });
-
-        jRevertBtn.setText("Reload data");
-        jRevertBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRevertBtnActionPerformed(evt);
             }
         });
 
@@ -213,27 +163,67 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
             }
         });
 
+        javax.swing.GroupLayout jAddPanelLayout = new javax.swing.GroupLayout(jAddPanel);
+        jAddPanel.setLayout(jAddPanelLayout);
+        jAddPanelLayout.setHorizontalGroup(
+            jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jAddPanelLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addGroup(jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jAddBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jAddSaveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jDeleteBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
+        );
+        jAddPanelLayout.setVerticalGroup(
+            jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jAddPanelLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(jAddBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jAddSaveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jDeleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17))
+        );
+
+        jUpdatePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jRevertBtn.setText("Reload data");
+        jRevertBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRevertBtnActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Table Filter");
+
         javax.swing.GroupLayout jUpdatePanelLayout = new javax.swing.GroupLayout(jUpdatePanel);
         jUpdatePanel.setLayout(jUpdatePanelLayout);
         jUpdatePanelLayout.setHorizontalGroup(
             jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jUpdatePanelLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jUpdateBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                    .addComponent(jDeleteBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                    .addComponent(jRevertBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addGroup(jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jRevertBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jUpdatePanelLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(tfTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jUpdatePanelLayout.createSequentialGroup()
+                            .addGap(16, 16, 16)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         jUpdatePanelLayout.setVerticalGroup(
             jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jUpdatePanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jUpdateBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jDeleteBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
-                .addComponent(jRevertBtn)
+                .addGap(17, 17, 17)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                .addComponent(jRevertBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(17, 17, 17))
         );
 
@@ -241,58 +231,21 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
         jTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jTitle.setText("DEPARTMENTS");
 
-        pnlTableFilter.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        pnlTableFilter.setPreferredSize(new java.awt.Dimension(197, 150));
-
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Table Filter");
-
-        tfTableFilter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfTableFilterActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout pnlTableFilterLayout = new javax.swing.GroupLayout(pnlTableFilter);
-        pnlTableFilter.setLayout(pnlTableFilterLayout);
-        pnlTableFilterLayout.setHorizontalGroup(
-            pnlTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlTableFilterLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tfTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(16, Short.MAX_VALUE))
-        );
-        pnlTableFilterLayout.setVerticalGroup(
-            pnlTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlTableFilterLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(27, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(47, 47, 47)
+                .addGap(27, 27, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(pnlTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jAddPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(50, Short.MAX_VALUE))
+                    .addComponent(btnClose, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jAddPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -300,16 +253,14 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
                 .addGap(12, 12, 12)
                 .addComponent(jTitle)
                 .addGap(27, 27, 27)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jAddPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jAddPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pnlTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnClose))
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addComponent(btnClose)
+                .addGap(26, 26, 26))
         );
 
         pack();
@@ -319,15 +270,9 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
         onAddData();
     }//GEN-LAST:event_jAddBtnActionPerformed
 
-    private void jAddCancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddCancelBtnActionPerformed
-    }//GEN-LAST:event_jAddCancelBtnActionPerformed
-
     private void jAddSaveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddSaveBtnActionPerformed
         onAddSaveData();
     }//GEN-LAST:event_jAddSaveBtnActionPerformed
-
-    private void jUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUpdateBtnActionPerformed
-    }//GEN-LAST:event_jUpdateBtnActionPerformed
 
     private void jRevertBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRevertBtnActionPerformed
         reloadTableData();
@@ -340,10 +285,6 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
         getFrameManager().showParent();
     }//GEN-LAST:event_btnCloseActionPerformed
-
-    private void tfTableFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfTableFilterActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfTableFilterActionPerformed
 
     /**
      * @param args the command line arguments
@@ -362,7 +303,6 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClose;
     private javax.swing.JButton jAddBtn;
-    private javax.swing.JButton jAddCancelBtn;
     private javax.swing.JPanel jAddPanel;
     private javax.swing.JButton jAddSaveBtn;
     private javax.swing.JButton jDeleteBtn;
@@ -370,9 +310,7 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
     private javax.swing.JButton jRevertBtn;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel jTitle;
-    private javax.swing.JButton jUpdateBtn;
     private javax.swing.JPanel jUpdatePanel;
-    private javax.swing.JPanel pnlTableFilter;
     private PaddedJTable tblDepartment;
     private javax.swing.JTextField tfTableFilter;
     // End of variables declaration//GEN-END:variables

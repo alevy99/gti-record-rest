@@ -51,6 +51,8 @@ public class UserFrame extends AbstractTableDataFrame<User> {
 
     private User selectedUser;
 
+    private static final String BTN_PERSONAL_DETAILS_CAPTION = "Personal details";
+
     /**
      * Creates new form PersonFrame
      */
@@ -90,8 +92,10 @@ public class UserFrame extends AbstractTableDataFrame<User> {
             highlightedRow = row; // Set new highlighted row
             tblUsers.repaint(); // Repaint after we changed highlightedRow
             selectedUser = getTableModel().getData(tblUsers.convertRowIndexToModel(row));
+            btnPersonInfo.setText(BTN_PERSONAL_DETAILS_CAPTION + ": " + selectedUser.getUsername());
         }, () -> {
             selectedUser = null;
+            btnPersonInfo.setText(BTN_PERSONAL_DETAILS_CAPTION);
         });
     }
 
@@ -167,14 +171,6 @@ public class UserFrame extends AbstractTableDataFrame<User> {
         jPasswordField1.setText("jPasswordField1");
 
         setAlwaysOnTop(true);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosed(java.awt.event.WindowEvent evt) {
-                formWindowClosed(evt);
-            }
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
-            }
-        });
 
         tblUsers.setAutoCreateRowSorter(true);
         tblUsers.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
@@ -264,12 +260,6 @@ public class UserFrame extends AbstractTableDataFrame<User> {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("User filter:");
 
-        tfTableFilter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfTableFilterActionPerformed(evt);
-            }
-        });
-
         btnReload.setText("Reload users");
         btnReload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -323,14 +313,13 @@ public class UserFrame extends AbstractTableDataFrame<User> {
             jPersonDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPersonDetailsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnPersonInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addComponent(btnPersonInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE))
         );
         jPersonDetailsPanelLayout.setVerticalGroup(
             jPersonDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPersonDetailsPanelLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(btnPersonInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19)
+                .addComponent(btnPersonInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -370,7 +359,7 @@ public class UserFrame extends AbstractTableDataFrame<User> {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButtonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -388,18 +377,6 @@ public class UserFrame extends AbstractTableDataFrame<User> {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-    }//GEN-LAST:event_formWindowClosed
-
-//    private void setTableSelection(boolean isEnabled) {
-//        tblUsers.setRowSelectionAllowed(isEnabled);
-//        tblUsers.setColumnSelectionAllowed(isEnabled);
-//    }
-
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        System.out.println("WINDOW OPENED");
-    }//GEN-LAST:event_formWindowOpened
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
         getFrameManager().showParent();
@@ -422,10 +399,6 @@ public class UserFrame extends AbstractTableDataFrame<User> {
         onAddSaveData();
     }//GEN-LAST:event_btnSaveActionPerformed
 
-    private void tfTableFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfTableFilterActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfTableFilterActionPerformed
-
     private void btnPersonInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPersonInfoActionPerformed
         onShowPersonInfo();
     }//GEN-LAST:event_btnPersonInfoActionPerformed
@@ -439,16 +412,13 @@ public class UserFrame extends AbstractTableDataFrame<User> {
             btnPersonInfo.setEnabled(false);
             return;
         }
-        // Show modules for the first course
-//        Arrays.stream(tblUsers.getSelectedRows()).findFirst().ifPresentOrElse(row -> {
-//            User user = getTableModel().getData(tblUsers.convertRowIndexToModel(row));
-            PersonFrame personFrame = getFrameManager().getFrame(PERSON);
+        PersonFrame personFrame = getFrameManager().getFrame(PERSON);
 
-            userService.insertPersonToUser(selectedUser);
+        userService.insertPersonToUser(selectedUser);
 
-            personFrame.setPersonId(selectedUser.getPersonId());
-            getFrameManager().showSub(PERSON);
-//        }, () -> btnPersonInfo.setEnabled(false));
+        personFrame.setPersonId(selectedUser.getPersonId());
+        personFrame.setUsername(selectedUser.getUsername());
+        getFrameManager().showSub(PERSON);
     }
 
     private void fillUserRoles(int row, User user) {

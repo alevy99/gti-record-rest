@@ -77,19 +77,16 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         tblModule = new PaddedJTable();
-        btnClose = new javax.swing.JButton();
-        jAddPanel = new javax.swing.JPanel();
-        jAddBtn = new javax.swing.JButton();
-        jAddCancelBtn = new javax.swing.JButton();
-        jAddSaveBtn = new javax.swing.JButton();
+        pnlControls = new javax.swing.JPanel();
+        btnAdd = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
+        btnReload = new javax.swing.JButton();
         jUpdatePanel = new javax.swing.JPanel();
-        jUpdateBtn = new javax.swing.JButton();
-        jRevertBtn = new javax.swing.JButton();
-        jDeleteBtn = new javax.swing.JButton();
-        jTitle = new javax.swing.JLabel();
-        pnlTableFilter = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         tfTableFilter = new javax.swing.JTextField();
+        btnClose = new javax.swing.JButton();
+        jTitle = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -122,80 +119,94 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
         });
         jScrollPane1.setViewportView(tblModule);
 
+        pnlControls.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        btnAdd.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnAdd.setForeground(new java.awt.Color(0, 51, 204));
+        btnAdd.setText("Add");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
+
+        btnSave.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnSave.setForeground(new java.awt.Color(0, 51, 204));
+        btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
+
+        btnDelete.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnDelete.setForeground(new java.awt.Color(0, 51, 204));
+        btnDelete.setText("Delete");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
+
+        btnReload.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnReload.setForeground(new java.awt.Color(0, 51, 204));
+        btnReload.setText("Reload");
+        btnReload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReloadActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlControlsLayout = new javax.swing.GroupLayout(pnlControls);
+        pnlControls.setLayout(pnlControlsLayout);
+        pnlControlsLayout.setHorizontalGroup(
+            pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlControlsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(pnlControlsLayout.createSequentialGroup()
+                        .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(1, 1, 1))
+                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+        pnlControlsLayout.setVerticalGroup(
+            pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlControlsLayout.createSequentialGroup()
+                .addContainerGap(25, Short.MAX_VALUE)
+                .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18))
+        );
+
+        jUpdatePanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 15)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 51, 204));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel1.setText("Filter:");
+
+        tfTableFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfTableFilterActionPerformed(evt);
+            }
+        });
+
+        btnClose.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnClose.setForeground(new java.awt.Color(0, 51, 204));
         btnClose.setText("Close");
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
-            }
-        });
-
-        jAddPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jAddBtn.setText("Add new");
-        jAddBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jAddBtnActionPerformed(evt);
-            }
-        });
-
-        jAddCancelBtn.setText("Cancel");
-        jAddCancelBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jAddCancelBtnActionPerformed(evt);
-            }
-        });
-
-        jAddSaveBtn.setText("Save new");
-        jAddSaveBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jAddSaveBtnActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jAddPanelLayout = new javax.swing.GroupLayout(jAddPanel);
-        jAddPanel.setLayout(jAddPanelLayout);
-        jAddPanelLayout.setHorizontalGroup(
-            jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jAddPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jAddSaveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                    .addComponent(jAddBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                    .addComponent(jAddCancelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
-                .addContainerGap(17, Short.MAX_VALUE))
-        );
-        jAddPanelLayout.setVerticalGroup(
-            jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jAddPanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jAddBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jAddSaveBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jAddCancelBtn)
-                .addGap(18, 18, 18))
-        );
-
-        jUpdatePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jUpdateBtn.setText("Update selected");
-        jUpdateBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jUpdateBtnActionPerformed(evt);
-            }
-        });
-
-        jRevertBtn.setText("Reload data");
-        jRevertBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRevertBtnActionPerformed(evt);
-            }
-        });
-
-        jDeleteBtn.setText("Delete selected");
-        jDeleteBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jDeleteBtnActionPerformed(evt);
             }
         });
 
@@ -204,61 +215,28 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
         jUpdatePanelLayout.setHorizontalGroup(
             jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jUpdatePanelLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jUpdateBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                    .addComponent(jDeleteBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                    .addComponent(jRevertBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tfTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         jUpdatePanelLayout.setVerticalGroup(
             jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jUpdatePanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jUpdateBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jDeleteBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                .addComponent(jRevertBtn)
-                .addGap(17, 17, 17))
-        );
-
-        jTitle.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jTitle.setText("MODULES");
-
-        pnlTableFilter.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        pnlTableFilter.setPreferredSize(new java.awt.Dimension(197, 150));
-
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Table Filter");
-
-        tfTableFilter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfTableFilterActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout pnlTableFilterLayout = new javax.swing.GroupLayout(pnlTableFilter);
-        pnlTableFilter.setLayout(pnlTableFilterLayout);
-        pnlTableFilterLayout.setHorizontalGroup(
-            pnlTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlTableFilterLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addGroup(pnlTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tfTableFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE))
-                .addContainerGap(16, Short.MAX_VALUE))
-        );
-        pnlTableFilterLayout.setVerticalGroup(
-            pnlTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlTableFilterLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(tfTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
+
+        jTitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jTitle.setForeground(new java.awt.Color(0, 51, 204));
+        jTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jTitle.setText("MODULES");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -266,38 +244,28 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(81, 81, 81)
+                .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jAddPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(pnlTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(61, 61, 61))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(pnlControls, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(114, 114, 114))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 686, Short.MAX_VALUE))
+                .addGap(40, 40, 40))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addComponent(jTitle)
-                .addGap(27, 27, 27)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jAddPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(pnlTableFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(btnClose)
-                .addGap(33, 33, 33))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jUpdatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlControls, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(19, 19, 19))
         );
 
         pack();
@@ -307,27 +275,21 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
         getFrameManager().showParent();
     }//GEN-LAST:event_btnCloseActionPerformed
 
-    private void jAddBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddBtnActionPerformed
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         onAddData();
-    }//GEN-LAST:event_jAddBtnActionPerformed
+    }//GEN-LAST:event_btnAddActionPerformed
 
-    private void jAddCancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddCancelBtnActionPerformed
-    }//GEN-LAST:event_jAddCancelBtnActionPerformed
-
-    private void jAddSaveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddSaveBtnActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         onAddSaveData();
-    }//GEN-LAST:event_jAddSaveBtnActionPerformed
+    }//GEN-LAST:event_btnSaveActionPerformed
 
-    private void jUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUpdateBtnActionPerformed
-    }//GEN-LAST:event_jUpdateBtnActionPerformed
-
-    private void jRevertBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRevertBtnActionPerformed
+    private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
         reloadTableData();
-    }//GEN-LAST:event_jRevertBtnActionPerformed
+    }//GEN-LAST:event_btnReloadActionPerformed
 
-    private void jDeleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jDeleteBtnActionPerformed
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         onDeleteData();
-    }//GEN-LAST:event_jDeleteBtnActionPerformed
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void tfTableFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfTableFilterActionPerformed
         // TODO add your handling code here:
@@ -348,19 +310,16 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnClose;
-    private javax.swing.JButton jAddBtn;
-    private javax.swing.JButton jAddCancelBtn;
-    private javax.swing.JPanel jAddPanel;
-    private javax.swing.JButton jAddSaveBtn;
-    private javax.swing.JButton jDeleteBtn;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnReload;
+    private javax.swing.JButton btnSave;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JButton jRevertBtn;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel jTitle;
-    private javax.swing.JButton jUpdateBtn;
     private javax.swing.JPanel jUpdatePanel;
-    private javax.swing.JPanel pnlTableFilter;
+    private javax.swing.JPanel pnlControls;
     private PaddedJTable tblModule;
     private javax.swing.JTextField tfTableFilter;
     // End of variables declaration//GEN-END:variables
@@ -373,12 +332,12 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
 
     @Override
     protected JButton getDeleteBtn() {
-        return jDeleteBtn;
+        return btnDelete;
     }
 
     @Override
     protected JButton getAddSaveBtn() {
-        return jAddSaveBtn;
+        return btnSave;
     }
 
     @Override
