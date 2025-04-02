@@ -51,7 +51,7 @@ public class UserFrame extends AbstractTableDataFrame<User> {
 
     private User selectedUser;
 
-    private static final String BTN_PERSONAL_DETAILS_CAPTION = "Personal details";
+    private static final String BTN_PERSONAL_DETAILS_TEXT = "Personal details";
 
     /**
      * Creates new form PersonFrame
@@ -92,10 +92,15 @@ public class UserFrame extends AbstractTableDataFrame<User> {
             highlightedRow = row; // Set new highlighted row
             tblUsers.repaint(); // Repaint after we changed highlightedRow
             selectedUser = getTableModel().getData(tblUsers.convertRowIndexToModel(row));
-            btnPersonInfo.setText(BTN_PERSONAL_DETAILS_CAPTION + ": " + selectedUser.getUsername());
+            // Set button text
+            if (selectedUser.getUsername() == null || selectedUser.getUsername().isEmpty()) {
+                btnPersonInfo.setText(BTN_PERSONAL_DETAILS_TEXT);
+            } else {
+                btnPersonInfo.setText(BTN_PERSONAL_DETAILS_TEXT + ": " + selectedUser.getUsername());
+            }
         }, () -> {
             selectedUser = null;
-            btnPersonInfo.setText(BTN_PERSONAL_DETAILS_CAPTION);
+            btnPersonInfo.setText(BTN_PERSONAL_DETAILS_TEXT);
         });
     }
 
@@ -128,7 +133,7 @@ public class UserFrame extends AbstractTableDataFrame<User> {
     @Override
     protected void updateUI() {
         super.updateUI();
-        btnPersonInfo.setEnabled(tblUsers.getSelectedRowCount() > 0);
+        btnPersonInfo.setEnabled((selectedUser != null) && (selectedUser.getId() != null));
     }
 
     /**
@@ -142,19 +147,17 @@ public class UserFrame extends AbstractTableDataFrame<User> {
         jPanel1 = new javax.swing.JPanel();
         jPasswordField1 = new javax.swing.JPasswordField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblUsers = new javax.swing.JTable();
+        tblUsers = new PaddedJTable();
         btnClose = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jButtonsPanel = new javax.swing.JPanel();
         pnlControls = new javax.swing.JPanel();
         btnAdd = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
-        jPersonDetailsPanel = new javax.swing.JPanel();
-        jUpdatePanel = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        tfTableFilter = new javax.swing.JTextField();
         btnReload = new javax.swing.JButton();
+        jUpdatePanel = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        tfTableFilter = new javax.swing.JTextField();
         btnPersonInfo = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -171,6 +174,7 @@ public class UserFrame extends AbstractTableDataFrame<User> {
         jPasswordField1.setText("jPasswordField1");
 
         setAlwaysOnTop(true);
+        setResizable(false);
 
         tblUsers.setAutoCreateRowSorter(true);
         tblUsers.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
@@ -196,6 +200,8 @@ public class UserFrame extends AbstractTableDataFrame<User> {
         tblUsers.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tblUsers);
 
+        btnClose.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnClose.setForeground(new java.awt.Color(0, 51, 204));
         btnClose.setText("Close");
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -203,12 +209,15 @@ public class UserFrame extends AbstractTableDataFrame<User> {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 51, 204));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("USERS");
 
-        pnlControls.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnlControls.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
+        btnAdd.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnAdd.setForeground(new java.awt.Color(0, 51, 204));
         btnAdd.setText("Add");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -216,6 +225,8 @@ public class UserFrame extends AbstractTableDataFrame<User> {
             }
         });
 
+        btnSave.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnSave.setForeground(new java.awt.Color(0, 51, 204));
         btnSave.setText("Save");
         btnSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -223,10 +234,21 @@ public class UserFrame extends AbstractTableDataFrame<User> {
             }
         });
 
+        btnDelete.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnDelete.setForeground(new java.awt.Color(0, 51, 204));
         btnDelete.setText("Delete");
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeleteActionPerformed(evt);
+            }
+        });
+
+        btnReload.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnReload.setForeground(new java.awt.Color(0, 51, 204));
+        btnReload.setText("Reload");
+        btnReload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReloadActionPerformed(evt);
             }
         });
 
@@ -235,37 +257,44 @@ public class UserFrame extends AbstractTableDataFrame<User> {
         pnlControlsLayout.setHorizontalGroup(
             pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlControlsLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(18, 18, 18)
                 .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(12, Short.MAX_VALUE))
+                    .addGroup(pnlControlsLayout.createSequentialGroup()
+                        .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(1, 1, 1))
+                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         pnlControlsLayout.setVerticalGroup(
             pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlControlsLayout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlControlsLayout.createSequentialGroup()
+                .addContainerGap(25, Short.MAX_VALUE)
+                .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18))
         );
 
-        jPersonDetailsPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jUpdatePanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        jUpdatePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 3, 15)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 51, 204));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel2.setText("Filter:");
 
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("User filter:");
-
-        btnReload.setText("Reload");
-        btnReload.addActionListener(new java.awt.event.ActionListener() {
+        tfTableFilter.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        tfTableFilter.setForeground(new java.awt.Color(0, 51, 204));
+        tfTableFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReloadActionPerformed(evt);
+                tfTableFilterActionPerformed(evt);
             }
         });
 
@@ -274,66 +303,23 @@ public class UserFrame extends AbstractTableDataFrame<User> {
         jUpdatePanelLayout.setHorizontalGroup(
             jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jUpdatePanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jUpdatePanelLayout.createSequentialGroup()
-                        .addComponent(tfTableFilter)
-                        .addGap(15, 15, 15))
-                    .addGroup(jUpdatePanelLayout.createSequentialGroup()
-                        .addGroup(jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jUpdatePanelLayout.createSequentialGroup()
-                                .addGap(39, 39, 39)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(18, Short.MAX_VALUE))))
+                .addContainerGap()
+                .addGroup(jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tfTableFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         jUpdatePanelLayout.setVerticalGroup(
             jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jUpdatePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel3)
+                .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
+                .addComponent(tfTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout jPersonDetailsPanelLayout = new javax.swing.GroupLayout(jPersonDetailsPanel);
-        jPersonDetailsPanel.setLayout(jPersonDetailsPanelLayout);
-        jPersonDetailsPanelLayout.setHorizontalGroup(
-            jPersonDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPersonDetailsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(90, Short.MAX_VALUE))
-        );
-        jPersonDetailsPanelLayout.setVerticalGroup(
-            jPersonDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jUpdatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout jButtonsPanelLayout = new javax.swing.GroupLayout(jButtonsPanel);
-        jButtonsPanel.setLayout(jButtonsPanelLayout);
-        jButtonsPanelLayout.setHorizontalGroup(
-            jButtonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jButtonsPanelLayout.createSequentialGroup()
-                .addContainerGap(7, Short.MAX_VALUE)
-                .addComponent(pnlControls, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(328, 328, 328)
-                .addComponent(jPersonDetailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        jButtonsPanelLayout.setVerticalGroup(
-            jButtonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jButtonsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jButtonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pnlControls, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPersonDetailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(21, 21, 21))
-        );
-
+        btnPersonInfo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnPersonInfo.setForeground(new java.awt.Color(0, 51, 204));
         btnPersonInfo.setText("Personal details");
         btnPersonInfo.setName(""); // NOI18N
         btnPersonInfo.addActionListener(new java.awt.event.ActionListener() {
@@ -348,30 +334,37 @@ public class UserFrame extends AbstractTableDataFrame<User> {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(44, 44, 44)
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnPersonInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(pnlControls, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButtonsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnPersonInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(22, 22, 22)
+                .addGap(16, 16, 16)
                 .addComponent(jLabel1)
-                .addGap(34, 34, 34)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(7, 7, 7)
+                .addGap(19, 19, 19)
+                .addComponent(jScrollPane1)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnClose)
-                    .addComponent(btnPersonInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(22, Short.MAX_VALUE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jUpdatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(pnlControls, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnPersonInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(11, 11, 11)))
+                .addGap(14, 14, 14))
         );
 
         pack();
@@ -382,29 +375,33 @@ public class UserFrame extends AbstractTableDataFrame<User> {
     }//GEN-LAST:event_btnCloseActionPerformed
 
 
-    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        onDeleteData();
-    }//GEN-LAST:event_btnDeleteActionPerformed
-
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        onAddData();
-    }//GEN-LAST:event_btnAddActionPerformed
-
     private Optional<Integer> doInsert(User user) {
         return userService.insert(user);
     }
-
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        onAddSaveData();
-    }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnPersonInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPersonInfoActionPerformed
         onShowPersonInfo();
     }//GEN-LAST:event_btnPersonInfoActionPerformed
 
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        onAddData();
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        onAddSaveData();
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        onDeleteData();
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
     private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
         reloadTableData();
     }//GEN-LAST:event_btnReloadActionPerformed
+
+    private void tfTableFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfTableFilterActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfTableFilterActionPerformed
 
     private void onShowPersonInfo() {
         if (selectedUser == null) {
@@ -453,16 +450,14 @@ public class UserFrame extends AbstractTableDataFrame<User> {
     private javax.swing.JButton btnPersonInfo;
     private javax.swing.JButton btnReload;
     private javax.swing.JButton btnSave;
-    private javax.swing.JPanel jButtonsPanel;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPanel jPersonDetailsPanel;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel jUpdatePanel;
     private javax.swing.JPanel pnlControls;
-    private javax.swing.JTable tblUsers;
+    private PaddedJTable tblUsers;
     private javax.swing.JTextField tfTableFilter;
     // End of variables declaration//GEN-END:variables
 
