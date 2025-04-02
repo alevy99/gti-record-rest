@@ -142,19 +142,19 @@ public class UserFrame extends AbstractTableDataFrame<User> {
         jPanel1 = new javax.swing.JPanel();
         jPasswordField1 = new javax.swing.JPasswordField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblUsers = new PaddedJTable();
+        tblUsers = new javax.swing.JTable();
         btnClose = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jButtonsPanel = new javax.swing.JPanel();
         pnlControls = new javax.swing.JPanel();
-        btnAddNew = new javax.swing.JButton();
+        btnAdd = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
+        jPersonDetailsPanel = new javax.swing.JPanel();
         jUpdatePanel = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         tfTableFilter = new javax.swing.JTextField();
         btnReload = new javax.swing.JButton();
-        jPersonDetailsPanel = new javax.swing.JPanel();
         btnPersonInfo = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -209,10 +209,10 @@ public class UserFrame extends AbstractTableDataFrame<User> {
 
         pnlControls.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        btnAddNew.setText("Add new user");
-        btnAddNew.addActionListener(new java.awt.event.ActionListener() {
+        btnAdd.setText("Add new user");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddNewActionPerformed(evt);
+                btnAddActionPerformed(evt);
             }
         });
 
@@ -239,7 +239,7 @@ public class UserFrame extends AbstractTableDataFrame<User> {
                 .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btnAddNew, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
@@ -247,13 +247,15 @@ public class UserFrame extends AbstractTableDataFrame<User> {
             pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlControlsLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addComponent(btnAddNew, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(19, Short.MAX_VALUE))
         );
+
+        jPersonDetailsPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         jUpdatePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -297,30 +299,18 @@ public class UserFrame extends AbstractTableDataFrame<User> {
                 .addGap(23, 23, 23))
         );
 
-        jPersonDetailsPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-
-        btnPersonInfo.setText("Personal details");
-        btnPersonInfo.setName(""); // NOI18N
-        btnPersonInfo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPersonInfoActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPersonDetailsPanelLayout = new javax.swing.GroupLayout(jPersonDetailsPanel);
         jPersonDetailsPanel.setLayout(jPersonDetailsPanelLayout);
         jPersonDetailsPanelLayout.setHorizontalGroup(
             jPersonDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPersonDetailsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnPersonInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE))
+                .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(90, Short.MAX_VALUE))
         );
         jPersonDetailsPanelLayout.setVerticalGroup(
             jPersonDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPersonDetailsPanelLayout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(btnPersonInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jUpdatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jButtonsPanelLayout = new javax.swing.GroupLayout(jButtonsPanel);
@@ -330,9 +320,7 @@ public class UserFrame extends AbstractTableDataFrame<User> {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jButtonsPanelLayout.createSequentialGroup()
                 .addContainerGap(7, Short.MAX_VALUE)
                 .addComponent(pnlControls, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
+                .addGap(328, 328, 328)
                 .addComponent(jPersonDetailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -342,10 +330,17 @@ public class UserFrame extends AbstractTableDataFrame<User> {
                 .addContainerGap()
                 .addGroup(jButtonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(pnlControls, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPersonDetailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jUpdatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPersonDetailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(21, 21, 21))
         );
+
+        btnPersonInfo.setText("Personal details");
+        btnPersonInfo.setName(""); // NOI18N
+        btnPersonInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPersonInfoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -356,10 +351,12 @@ public class UserFrame extends AbstractTableDataFrame<User> {
                 .addGap(44, 44, 44)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButtonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(25, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnPersonInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButtonsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -370,8 +367,10 @@ public class UserFrame extends AbstractTableDataFrame<User> {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24)
-                .addComponent(btnClose)
+                .addGap(7, 7, 7)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnClose)
+                    .addComponent(btnPersonInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
@@ -387,9 +386,9 @@ public class UserFrame extends AbstractTableDataFrame<User> {
         onDeleteData();
     }//GEN-LAST:event_btnDeleteActionPerformed
 
-    private void btnAddNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewActionPerformed
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         onAddData();
-    }//GEN-LAST:event_btnAddNewActionPerformed
+    }//GEN-LAST:event_btnAddActionPerformed
 
     private Optional<Integer> doInsert(User user) {
         return userService.insert(user);
@@ -448,7 +447,7 @@ public class UserFrame extends AbstractTableDataFrame<User> {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAddNew;
+    private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnClose;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnPersonInfo;
@@ -463,7 +462,7 @@ public class UserFrame extends AbstractTableDataFrame<User> {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel jUpdatePanel;
     private javax.swing.JPanel pnlControls;
-    private PaddedJTable tblUsers;
+    private javax.swing.JTable tblUsers;
     private javax.swing.JTextField tfTableFilter;
     // End of variables declaration//GEN-END:variables
 
