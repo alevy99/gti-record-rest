@@ -181,8 +181,8 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
         ModuleFrame.initTable(tblCourseModules);
         ModuleFrame.initTable(tblAllModules);
 
-        SwingUIUtils.addTableFilter(tblCourseModules, tfModuleTableFilter);
-        SwingUIUtils.addTableFilter(tblAllModules, tfModuleTableFilter);
+        SwingUIUtils.addTableFilter(tblCourseModules, tfModuleFilter);
+        SwingUIUtils.addTableFilter(tblAllModules, tfModuleFilter);
 
         tblCourseModules.getSelectionModel().addListSelectionListener(createSafeListener(listener -> updateButtonsUI()));
         tblAllModules.getSelectionModel().addListSelectionListener(createSafeListener(listener -> updateButtonsUI()));
@@ -242,35 +242,31 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblCourse = new PaddedJTable();
-        jAddPanel = new javax.swing.JPanel();
-        jAddBtn = new javax.swing.JButton();
-        jAddCancelBtn = new javax.swing.JButton();
-        jAddSaveBtn = new javax.swing.JButton();
-        jUpdatePanel = new javax.swing.JPanel();
-        jUpdateBtn = new javax.swing.JButton();
-        jRevertBtn = new javax.swing.JButton();
-        jDeleteBtn = new javax.swing.JButton();
         jTitle = new javax.swing.JLabel();
-        pnlCourseTableFilter = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        tfTableFilter = new javax.swing.JTextField();
-        pnlModulesTableFilter = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        tfModuleTableFilter = new javax.swing.JTextField();
         pnlCourseModules = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblCourseModules = new PaddedJTable();
         lblCourseModulesTitle = new javax.swing.JLabel();
+        pnlAddRemoveModules = new javax.swing.JPanel();
+        btnRemoveModuleFromCourse = new javax.swing.JButton();
+        btnAddModuleToCourse = new javax.swing.JButton();
         pnlAllModules = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblAllModules = new PaddedJTable();
         jLabel4 = new javax.swing.JLabel();
-        pnlAddRemoveModules = new javax.swing.JPanel();
-        btnRemoveModuleFromCourse = new javax.swing.JButton();
-        btnAddModuleToCourse = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
+        pnlControls = new javax.swing.JPanel();
+        btnAdd = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
+        btnReload = new javax.swing.JButton();
+        jUpdatePanel = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        tfCourseFilter = new javax.swing.JTextField();
+        jUpdatePanel2 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        tfModuleFilter = new javax.swing.JTextField();
         btnOpenModules = new javax.swing.JButton();
-        btnClose = new javax.swing.JButton();
+        btnClose1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -305,159 +301,12 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
         });
         jScrollPane1.setViewportView(tblCourse);
 
-        jAddPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jAddBtn.setText("Add new course");
-        jAddBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jAddBtnActionPerformed(evt);
-            }
-        });
-
-        jAddCancelBtn.setText("Cancel");
-        jAddCancelBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jAddCancelBtnActionPerformed(evt);
-            }
-        });
-
-        jAddSaveBtn.setText("Save new courses");
-        jAddSaveBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jAddSaveBtnActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jAddPanelLayout = new javax.swing.GroupLayout(jAddPanel);
-        jAddPanel.setLayout(jAddPanelLayout);
-        jAddPanelLayout.setHorizontalGroup(
-            jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jAddPanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jAddSaveBtn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jAddBtn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jAddCancelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(18, Short.MAX_VALUE))
-        );
-        jAddPanelLayout.setVerticalGroup(
-            jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jAddPanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jAddBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jAddSaveBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
-                .addComponent(jAddCancelBtn)
-                .addGap(18, 18, 18))
-        );
-
-        jUpdatePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jUpdateBtn.setText("Update selected course");
-        jUpdateBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jUpdateBtnActionPerformed(evt);
-            }
-        });
-
-        jRevertBtn.setText("Reload courses");
-        jRevertBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRevertBtnActionPerformed(evt);
-            }
-        });
-
-        jDeleteBtn.setText("Delete selected course");
-        jDeleteBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jDeleteBtnActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jUpdatePanelLayout = new javax.swing.GroupLayout(jUpdatePanel);
-        jUpdatePanel.setLayout(jUpdatePanelLayout);
-        jUpdatePanelLayout.setHorizontalGroup(
-            jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jUpdatePanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jDeleteBtn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jUpdateBtn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jRevertBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(15, Short.MAX_VALUE))
-        );
-        jUpdatePanelLayout.setVerticalGroup(
-            jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jUpdatePanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jUpdateBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jDeleteBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jRevertBtn)
-                .addGap(17, 17, 17))
-        );
-
-        jTitle.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jTitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jTitle.setForeground(new java.awt.Color(0, 51, 204));
         jTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jTitle.setText("COURSES");
 
-        pnlCourseTableFilter.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        pnlCourseTableFilter.setPreferredSize(new java.awt.Dimension(197, 150));
-
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Course Filter");
-
-        javax.swing.GroupLayout pnlCourseTableFilterLayout = new javax.swing.GroupLayout(pnlCourseTableFilter);
-        pnlCourseTableFilter.setLayout(pnlCourseTableFilterLayout);
-        pnlCourseTableFilterLayout.setHorizontalGroup(
-            pnlCourseTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlCourseTableFilterLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(pnlCourseTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tfTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15))
-        );
-        pnlCourseTableFilterLayout.setVerticalGroup(
-            pnlCourseTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlCourseTableFilterLayout.createSequentialGroup()
-                .addGap(7, 7, 7)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        pnlModulesTableFilter.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        pnlModulesTableFilter.setPreferredSize(new java.awt.Dimension(197, 150));
-
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Module Filter");
-
-        javax.swing.GroupLayout pnlModulesTableFilterLayout = new javax.swing.GroupLayout(pnlModulesTableFilter);
-        pnlModulesTableFilter.setLayout(pnlModulesTableFilterLayout);
-        pnlModulesTableFilterLayout.setHorizontalGroup(
-            pnlModulesTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlModulesTableFilterLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(pnlModulesTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tfModuleTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(13, Short.MAX_VALUE))
-        );
-        pnlModulesTableFilterLayout.setVerticalGroup(
-            pnlModulesTableFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlModulesTableFilterLayout.createSequentialGroup()
-                .addGap(7, 7, 7)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfModuleTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        pnlCourseModules.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnlCourseModules.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         tblCourseModules.setAutoCreateRowSorter(true);
         tblCourseModules.setModel(new javax.swing.table.DefaultTableModel(
@@ -481,6 +330,8 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
         });
         jScrollPane2.setViewportView(tblCourseModules);
 
+        lblCourseModulesTitle.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblCourseModulesTitle.setForeground(new java.awt.Color(0, 51, 204));
         lblCourseModulesTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCourseModulesTitle.setText("Course Modules");
 
@@ -507,7 +358,25 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pnlAllModules.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnRemoveModuleFromCourse.setFont(new java.awt.Font("Monoid", 1, 14)); // NOI18N
+        btnRemoveModuleFromCourse.setForeground(new java.awt.Color(0, 0, 204));
+        btnRemoveModuleFromCourse.setText(">>>");
+        btnRemoveModuleFromCourse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveModuleFromCourseActionPerformed(evt);
+            }
+        });
+
+        btnAddModuleToCourse.setFont(new java.awt.Font("Monoid", 1, 14)); // NOI18N
+        btnAddModuleToCourse.setForeground(new java.awt.Color(0, 0, 204));
+        btnAddModuleToCourse.setText("<<<");
+        btnAddModuleToCourse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddModuleToCourseActionPerformed(evt);
+            }
+        });
+
+        pnlAllModules.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         tblAllModules.setAutoCreateRowSorter(true);
         tblAllModules.setModel(new javax.swing.table.DefaultTableModel(
@@ -531,6 +400,8 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
         });
         jScrollPane3.setViewportView(tblAllModules);
 
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 51, 204));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("All Modules");
 
@@ -557,24 +428,6 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        btnRemoveModuleFromCourse.setFont(new java.awt.Font("Monoid", 1, 14)); // NOI18N
-        btnRemoveModuleFromCourse.setForeground(new java.awt.Color(0, 0, 204));
-        btnRemoveModuleFromCourse.setText(">>>");
-        btnRemoveModuleFromCourse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRemoveModuleFromCourseActionPerformed(evt);
-            }
-        });
-
-        btnAddModuleToCourse.setFont(new java.awt.Font("Monoid", 1, 14)); // NOI18N
-        btnAddModuleToCourse.setForeground(new java.awt.Color(0, 0, 204));
-        btnAddModuleToCourse.setText("<<<");
-        btnAddModuleToCourse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddModuleToCourseActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout pnlAddRemoveModulesLayout = new javax.swing.GroupLayout(pnlAddRemoveModules);
         pnlAddRemoveModules.setLayout(pnlAddRemoveModulesLayout);
         pnlAddRemoveModulesLayout.setHorizontalGroup(
@@ -584,7 +437,9 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
                 .addGroup(pnlAddRemoveModulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnRemoveModuleFromCourse)
                     .addComponent(btnAddModuleToCourse))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(pnlAllModules, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlAddRemoveModulesLayout.setVerticalGroup(
             pnlAddRemoveModulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -593,45 +448,164 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
                 .addComponent(btnRemoveModuleFromCourse)
                 .addGap(38, 38, 38)
                 .addComponent(btnAddModuleToCourse)
-                .addContainerGap(115, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(pnlAllModules, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        btnOpenModules.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnOpenModules.setText("<html>Manage<br/>Modules</html>");
+        pnlControls.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        btnAdd.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnAdd.setForeground(new java.awt.Color(0, 51, 204));
+        btnAdd.setText("Add");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
+
+        btnSave.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnSave.setForeground(new java.awt.Color(0, 51, 204));
+        btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
+
+        btnDelete.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnDelete.setForeground(new java.awt.Color(0, 51, 204));
+        btnDelete.setText("Delete");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
+
+        btnReload.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnReload.setForeground(new java.awt.Color(0, 51, 204));
+        btnReload.setText("Reload");
+        btnReload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReloadActionPerformed(evt);
+            }
+        });
+
+        jUpdatePanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 3, 15)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 51, 204));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel2.setText("Course filter");
+
+        tfCourseFilter.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        tfCourseFilter.setForeground(new java.awt.Color(0, 51, 204));
+
+        javax.swing.GroupLayout jUpdatePanelLayout = new javax.swing.GroupLayout(jUpdatePanel);
+        jUpdatePanel.setLayout(jUpdatePanelLayout);
+        jUpdatePanelLayout.setHorizontalGroup(
+            jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jUpdatePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tfCourseFilter)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jUpdatePanelLayout.setVerticalGroup(
+            jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jUpdatePanelLayout.createSequentialGroup()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfCourseFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        jUpdatePanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 3, 15)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(0, 51, 204));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel6.setText("Module filter");
+
+        tfModuleFilter.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        tfModuleFilter.setForeground(new java.awt.Color(0, 51, 204));
+
+        javax.swing.GroupLayout jUpdatePanel2Layout = new javax.swing.GroupLayout(jUpdatePanel2);
+        jUpdatePanel2.setLayout(jUpdatePanel2Layout);
+        jUpdatePanel2Layout.setHorizontalGroup(
+            jUpdatePanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jUpdatePanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jUpdatePanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tfModuleFilter)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jUpdatePanel2Layout.setVerticalGroup(
+            jUpdatePanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jUpdatePanel2Layout.createSequentialGroup()
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfModuleFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout pnlControlsLayout = new javax.swing.GroupLayout(pnlControls);
+        pnlControls.setLayout(pnlControlsLayout);
+        pnlControlsLayout.setHorizontalGroup(
+            pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlControlsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(pnlControlsLayout.createSequentialGroup()
+                        .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(1, 1, 1))
+                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addComponent(jUpdatePanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnlControlsLayout.setVerticalGroup(
+            pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlControlsLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jUpdatePanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnlControlsLayout.createSequentialGroup()
+                        .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
+        );
+
+        btnOpenModules.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnOpenModules.setForeground(new java.awt.Color(0, 51, 204));
+        btnOpenModules.setText("Manage Modules");
         btnOpenModules.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOpenModulesActionPerformed(evt);
             }
         });
 
-        btnClose.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnClose.setText("Close");
-        btnClose.addActionListener(new java.awt.event.ActionListener() {
+        btnClose1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnClose1.setForeground(new java.awt.Color(0, 51, 204));
+        btnClose1.setText("Close");
+        btnClose1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCloseActionPerformed(evt);
+                btnClose1ActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(btnOpenModules, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
-                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnOpenModules, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -639,96 +613,61 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jAddPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(pnlCourseModules, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(pnlModulesTableFilter, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
-                            .addComponent(pnlCourseTableFilter, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 328, Short.MAX_VALUE)))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(pnlAddRemoveModules, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(17, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(pnlCourseModules, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(pnlAddRemoveModules, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(pnlAllModules, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(22, Short.MAX_VALUE))
+                                .addComponent(pnlControls, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnOpenModules, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnClose1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(24, 24, 24))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addComponent(jTitle)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jAddPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jUpdatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(pnlCourseTableFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pnlModulesTableFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(pnlControls, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnOpenModules, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnClose1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(2, 2, 2)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pnlCourseModules, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlAllModules, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnlAddRemoveModules, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1050, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 7, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1057, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 774, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 812, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
-        getFrameManager().showParent();
-    }//GEN-LAST:event_btnCloseActionPerformed
-
-    private void jAddBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddBtnActionPerformed
-        onAddData();
-    }//GEN-LAST:event_jAddBtnActionPerformed
-
-    private void jAddCancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddCancelBtnActionPerformed
-    }//GEN-LAST:event_jAddCancelBtnActionPerformed
-
-    private void jAddSaveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddSaveBtnActionPerformed
-        onAddSaveData();
-    }//GEN-LAST:event_jAddSaveBtnActionPerformed
-
-    private void jUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUpdateBtnActionPerformed
-    }//GEN-LAST:event_jUpdateBtnActionPerformed
-
-    private void jRevertBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRevertBtnActionPerformed
-        reloadTableData();
-    }//GEN-LAST:event_jRevertBtnActionPerformed
-
-    private void jDeleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jDeleteBtnActionPerformed
-        onDeleteData();
-    }//GEN-LAST:event_jDeleteBtnActionPerformed
 
     private void btnAddModuleToCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddModuleToCourseActionPerformed
         if ((selectedCourse == null)
@@ -779,6 +718,26 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
 
     }//GEN-LAST:event_btnRemoveModuleFromCourseActionPerformed
 
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        onAddData();
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        onAddSaveData();
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        onDeleteData();
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
+        reloadTableData();
+    }//GEN-LAST:event_btnReloadActionPerformed
+
+    private void btnClose1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClose1ActionPerformed
+        getFrameManager().showParent();
+    }//GEN-LAST:event_btnClose1ActionPerformed
+
     private void btnOpenModulesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenModulesActionPerformed
         getFrameManager().showSub(MODULE);
     }//GEN-LAST:event_btnOpenModulesActionPerformed
@@ -798,38 +757,34 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnAddModuleToCourse;
-    private javax.swing.JButton btnClose;
+    private javax.swing.JButton btnClose1;
+    private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnOpenModules;
+    private javax.swing.JButton btnReload;
     private javax.swing.JButton btnRemoveModuleFromCourse;
-    private javax.swing.JButton jAddBtn;
-    private javax.swing.JButton jAddCancelBtn;
-    private javax.swing.JPanel jAddPanel;
-    private javax.swing.JButton jAddSaveBtn;
-    private javax.swing.JButton jDeleteBtn;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JButton btnSave;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JButton jRevertBtn;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel jTitle;
-    private javax.swing.JButton jUpdateBtn;
     private javax.swing.JPanel jUpdatePanel;
+    private javax.swing.JPanel jUpdatePanel2;
     private javax.swing.JLabel lblCourseModulesTitle;
     private javax.swing.JPanel pnlAddRemoveModules;
     private javax.swing.JPanel pnlAllModules;
+    private javax.swing.JPanel pnlControls;
     private javax.swing.JPanel pnlCourseModules;
-    private javax.swing.JPanel pnlCourseTableFilter;
-    private javax.swing.JPanel pnlModulesTableFilter;
     private PaddedJTable tblAllModules;
     private PaddedJTable tblCourse;
     private PaddedJTable tblCourseModules;
-    private javax.swing.JTextField tfModuleTableFilter;
-    private javax.swing.JTextField tfTableFilter;
+    private javax.swing.JTextField tfCourseFilter;
+    private javax.swing.JTextField tfModuleFilter;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -839,17 +794,17 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
 
     @Override
     protected JButton getDeleteBtn() {
-        return jDeleteBtn;
+        return btnDelete;
     }
 
     @Override
     protected JButton getAddSaveBtn() {
-        return jAddSaveBtn;
+        return btnSave;
     }
 
     @Override
     protected JTextField getTableFilterField() {
-        return tfTableFilter;
+        return tfCourseFilter;
     }
 
     @Override

@@ -47,6 +47,8 @@ public class UserServiceImpl implements UserService {
         }
         user.setId(newId.get());
         userRolesDao.insert(user.getId(), user.getRoles());
+        // Add person when insert user
+        insertPersonToUser(user);
         return newId;
     }
 

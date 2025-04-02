@@ -195,11 +195,8 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel1.setText("Filter:");
 
-        tfTableFilter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfTableFilterActionPerformed(evt);
-            }
-        });
+        tfTableFilter.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        tfTableFilter.setForeground(new java.awt.Color(0, 51, 204));
 
         btnClose.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnClose.setForeground(new java.awt.Color(0, 51, 204));
@@ -290,10 +287,6 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         onDeleteData();
     }//GEN-LAST:event_btnDeleteActionPerformed
-
-    private void tfTableFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfTableFilterActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfTableFilterActionPerformed
 
     /**
      * @param args the command line arguments

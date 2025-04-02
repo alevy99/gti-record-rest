@@ -292,11 +292,6 @@ public class UserFrame extends AbstractTableDataFrame<User> {
 
         tfTableFilter.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         tfTableFilter.setForeground(new java.awt.Color(0, 51, 204));
-        tfTableFilter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfTableFilterActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jUpdatePanelLayout = new javax.swing.GroupLayout(jUpdatePanel);
         jUpdatePanel.setLayout(jUpdatePanelLayout);
@@ -375,10 +370,6 @@ public class UserFrame extends AbstractTableDataFrame<User> {
     }//GEN-LAST:event_btnCloseActionPerformed
 
 
-    private Optional<Integer> doInsert(User user) {
-        return userService.insert(user);
-    }
-
     private void btnPersonInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPersonInfoActionPerformed
         onShowPersonInfo();
     }//GEN-LAST:event_btnPersonInfoActionPerformed
@@ -398,10 +389,6 @@ public class UserFrame extends AbstractTableDataFrame<User> {
     private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
         reloadTableData();
     }//GEN-LAST:event_btnReloadActionPerformed
-
-    private void tfTableFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfTableFilterActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfTableFilterActionPerformed
 
     private void onShowPersonInfo() {
         if (selectedUser == null) {

@@ -88,6 +88,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         if (!errors.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Insert failed for:\n" + String.join("\n", errors), "Not valid data", JOptionPane.ERROR_MESSAGE);
         }
+        updateUI();
     }
 
     protected void onDeleteData() {
@@ -114,6 +115,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         modelRows.sort(Comparator.reverseOrder());
         modelRows.forEach(modelRow -> getTableModel().removeRow(modelRow));
 
+        updateUI();
 //        reloadTableData();
     }
 
