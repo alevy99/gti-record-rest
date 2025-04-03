@@ -47,8 +47,6 @@ public class UserServiceImpl implements UserService {
         }
         user.setId(newId.get());
         userRolesDao.insert(user.getId(), user.getRoles());
-        // Add person when insert user
-        insertPersonToUser(user);
         return newId;
     }
 
@@ -57,64 +55,51 @@ public class UserServiceImpl implements UserService {
     public void updateUserWithRoles(User user) {
         userDao.getById(user.getId()).ifPresentOrElse(userDB -> {
             userDao.update(user);
-
-            logger.trace("New roles: {}", user.getRoles().stream()
-                    .map(Role::getName)
-                    .collect(Collectors.joining(", ")));
+            logRoles("New roles: {}", user.getRoles());
 
             List<Role> currentRoles = userDB.getRoles();
-
-            logger.trace("Current roles: {}", currentRoles.stream()
-                    .map(Role::getName)
-                    .collect(Collectors.joining(", ")));
+            logRoles("Current roles: {}", currentRoles);
 
             List<Role> rolesToInsert = new ArrayList<>(user.getRoles());
             rolesToInsert.removeAll(currentRoles);
-
-            logger.trace("Roles to insert: {}", rolesToInsert.stream()
-                    .map(Role::getName)
-                    .collect(Collectors.joining(", ")));
-
+            logRoles("Roles to insert: {}", rolesToInsert);
             userRolesDao.insert(user.getId(), rolesToInsert);
 
             List<Role> rolesToDelete = new ArrayList<>(currentRoles);
             rolesToDelete.removeAll(user.getRoles());
-
-            logger.trace("Roles to delete: {}", rolesToInsert.stream()
-                    .map(Role::getName)
-                    .collect(Collectors.joining(", ")));
-
+            logRoles("Roles to delete: {}", rolesToDelete);
             userRolesDao.deleteByUserId(user.getId(), rolesToDelete);
         }, () -> {
             throw new RuntimeException("User was not found: ID = " + user.getId());
         });
     }
 
-//    @Transactional
+    private void logRoles(String message, List<Role> roles) {
+        if (logger.isTraceEnabled()) {
+            logger.trace(message, roles.stream()
+                    .map(Role::getName)
+                    .collect(Collectors.joining(", ")));
+        }
+    }
+
     @Override
     public void updateUser(User user) {
         userDao.update(user);
-//        Optional<Integer> personId = personService.save(user.getPerson());
-//        personId.ifPresent(personIdDB -> {
-//            user.setId(personIdDB);
-//            userDao.update(user);
-//        });
     }
 
     @Transactional
     @Override
-    public void insertPersonToUser(User user) {
+    public Optional<Integer> insertPersonToUser(User user) {
         if (user.getPersonId() != null) {
-            return;
+            return Optional.of(user.getPersonId());
         }
         Person person = new Person();
         Optional<Integer> newPersonIdOpt = personService.insert(person);
-        newPersonIdOpt.ifPresentOrElse(personId -> {
+        newPersonIdOpt.ifPresent(personId -> {
             user.setPersonId(personId);
             userDao.update(user);
-        }, () -> {
-            throw new RuntimeException("Error adding new person for user ID = " + user.getId());
         });
+        return newPersonIdOpt;
     }
 
     @Transactional
