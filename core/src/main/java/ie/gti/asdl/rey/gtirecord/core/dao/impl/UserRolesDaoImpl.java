@@ -22,34 +22,41 @@ public class UserRolesDaoImpl implements UserRolesDao {
     }
 
     @Override
-    public void insert(int userID, List<Role> roles) {
-        String sql = "INSERT INTO users_roles (user_ID, role_ID) VALUES (?, ?)";
+    public void insert(int userId, List<Role> roles) {
+        String sql = "INSERT INTO users_roles (user_id, role_id) VALUES (?, ?)";
 
         jdbcTemplate.batchUpdate(sql, roles, roles.size(), new ParameterizedPreparedStatementSetter<Role>() {
             @Override
             public void setValues(PreparedStatement ps, Role role) throws SQLException {
-                ps.setInt(1, userID);
+                ps.setInt(1, userId);
                 ps.setInt(2, role.getId());
             }
         });
     }
 
     @Override
-    public void deleteByUserId(int userID, List<Role> roles) {
-        final String sql = "DELETE FROM users_roles WHERE user_ID = ? and role_ID = ?";
+    public void deleteByUserId(int userId, List<Role> roles) {
+        final String sql = "DELETE FROM users_roles WHERE user_id = ? and role_id = ?";
         jdbcTemplate.batchUpdate(sql, roles, roles.size(), new ParameterizedPreparedStatementSetter<Role>() {
             @Override
             public void setValues(PreparedStatement ps, Role role) throws SQLException {
-                ps.setInt(1, userID);
+                ps.setInt(1, userId);
                 ps.setInt(2, role.getId());
             }
         });
     }
 
     @Override
-    public void deleteByUserId(int userID) {
-        final String sql = "DELETE FROM users_roles WHERE user_ID = ?";
-        jdbcTemplate.update(sql, userID);
+    public void deleteByUserId(int userId) {
+        final String sql = "DELETE FROM users_roles WHERE user_id = ?";
+        jdbcTemplate.update(sql, userId);
+    }
+
+    @Override
+    public void delete(Integer userId, Integer roleId) {
+        if (userId == null || roleId == null) return;
+        final String sql = "DELETE FROM users_roles WHERE user_id = ? and role_id = ?";
+        jdbcTemplate.update(sql, userId, roleId);
     }
 
 }

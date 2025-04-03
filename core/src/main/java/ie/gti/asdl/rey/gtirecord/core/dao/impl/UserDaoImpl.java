@@ -3,6 +3,7 @@ package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 import ie.gti.asdl.rey.gtirecord.core.dao.UserDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.RoleRowMapper;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.UserRowMapper;
+import ie.gti.asdl.rey.gtirecord.model.entity.Role;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -31,7 +32,10 @@ public class UserDaoImpl implements UserDao {
                 user = userMapper.mapRow(rs, row);
             }
             assert user != null;
-            user.getRoles().add(roleMapper.mapRow(rs, row));
+            var role = roleMapper.mapRow(rs, row);
+            if ((role != null) && role.isValid()) {
+                user.getRoles().add(role);
+            }
             row++;
         }
         return user;
@@ -101,7 +105,10 @@ public class UserDaoImpl implements UserDao {
                     userMap.put(userID, user);
                 }
                 assert user != null;
-                user.getRoles().add(roleMapper.mapRow(rs, row));
+                var role = roleMapper.mapRow(rs, row);
+                if ((role != null) && role.isValid()) {
+                    user.getRoles().add(role);
+                }
                 row++;
             }
             return new ArrayList<>(userMap.values());

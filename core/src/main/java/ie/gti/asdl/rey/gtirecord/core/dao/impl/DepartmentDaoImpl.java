@@ -25,7 +25,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private static final RowMapper<Department> departmentRowMapper = new BeanPropertyRowMapper<Department>(Department.class);
+    private static final RowMapper<Department> departmentRowMapper = new BeanPropertyRowMapper<>(Department.class);
 
     @Autowired
     public DepartmentDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -33,7 +33,8 @@ public class DepartmentDaoImpl implements DepartmentDao {
     }
 
     @Override
-    public Optional<Department> getById(int id) {
+    public Optional<Department> getById(Integer id) {
+        if (id == null) return Optional.empty();
         final String sql = "SELECT * FROM department WHERE id = ?";
         List<Department> departments = jdbcTemplate.query(sql, departmentRowMapper, id);
         return departments.isEmpty() ? Optional.empty() : Optional.of(departments.getFirst());

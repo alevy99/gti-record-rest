@@ -24,7 +24,8 @@ public class AddressDaoImpl implements AddressDao {
     }
 
     @Override
-    public Optional<Address> getByPersonId(int personId) {
+    public Optional<Address> getByPersonId(Integer personId) {
+        if (personId == null) return Optional.empty();
         final String sql = "SELECT * FROM address WHERE person_id = ?";
         List<Address> addresses = jdbcTemplate.query(sql, addressRowMapper, personId);
         return addresses.isEmpty() ? Optional.empty() : Optional.of(addresses.getFirst());

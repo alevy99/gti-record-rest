@@ -1,6 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.PersonDao;
+import ie.gti.asdl.rey.gtirecord.model.entity.Department;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -37,9 +38,9 @@ public class PersonDaoImpl implements PersonDao {
     @Override
     public Optional<Person> getById(Integer id) {
         if (id == null) return Optional.empty();
-
         final String sql = "SELECT * FROM person WHERE id = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, personRowMapper, id));
+        List<Person> persons = jdbcTemplate.query(sql, personRowMapper, id);
+        return persons.isEmpty() ? Optional.empty() : Optional.of(persons.getFirst());
     }
 
     @Override

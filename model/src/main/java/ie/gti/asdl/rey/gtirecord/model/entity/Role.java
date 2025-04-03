@@ -9,6 +9,18 @@ import java.io.Serializable;
 @Data
 public class Role implements Serializable {
 
+    public static RoleType getRoleTypeByRole(Role role) {
+        if (RoleType.STUDENT.name.equals(role.getName())) {
+            return Role.RoleType.STUDENT;
+        } else if (RoleType.TEACHER.name.equals(role.getName())) {
+            return Role.RoleType.TEACHER;
+        } else if (RoleType.ADMIN.name.equals(role.getName())) {
+            return Role.RoleType.ADMIN;
+        } else {
+            throw new IllegalArgumentException("Invalid role: " + role.getName());
+        }
+    }
+
     public enum RoleType {
         ADMIN(1, "admin"),
         TEACHER(2, "teacher"),
@@ -35,5 +47,9 @@ public class Role implements Serializable {
 
     @ShortDescriptionField
     private String name;
+
+    public boolean isValid() {
+        return id != null && name != null && !name.isEmpty();
+    }
 
 }

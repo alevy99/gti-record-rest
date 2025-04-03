@@ -8,9 +8,11 @@ import java.util.List;
 @Repository
 public interface UserRolesDao {
 
-    void insert(int userID, List<Role> roles);
+    void insert(int userId, List<Role> roles);
 
-    void deleteByUserId(int userID, List<Role> roles);
+    void deleteByUserId(int userId, List<Role> roles);
 
-    void deleteByUserId(int userID);
+    void deleteByUserId(int userId);
+
+    void delete(Integer userId, Integer roleId);
 }

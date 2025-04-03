@@ -9,9 +9,9 @@ import java.util.Optional;
 @Repository
 public interface ModuleDao {
 
-    Optional<Module> getById(int id);
+    Optional<Module> getById(Integer id);
 
-    List<Module> getByCourseId(int courseId);
+    List<Module> getByCourseId(Integer courseId);
 
     List<Module> getAll();
 

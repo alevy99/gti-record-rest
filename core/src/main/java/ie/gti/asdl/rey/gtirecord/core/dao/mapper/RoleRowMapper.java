@@ -12,6 +12,11 @@ public class RoleRowMapper implements RowMapper<Role> {
     public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
         Role role = new Role();
         role.setId(rs.getInt("role_id"));
+        Integer roleId = rs.getInt("role_id");
+        if (rs.wasNull()) {
+            roleId = null;
+        }
+        role.setId(roleId);
         role.setName(rs.getString("role_name"));
         return role;
     }

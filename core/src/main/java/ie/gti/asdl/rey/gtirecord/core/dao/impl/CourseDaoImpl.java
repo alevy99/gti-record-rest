@@ -30,7 +30,8 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     @Override
-    public Optional<Course> getById(int id) {
+    public Optional<Course> getById(Integer id) {
+        if (id == null) return Optional.empty();
         final String sql = """
                     SELECT c.id, c.department_id, c.course_type_id, c.qqi_level_id, c.name, c.code, d.name as department_name, ct.type, q.name as qqi_name
                     FROM course c, department d, course_type ct, qqi_level q

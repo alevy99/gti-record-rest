@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface CourseDao {
 
-    Optional<Course> getById(int id);
+    Optional<Course> getById(Integer id);
 
     List<Course> getAll();
 

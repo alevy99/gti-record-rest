@@ -33,14 +33,16 @@ public class ModuleDaoImpl implements ModuleDao {
     }
 
     @Override
-    public Optional<Module> getById(int id) {
+    public Optional<Module> getById(Integer id) {
+        if (id == null) return Optional.empty();
         final String sql = "SELECT * FROM module WHERE id = ?";
         List<Module> modules = jdbcTemplate.query(sql, moduleRowMapper, id);
         return modules.isEmpty() ? Optional.empty() : Optional.of(modules.getFirst());
     }
 
     @Override
-    public List<Module> getByCourseId(int courseId) {
+    public List<Module> getByCourseId(Integer courseId) {
+        if (courseId == null) return List.of();
         final String sql = """
                 SELECT m.id,  m.name, m.code
                 FROM module m, course_has_module cm

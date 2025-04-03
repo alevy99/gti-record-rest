@@ -82,23 +82,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user) {
+    public void update(User user) {
         userDao.update(user);
-    }
-
-    @Transactional
-    @Override
-    public Optional<Integer> insertPersonToUser(User user) {
-        if (user.getPersonId() != null) {
-            return Optional.of(user.getPersonId());
-        }
-        Person person = new Person();
-        Optional<Integer> newPersonIdOpt = personService.insert(person);
-        newPersonIdOpt.ifPresent(personId -> {
-            user.setPersonId(personId);
-            userDao.update(user);
-        });
-        return newPersonIdOpt;
     }
 
     @Transactional

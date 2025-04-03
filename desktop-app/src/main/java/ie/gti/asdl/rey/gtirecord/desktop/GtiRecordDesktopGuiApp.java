@@ -6,6 +6,7 @@ package ie.gti.asdl.rey.gtirecord.desktop;
 
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
@@ -47,7 +48,7 @@ public class GtiRecordDesktopGuiApp {
 //        System.out.println("Hello World!");
         FrameManager frameManager = context.getBean(FrameManager.class);
         frameManager.showSub(LOGIN);
-        
+
 //        loginFrame = new LoginFrame(context);//context.getBean(LoginFrame.class);
     }
 }

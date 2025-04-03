@@ -8,7 +8,7 @@ import java.util.Optional;
 @Repository
 public interface AddressDao {
 
-    Optional<Address> getByPersonId(int personId);
+    Optional<Address> getByPersonId(Integer personId);
 
     void insert(Address address);
 

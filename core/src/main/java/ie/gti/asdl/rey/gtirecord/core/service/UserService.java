@@ -13,9 +13,7 @@ public interface UserService {
 
     void updateUserWithRoles(User user);
 
-    void updateUser(User user);
-
-    Optional<Integer> insertPersonToUser(User user);
+    void update(User user);
 
     void delete(int id);
 

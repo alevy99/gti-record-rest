@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface DepartmentDao {
 
-    Optional<Department> getById(int id);
+    Optional<Department> getById(Integer id);
 
     List<Department> getAll();
 

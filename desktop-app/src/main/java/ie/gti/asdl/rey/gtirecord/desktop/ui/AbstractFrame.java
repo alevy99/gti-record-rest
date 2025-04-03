@@ -56,8 +56,13 @@ public abstract class AbstractFrame extends JFrame {
         }
     }
 
+    protected void resetFrame() {
+        // Do nothing
+    }
+
     protected void onFormHidden() {
         logger.debug("{} WINDOW IS HIDDEN", this.getClass().getSimpleName());
+        resetFrame();
     }
 
 
