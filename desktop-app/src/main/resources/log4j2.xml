@@ -14,14 +14,25 @@
 
     <Loggers>
         <!-- Log SQL Queries from JdbcTemplate -->
-        <Logger name="org.springframework.jdbc.core" level="DEBUG" additivity="false">
+        <Logger name="org.springframework.jdbc.core" level="INFO" additivity="false">
             <AppenderRef ref="Console"/>
+<!--            <AppenderRef ref="FileLogger"/>-->
+        </Logger>
+
+        <Logger name="org.springframework.jdbc.core.JdbcTemplate" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+            <!--            <AppenderRef ref="FileLogger"/>-->
+        </Logger>
+
+        <Logger name="ie.gti.asdl.rey" level="TRACE" additivity="false">
+            <AppenderRef ref="Console"/>
+<!--            <AppenderRef ref="FileLogger"/>-->
         </Logger>
 
         <!-- Root Logger -->
-        <Root level="Trace">
+        <Root level="DEBUG">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="FileLogger"/>
+<!--            <AppenderRef ref="FileLogger"/>-->
         </Root>
     </Loggers>
 </Configuration>

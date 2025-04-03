@@ -14,12 +14,12 @@
 
     <Loggers>
         <!-- Log SQL Queries from JdbcTemplate -->
-        <Logger name="org.springframework.jdbc.core" level="DEBUG" additivity="false">
+        <Logger name="org.springframework.jdbc.core" level="TRACE" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
 
         <!-- Root Logger -->
-        <Root level="Trace">
+        <Root level="TRACE">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="FileLogger"/>
         </Root>
