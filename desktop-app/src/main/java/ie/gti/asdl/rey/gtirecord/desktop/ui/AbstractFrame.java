@@ -37,7 +37,7 @@ public abstract class AbstractFrame extends JFrame {
 
     }
 
-    protected void initForm() {
+    protected void initFrame() {
         setDefaultCloseOperation(getDefaultCloseOperationValue()); // Hide instead of closing
     }
 
@@ -50,9 +50,9 @@ public abstract class AbstractFrame extends JFrame {
         }
         super.setVisible(b);
         if (!b) {
-            onFormHidden();
+            onFrameHidden();
         } else {
-            onFormShown();
+            onFrameShown();
         }
     }
 
@@ -60,17 +60,17 @@ public abstract class AbstractFrame extends JFrame {
         // Do nothing
     }
 
-    protected void onFormHidden() {
+    protected void onFrameHidden() {
         logger.debug("{} WINDOW IS HIDDEN", this.getClass().getSimpleName());
         resetFrame();
     }
 
 
-    protected void onFormShown() {
+    protected void onFrameShown() {
         logger.debug("{} WINDOW IS VISIBLE", this.getClass().getSimpleName());
     }
 
-    public void showForm() {
+    public void showFrame() {
         SwingUtilities.invokeLater(() -> {
             setVisible(true);
             toFront();

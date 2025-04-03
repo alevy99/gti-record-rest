@@ -19,7 +19,6 @@ import ie.gti.asdl.rey.gtirecord.model.entity.Address;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import ie.gti.asdl.rey.gtirecord.model.util.AddressUtils;
-import lombok.Setter;
 import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
@@ -30,7 +29,6 @@ import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Objects;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.PERSON;
 import static ie.gti.asdl.rey.gtirecord.desktop.util.ImageUtils.resizeIcon;
@@ -68,14 +66,14 @@ public class PersonFrame extends AbstractFrame {
     }
 
     @Override
-    protected void initForm() {
-        super.initForm();
+    protected void initFrame() {
+        super.initFrame();
         reInitForm();
     }
 
     @Override
-    protected void onFormShown() {
-        super.onFormShown();
+    protected void onFrameShown() {
+        super.onFrameShown();
         reInitForm();
     }
 

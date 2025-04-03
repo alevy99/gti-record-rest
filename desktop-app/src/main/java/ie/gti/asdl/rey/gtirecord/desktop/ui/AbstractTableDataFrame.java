@@ -21,8 +21,8 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     }
 
     @Override
-    protected void initForm() {
-        super.initForm();
+    protected void initFrame() {
+        super.initFrame();
         getTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         // Add selection listener
@@ -52,7 +52,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     protected abstract void fillDataObjectFromTable(T data, Integer row);
     protected abstract void addEmptyRowToModel();
 
-    protected void onAddData() {
+    protected void onAddLine() {
         addEmptyRowToModel();
         int newRow = getTable().getRowCount() - 1;
         getTable().setRowSelectionInterval(newRow, newRow);
@@ -61,7 +61,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         getTable().scrollRectToVisible(rect);
     }
 
-    protected void onAddSaveData() {
+    protected void onSaveData() {
         if (!confirmBatchTableAction(this, getTable(), getDataDescriptionColumn(), "Confirm save", "Are you sure want to save data:")) return;
         List<String> errors = new ArrayList<>();
 
@@ -124,8 +124,8 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     }
 
     @Override
-    protected void onFormShown() {
-        super.onFormShown();
+    protected void onFrameShown() {
+        super.onFrameShown();
         reloadTableData();
         updateUI();
     }

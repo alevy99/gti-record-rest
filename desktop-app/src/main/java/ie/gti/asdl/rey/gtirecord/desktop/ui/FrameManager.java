@@ -2,7 +2,6 @@ package ie.gti.asdl.rey.gtirecord.desktop.ui;
 
 import ie.gti.asdl.rey.gtirecord.desktop.ui.frame.*;
 import ie.gti.asdl.rey.gtirecord.core.ServiceManager;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -94,7 +93,7 @@ public class FrameManager {
     }
 
     private void showFrame(FrameType frameType) {
-        getFrame(frameType).showForm();
+        getFrame(frameType).showFrame();
         activeFrameType = frameType;
     }
 }

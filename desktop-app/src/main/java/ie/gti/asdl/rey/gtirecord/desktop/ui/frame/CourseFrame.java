@@ -15,7 +15,6 @@ import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.*;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils;
-import ie.gti.asdl.rey.gtirecord.model.annotation.DescriptionUtil;
 import ie.gti.asdl.rey.gtirecord.model.entity.*;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import org.springframework.context.ApplicationContext;
@@ -23,7 +22,6 @@ import org.springframework.context.ApplicationContext;
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -78,14 +76,14 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
         moduleService = serviceManager.getModuleService();
         courseModuleService = serviceManager.getCourseModuleService();
         initComponents();
-        initForm();
+        initFrame();
     }
 
     @Override
-    protected void initForm() {
+    protected void initFrame() {
         // Init table model first
         initTableModel();
-        super.initForm();
+        super.initFrame();
 
         tblCourse.setHighlightedRowSupplier(() -> highlightedRow);
 
@@ -224,8 +222,8 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     }
 
     @Override
-    protected void onFormShown() {
-        super.onFormShown();
+    protected void onFrameShown() {
+        super.onFrameShown();
         reloadAllModules();
         reloadCourseModules();
         updateModulesTableUI();
@@ -719,11 +717,11 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     }//GEN-LAST:event_btnRemoveModuleFromCourseActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        onAddData();
+        onAddLine();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        onAddSaveData();
+        onSaveData();
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed

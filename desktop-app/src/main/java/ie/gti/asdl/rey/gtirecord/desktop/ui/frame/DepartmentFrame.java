@@ -37,13 +37,13 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
         super(frameManager);
         departmentService = serviceManager.getDepartmentService();
         initComponents();
-        initForm();
+        this.initFrame();
     }
 
     @Override
-    protected void initForm() {
+    protected void initFrame() {
         initTableModel();
-        super.initForm();
+        super.initFrame();
 
         tblDepartment.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
@@ -286,11 +286,11 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        onAddData();
+        onAddLine();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        onAddSaveData();
+        onSaveData();
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed

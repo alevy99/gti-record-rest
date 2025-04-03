@@ -30,7 +30,7 @@ public class LoginFrame extends AbstractFrame {
         super(frameManager);
         userService = serviceManager.getUserService();
         initComponents();
-        initForm();
+        initFrame();
     }
 
 

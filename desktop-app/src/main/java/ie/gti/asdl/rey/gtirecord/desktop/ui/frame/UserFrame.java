@@ -60,13 +60,13 @@ public class UserFrame extends AbstractTableDataFrame<User> {
         super(frameManager);
         userService = serviceManager.getUserService();
         initComponents();
-        initForm();
+        this.initFrame();
     }
 
     @Override
-    protected void initForm() {
+    protected void initFrame() {
         initModel();
-        super.initForm();
+        super.initFrame();
 
         tblUsers.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
@@ -375,11 +375,11 @@ public class UserFrame extends AbstractTableDataFrame<User> {
     }//GEN-LAST:event_btnPersonInfoActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        onAddData();
+        onAddLine();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        onAddSaveData();
+        onSaveData();
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
@@ -480,7 +480,6 @@ public class UserFrame extends AbstractTableDataFrame<User> {
     @Override
     protected void doReloadData() {
         List<User> users = userService.getAll();
-
         users.forEach(user -> getTableModel().addRow(user, new Object[]{user.getId(), user.getUsername(), user.getPassword(),
                 UserUtils.isStudent(user), UserUtils.isTeacher(user), UserUtils.isAdmin(user)}));
     }

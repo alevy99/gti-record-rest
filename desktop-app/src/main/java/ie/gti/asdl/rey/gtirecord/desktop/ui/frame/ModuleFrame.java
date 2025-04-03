@@ -47,13 +47,13 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
         super(frameManager);
         moduleService = serviceManager.getModuleService();
         initComponents();
-        initForm();
+        initFrame();
     }
 
     @Override
-    protected void initForm() {
+    protected void initFrame() {
         initTable(getTable()); // Init Table Model first
-        super.initForm();
+        super.initFrame();
     }
 
     static void initTable(PaddedJTable table) {
@@ -273,11 +273,11 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        onAddData();
+        onAddLine();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        onAddSaveData();
+        onSaveData();
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed

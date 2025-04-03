@@ -31,7 +31,7 @@ public class TeacherFrame extends AbstractFrame {
         super(frameManager);
 //        this.frameManager = frameManager;
         initComponents();
-        initForm();
+        initFrame();
     }
 
     /**

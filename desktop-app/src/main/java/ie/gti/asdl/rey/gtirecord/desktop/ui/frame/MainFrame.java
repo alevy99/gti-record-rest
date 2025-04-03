@@ -32,7 +32,7 @@ public class MainFrame extends AbstractFrame {
     public MainFrame(FrameManager frameManager, ServiceManager serviceManager) {
         super(frameManager);
         initComponents();
-        initForm();
+        initFrame();
     }
 
     /**
