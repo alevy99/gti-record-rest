@@ -397,10 +397,6 @@ public class UserFrame extends AbstractTableDataFrame<User> {
         }
         PersonFrame personFrame = getFrameManager().getFrame(PERSON);
 
-        // Lazy insert person to user
-//        userService.insertPersonToUser(selectedUser);
-
-//        personFrame.setPersonId(selectedUser.getPersonId());
         personFrame.setUser(selectedUser);
         getFrameManager().showSub(PERSON);
     }
