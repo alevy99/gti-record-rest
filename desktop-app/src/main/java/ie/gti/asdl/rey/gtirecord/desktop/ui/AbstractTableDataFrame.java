@@ -92,31 +92,35 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     }
 
     protected void onDeleteData() {
-        if (!confirmBatchTableAction(this, getTable(), getDataDescriptionColumn(),
+        List<Integer> modelRows = new ArrayList<>();
+        List<T> dataList = new ArrayList<>();
+
+        Arrays.stream(getTable().getSelectedRows())
+                .map(row -> getTable().convertRowIndexToModel(row)).forEach(modelRow -> {
+            T data = getTableModel().getData(modelRow);
+
+            // data has key -> call delete service
+            if (KeyUtil.hasKey(data)) {
+                dataList.add(data);
+                modelRows.add(modelRow);
+            } else {
+                // No key - just delete the corresponding row
+                modelRows.add(modelRow);
+            }
+        });
+
+        if (!dataList.isEmpty() && !confirmBatchTableAction(this, getTable(), getDataDescriptionColumn(),
                 "Confirm delete", "Are you sure want to delete data:")) {
             return;
         }
 
-        List<Integer> modelRows = new ArrayList<>();
+        dataList.stream().map(KeyUtil::getKey).forEach(this::doDeleteData);
 
-        Arrays.stream(getTable().getSelectedRows()).forEach(row -> {
-            T data = getTableModel().getData(getTable().convertRowIndexToModel(row));
-
-            // data has key -> call delete service
-            if (KeyUtil.hasKey(data)) {
-                doDeleteData(KeyUtil.getKey(data));
-                modelRows.add(getTable().convertRowIndexToModel(row));
-            } else {
-                // No key - just delete the corresponding row
-                modelRows.add(getTable().convertRowIndexToModel(row));
-            }
-        });
         // Delete from the model in reverse order
         modelRows.sort(Comparator.reverseOrder());
         modelRows.forEach(modelRow -> getTableModel().removeRow(modelRow));
 
         updateUI();
-//        reloadTableData();
     }
 
     protected DataTableModel<T> getTableModel() {
