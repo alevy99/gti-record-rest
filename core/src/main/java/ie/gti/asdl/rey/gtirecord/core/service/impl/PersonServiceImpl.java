@@ -112,7 +112,7 @@ public class PersonServiceImpl implements PersonService {
                         if (studentService.getByPersonId(personId).isEmpty()) {
                             Student student = new Student();
                             student.setPerson(person);
-                            studentService.insert(new Student());
+                            studentService.insert(student);
                         }
                     }
                     case Role.RoleType.TEACHER -> {

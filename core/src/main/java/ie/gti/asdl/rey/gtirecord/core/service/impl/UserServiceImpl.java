@@ -1,12 +1,9 @@
 package ie.gti.asdl.rey.gtirecord.core.service.impl;
 
-import ie.gti.asdl.rey.gtirecord.core.dao.UserDao;
-import ie.gti.asdl.rey.gtirecord.core.dao.UserRolesDao;
+import ie.gti.asdl.rey.gtirecord.core.dao.*;
 import ie.gti.asdl.rey.gtirecord.core.service.PersonService;
 import ie.gti.asdl.rey.gtirecord.core.service.UserService;
-import ie.gti.asdl.rey.gtirecord.model.entity.Person;
-import ie.gti.asdl.rey.gtirecord.model.entity.Role;
-import ie.gti.asdl.rey.gtirecord.model.entity.User;
+import ie.gti.asdl.rey.gtirecord.model.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +25,21 @@ public class UserServiceImpl implements UserService {
 
     private final UserRolesDao userRolesDao;
 
+    private final PersonDao personDao;
+
     private final PersonService personService;
+    private final StudentDao studentDao;
+    private final TeacherDao teacherDao;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, UserRolesDao userRolesDao, PersonService personService) {
+    public UserServiceImpl(UserDao userDao, UserRolesDao userRolesDao, PersonDao personDao, PersonService personService, StudentDao studentDao, TeacherDao teacherDao) {
         super();
         this.userDao = userDao;
         this.userRolesDao = userRolesDao;
+        this.personDao = personDao;
         this.personService = personService;
+        this.studentDao = studentDao;
+        this.teacherDao = teacherDao;
     }
 
     @Transactional
@@ -59,11 +63,13 @@ public class UserServiceImpl implements UserService {
             List<Role> currentRoles = userDB.getRoles();
             logRoles("Current roles: {}", currentRoles);
 
-            List<Role> rolesToInsert = new ArrayList<>(user.getRoles());
-            rolesToInsert.removeAll(currentRoles);
-            logRoles("Roles to insert: {}", rolesToInsert);
-            userRolesDao.insert(user.getId(), rolesToInsert);
+            insertMissingRoles(user, currentRoles);
 
+            // Delete roles we don't have anymore
+            // We might want to delete associated records in student or teacher tables,
+            // but in that case we would delete some data of the student or teacher
+            // It is better to delete it when working directly with students or teachers,
+            // rather than with a user
             List<Role> rolesToDelete = new ArrayList<>(currentRoles);
             rolesToDelete.removeAll(user.getRoles());
             logRoles("Roles to delete: {}", rolesToDelete);
@@ -71,6 +77,42 @@ public class UserServiceImpl implements UserService {
         }, () -> {
             throw new RuntimeException("User was not found: ID = " + user.getId());
         });
+    }
+
+    private void insertMissingRoles(User user, List<Role> currentRoles) {
+        List<Role> rolesToInsert = new ArrayList<>(user.getRoles());
+        rolesToInsert.removeAll(currentRoles);
+        logRoles("Roles to insert: {}", rolesToInsert);
+        userRolesDao.insert(user.getId(), rolesToInsert);
+
+        // Now if we have a person already, associated with a user
+        // And if it has Student or Teacher roles,
+        // then we have to make sure there is a record in student or teacher tables
+        if (user.getPersonId() != null) {
+            personDao.getById(user.getPersonId()).ifPresent(person -> {
+                rolesToInsert.stream()
+                        .map(Role::getRoleTypeByRole)
+                        .forEach(roleType -> {
+                             switch (roleType) {
+                                 case Role.RoleType.STUDENT -> {
+                                     // Add student record if there is no record in DB
+                                     studentDao.getByPersonId(person.getId()).ifPresentOrElse(student -> {}, () -> {
+                                         Student student = new Student();
+                                         student.setPerson(person);
+                                         studentDao.insert(student);
+                                     });
+                                 }
+                                 case Role.RoleType.TEACHER -> {
+                                     teacherDao.getByPersonId(person.getId()).ifPresentOrElse(teacher -> {}, () -> {
+                                         Teacher teacher = new Teacher();
+                                         teacher.setPerson(person);
+                                         teacherDao.insert(teacher);
+                                     });
+                                 }
+                             }
+                        });
+            });
+        }
     }
 
     private void logRoles(String message, List<Role> roles) {
