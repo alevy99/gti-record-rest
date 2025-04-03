@@ -341,7 +341,7 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
     }
 
     @Override
-    protected JButton getAddSaveBtn() {
+    protected JButton getSaveBtn() {
         return btnSave;
     }
 

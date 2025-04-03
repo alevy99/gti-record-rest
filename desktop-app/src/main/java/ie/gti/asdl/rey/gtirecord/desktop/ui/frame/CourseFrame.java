@@ -796,7 +796,7 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     }
 
     @Override
-    protected JButton getAddSaveBtn() {
+    protected JButton getSaveBtn() {
         return btnSave;
     }
 

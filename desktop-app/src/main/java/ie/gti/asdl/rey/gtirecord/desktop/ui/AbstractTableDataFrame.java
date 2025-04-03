@@ -34,7 +34,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     protected abstract PaddedJTable getTable();
 
     protected abstract JButton getDeleteBtn();
-    protected abstract JButton getAddSaveBtn();
+    protected abstract JButton getSaveBtn();
     protected abstract JTextField getTableFilterField();
     protected abstract int getDataDescriptionColumn();
 
@@ -141,7 +141,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     }
 
     protected void updateUI() {
-        getAddSaveBtn().setEnabled(getTable().getSelectedRowCount() > 0);
+        getSaveBtn().setEnabled(getTable().getSelectedRowCount() > 0);
         getDeleteBtn().setEnabled(getTable().getSelectedRowCount() > 0);
     }
 

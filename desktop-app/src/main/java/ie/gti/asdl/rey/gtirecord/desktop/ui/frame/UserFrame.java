@@ -454,7 +454,7 @@ public class UserFrame extends AbstractTableDataFrame<User> {
     }
 
     @Override
-    protected JButton getAddSaveBtn() {
+    protected JButton getSaveBtn() {
         return btnSave;
     }
 

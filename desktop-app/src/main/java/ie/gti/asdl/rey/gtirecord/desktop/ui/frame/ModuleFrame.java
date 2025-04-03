@@ -329,7 +329,7 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     }
 
     @Override
-    protected JButton getAddSaveBtn() {
+    protected JButton getSaveBtn() {
         return btnSave;
     }
 
