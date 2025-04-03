@@ -23,21 +23,18 @@ public class UserDaoImpl implements UserDao {
     private final static UserRowMapper userMapper = new UserRowMapper();
     public final static RoleRowMapper roleMapper = new RoleRowMapper();
 
-    private final static ResultSetExtractor<User> rsExtractor = new ResultSetExtractor<User>() {
-        @Override
-        public User extractData(ResultSet rs) throws SQLException, DataAccessException {
-            User user = null;
-            int row = 0;
-            while (rs.next()) {
-                if (user == null) {
-                    user = userMapper.mapRow(rs, row);
-                }
-                assert user != null;
-                user.getRoles().add(roleMapper.mapRow(rs, row));
-                row++;
+    private final static ResultSetExtractor<User> rsExtractor = rs -> {
+        User user = null;
+        int row = 0;
+        while (rs.next()) {
+            if (user == null) {
+                user = userMapper.mapRow(rs, row);
             }
-            return user;
+            assert user != null;
+            user.getRoles().add(roleMapper.mapRow(rs, row));
+            row++;
         }
+        return user;
     };
 
     @Autowired
@@ -47,7 +44,8 @@ public class UserDaoImpl implements UserDao {
 
 
     @Override
-    public Optional<User> getById(int id) {
+    public Optional<User> getById(Integer id) {
+        if (id == null) return Optional.empty();
         final String sql =
                 """
                         SELECT u.id, u.person_id, u.username, u.password, r.id as role_id, r.name as role_name
@@ -71,6 +69,19 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public Optional<User> getByPersonId(Integer personId) {
+        if (personId == null) return Optional.empty();
+        final String sql =
+                """
+                        SELECT u.id, u.person_id, u.username, u.password, r.id as role_id, r.name as role_name
+                        FROM user u
+                        LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id\s
+                        LEFT OUTER JOIN role r ON r.id = ur.role_id
+                        WHERE u.person_id=?""";
+        return Optional.ofNullable(jdbcTemplate.query(sql, rsExtractor, personId));
+    }
+
+    @Override
     public List<User> getAll() {
         final String sql =
                 """
@@ -78,26 +89,22 @@ public class UserDaoImpl implements UserDao {
                         FROM user u
                         LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id
                         LEFT OUTER JOIN role r ON r.id = ur.role_id""";
-        return jdbcTemplate.query(sql, new ResultSetExtractor<List<User>>() {
+        return jdbcTemplate.query(sql, (ResultSetExtractor<List<User>>) rs -> {
+            Map<Integer, User> userMap = new HashMap<>();
 
-            @Override
-            public List<User> extractData(@NonNull ResultSet rs) throws SQLException, DataAccessException {
-                Map<Integer, User> userMap = new HashMap<>();
-
-                int row = 0;
-                while (rs.next()) {
-                    int userID = rs.getInt("id");
-                    User user = userMap.get(userID);
-                    if (user == null)  {
-                        user = userMapper.mapRow(rs, row);
-                        userMap.put(userID, user);
-                    }
-                    assert user != null;
-                    user.getRoles().add(roleMapper.mapRow(rs, row));
-                    row++;
+            int row = 0;
+            while (rs.next()) {
+                int userID = rs.getInt("id");
+                User user = userMap.get(userID);
+                if (user == null)  {
+                    user = userMapper.mapRow(rs, row);
+                    userMap.put(userID, user);
                 }
-                return new ArrayList<>(userMap.values());
+                assert user != null;
+                user.getRoles().add(roleMapper.mapRow(rs, row));
+                row++;
             }
+            return new ArrayList<>(userMap.values());
         });
     }
 
@@ -133,12 +140,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void deleteUsersById(List<Integer> ids) {
         final String sql = "DELETE FROM user WHERE user.id = ?";
-        jdbcTemplate.batchUpdate(sql, ids, ids.size(), new ParameterizedPreparedStatementSetter<Integer>() {
-            @Override
-            public void setValues(@NonNull PreparedStatement ps, @NonNull Integer id) throws SQLException {
-                ps.setInt(1, id);
-            }
-        });
+        jdbcTemplate.batchUpdate(sql, ids, ids.size(), (ps, id) -> ps.setInt(1, id));
     }
 
     @Override

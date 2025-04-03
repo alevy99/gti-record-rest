@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface UserDao {
 
-    Optional<User> getById(int id);
+    Optional<User> getById(Integer id);
 
     Optional<User> getByUsername(String username);
 
@@ -24,4 +24,5 @@ public interface UserDao {
     void update(User user);
 
 
+    Optional<User> getByPersonId(Integer personId);
 }

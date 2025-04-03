@@ -398,10 +398,9 @@ public class UserFrame extends AbstractTableDataFrame<User> {
         PersonFrame personFrame = getFrameManager().getFrame(PERSON);
 
         // Lazy insert person to user
-        userService.insertPersonToUser(selectedUser);
+//        userService.insertPersonToUser(selectedUser);
 
         personFrame.setPersonId(selectedUser.getPersonId());
-        personFrame.setUsername(selectedUser.getUsername());
         getFrameManager().showSub(PERSON);
     }
 
@@ -422,12 +421,10 @@ public class UserFrame extends AbstractTableDataFrame<User> {
      */
     public static void main(String args[]) {
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, args);
-                FrameManager manager = context.getBean(FrameManager.class);
-                manager.showSub(USER);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, args);
+            FrameManager manager = context.getBean(FrameManager.class);
+            manager.showSub(USER);
         });
     }
 
@@ -483,10 +480,8 @@ public class UserFrame extends AbstractTableDataFrame<User> {
     protected void doReloadData() {
         List<User> users = userService.getAll();
 
-        users.forEach(user -> {
-            getTableModel().addRow(user, new Object[]{user.getId(), user.getUsername(), user.getPassword(),
-                    UserUtils.isStudent(user), UserUtils.isTeacher(user), UserUtils.isAdmin(user)});
-        });
+        users.forEach(user -> getTableModel().addRow(user, new Object[]{user.getId(), user.getUsername(), user.getPassword(),
+                UserUtils.isStudent(user), UserUtils.isTeacher(user), UserUtils.isAdmin(user)}));
     }
 
     @Override

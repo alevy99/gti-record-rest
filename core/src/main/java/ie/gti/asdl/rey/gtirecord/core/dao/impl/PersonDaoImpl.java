@@ -21,7 +21,7 @@ public class PersonDaoImpl implements PersonDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Person> personRowMapper = new BeanPropertyRowMapper<Person>(Person.class);
+    private final RowMapper<Person> personRowMapper = new BeanPropertyRowMapper<>(Person.class);
 
     @Autowired
     public PersonDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -35,7 +35,9 @@ public class PersonDaoImpl implements PersonDao {
     }
 
     @Override
-    public Optional<Person> getById(int id) {
+    public Optional<Person> getById(Integer id) {
+        if (id == null) return Optional.empty();
+
         final String sql = "SELECT * FROM person WHERE id = ?";
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, personRowMapper, id));
     }

@@ -41,7 +41,9 @@ public class ModuleServiceImpl implements ModuleService {
 
     @Override
     public Optional<Integer> insert(Module module) {
-        return moduleDao.insert(module);
+        var moduleOpt = moduleDao.insert(module);
+        moduleOpt.ifPresent(module::setId);
+        return moduleOpt;
     }
 
     @Override

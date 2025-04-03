@@ -11,7 +11,7 @@ public interface PersonService {
 
     List<Person> getAll();
 
-    Optional<Person> getById(int id);
+    Optional<Person> getById(Integer id);
 
     Optional<Integer> insert(Person person);
 

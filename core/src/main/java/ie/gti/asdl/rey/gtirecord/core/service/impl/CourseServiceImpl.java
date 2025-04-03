@@ -43,7 +43,9 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Optional<Integer> insert(Course course) {
-        return courseDao.insert(course);
+        var courseOpt = courseDao.insert(course);
+        courseOpt.ifPresent(course::setId);
+        return courseOpt;
     }
 
     @Override

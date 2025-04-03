@@ -31,7 +31,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public Optional<Integer> insert(Department department) {
-        return departmentDao.insert(department);
+        var departmentOpt = departmentDao.insert(department);
+        departmentOpt.ifPresent(department::setId);
+        return departmentOpt;
     }
 
     @Override

@@ -41,13 +41,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public Optional<Integer> insert(User user) {
-        Optional<Integer> newId = userDao.insert(user);
-        if (newId.isEmpty()) {
-            return newId;
-        }
-        user.setId(newId.get());
-        userRolesDao.insert(user.getId(), user.getRoles());
-        return newId;
+        Optional<Integer> userIdOpt = userDao.insert(user);
+        userIdOpt.ifPresent(userId -> {
+            user.setId(userIdOpt.get());
+            userRolesDao.insert(user.getId(), user.getRoles());
+        });
+        return userIdOpt;
     }
 
     @Transactional
@@ -121,7 +120,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getById(int id) {
+    public Optional<User> getById(Integer id) {
         return userDao.getById(id);
+    }
+
+    @Override
+    public Optional<User> getByPersonId(Integer personId) {
+        return userDao.getByPersonId(personId);
     }
 }

@@ -30,7 +30,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Optional<Person> getById(int id) {
+    public Optional<Person> getById(Integer id) {
         Optional<Person> person = personDao.getById(id);
         person.ifPresent( p -> {
             Optional<Address> address = addressDao.getByPersonId(id);
@@ -42,14 +42,15 @@ public class PersonServiceImpl implements PersonService {
     @Transactional
     @Override
     public Optional<Integer> insert(Person person) {
-        Optional<Integer> personId = personDao.insert(person);
-        personId.ifPresent(persId -> {
+        Optional<Integer> personIdOpt = personDao.insert(person);
+        personIdOpt.ifPresent(personId -> {
+            person.setId(personId);
             if (person.getAddress() != null) {
-                person.getAddress().setPersonId(persId);
+                person.getAddress().setPersonId(personId);
                 addressDao.insert(person.getAddress());
             }
         });
-        return personId;
+        return personIdOpt;
     }
 
     @Transactional
@@ -76,6 +77,7 @@ public class PersonServiceImpl implements PersonService {
             update(person);
             result = Optional.of(person.getId());
         }
+
         return result;
     }
 
