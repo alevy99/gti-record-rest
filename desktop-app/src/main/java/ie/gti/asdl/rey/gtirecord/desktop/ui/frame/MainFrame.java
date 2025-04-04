@@ -62,6 +62,8 @@ public class MainFrame extends AbstractFrame {
         btnCourse = new javax.swing.JButton();
         btnLogOut = new javax.swing.JButton();
 
+        setResizable(false);
+
         jButton10.setText("USER ST");
 
         jButton11.setText("CLASS ST");

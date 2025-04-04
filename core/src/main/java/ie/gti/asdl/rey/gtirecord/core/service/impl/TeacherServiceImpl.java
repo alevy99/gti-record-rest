@@ -2,13 +2,16 @@ package ie.gti.asdl.rey.gtirecord.core.service.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.*;
 import ie.gti.asdl.rey.gtirecord.core.service.TeacherService;
+import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import ie.gti.asdl.rey.gtirecord.model.entity.Role;
 import ie.gti.asdl.rey.gtirecord.model.entity.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Andrei Levchenko
@@ -32,13 +35,18 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    public List<Teacher> getAll() {
+        return teacherDao.getAll();
+    }
+
+    @Override
     public Optional<Teacher> getByPersonId(Integer personId) {
         return teacherDao.getByPersonId(personId);
     }
 
     @Override
-    public void insert(Teacher teacher) {
-        teacherDao.insert(teacher);
+    public Optional<Integer> insert(Teacher teacher) {
+        return teacherDao.insert(teacher);
     }
 
     @Override

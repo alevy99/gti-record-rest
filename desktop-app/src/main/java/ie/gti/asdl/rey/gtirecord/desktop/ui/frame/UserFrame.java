@@ -369,7 +369,6 @@ public class UserFrame extends AbstractTableDataFrame<User> {
         getFrameManager().showParent();
     }//GEN-LAST:event_btnCloseActionPerformed
 
-
     private void btnPersonInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPersonInfoActionPerformed
         onShowPersonInfo();
     }//GEN-LAST:event_btnPersonInfoActionPerformed

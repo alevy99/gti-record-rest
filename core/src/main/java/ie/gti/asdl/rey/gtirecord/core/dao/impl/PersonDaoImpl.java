@@ -1,6 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.PersonDao;
+import ie.gti.asdl.rey.gtirecord.model.annotation.DescriptionUtil;
 import ie.gti.asdl.rey.gtirecord.model.entity.Department;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +48,8 @@ public class PersonDaoImpl implements PersonDao {
     public Optional<Integer> insert(Person person) {
         final String sql = """
                 INSERT INTO person
-                (first_name, last_name, date_of_birth, phone_num, email, ppsn)
-                VALUES (?,?,?,?,?,?);
+                (first_name, last_name, gender, date_of_birth, phone_num, email, ppsn)
+                VALUES (?,?,?,?,?,?,?);
                 """;
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -59,14 +60,15 @@ public class PersonDaoImpl implements PersonDao {
                 PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1, person.getFirstName());
                 ps.setString(2, person.getLastName());
+                ps.setString(3, person.getGender());
                 if (person.getDateOfBirth() != null) {
-                    ps.setDate(3, Date.valueOf(person.getDateOfBirth()));
+                    ps.setDate(4, Date.valueOf(person.getDateOfBirth()));
                 } else {
-                    ps.setNull(3, Types.DATE);
+                    ps.setNull(4, Types.DATE);
                 }
-                ps.setString(4, person.getPhoneNum());
-                ps.setString(5, person.getEmail());
-                ps.setString(6, person.getPpsn());
+                ps.setString(5, person.getPhoneNum());
+                ps.setString(6, person.getEmail());
+                ps.setString(7, person.getPpsn());
                 return ps;
             }
         }, keyHolder);
@@ -82,7 +84,7 @@ public class PersonDaoImpl implements PersonDao {
     public void update(Person person) {
         final String sql = """
                 UPDATE person
-                SET first_name = ?, last_name = ?, date_of_birth = ?, phone_num = ?, email = ?, ppsn = ?
+                SET first_name = ?, last_name = ?, gender = ?, date_of_birth = ?, phone_num = ?, email = ?, ppsn = ?
                 WHERE id = ?;
                 """;
         java.sql.Date sqlDate = person.getDateOfBirth() != null ? Date.valueOf(person.getDateOfBirth()) : null;
@@ -91,7 +93,7 @@ public class PersonDaoImpl implements PersonDao {
 //        } else {
 //            ps.setNull(3, Types.DATE);
 //        }
-        jdbcTemplate.update(sql, person.getFirstName(), person.getLastName(), sqlDate,
+        jdbcTemplate.update(sql, person.getFirstName(), person.getLastName(), person.getGender(), sqlDate,
                 person.getPhoneNum(), person.getEmail(), person.getPpsn(), person.getId());
     }
 

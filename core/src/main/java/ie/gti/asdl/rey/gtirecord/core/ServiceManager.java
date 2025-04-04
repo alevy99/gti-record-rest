@@ -1,9 +1,11 @@
 package ie.gti.asdl.rey.gtirecord.core;
 
 import ie.gti.asdl.rey.gtirecord.core.service.*;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+@Getter
 @Component
 public class ServiceManager {
 
@@ -19,38 +21,25 @@ public class ServiceManager {
 
     private final CourseModuleService courseModuleService;
 
+    private final TeacherService teacherService;
+
+    private final StudentService studentService;
+
+    private final TeacherModuleService teacherModuleService;
+
     @Autowired
     public ServiceManager(UserService userService, PersonService personService, DepartmentService departmentService,
-                          ModuleService moduleService, CourseService courseService, CourseModuleService courseModuleService) {
+                          ModuleService moduleService, CourseService courseService, CourseModuleService courseModuleService,
+                          TeacherService teacherService, StudentService studentService, TeacherModuleService teacherModuleService) {
         this.userService = userService;
         this.personService = personService;
         this.departmentService = departmentService;
         this.moduleService = moduleService;
         this.courseService = courseService;
         this.courseModuleService = courseModuleService;
+        this.teacherService = teacherService;
+        this.studentService = studentService;
+        this.teacherModuleService = teacherModuleService;
     }
 
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public PersonService getPersonService() {
-        return personService;
-    }
-
-    public DepartmentService getDepartmentService() {
-        return departmentService;
-    }
-
-    public ModuleService getModuleService() {
-        return moduleService;
-    }
-
-    public CourseService getCourseService() {
-        return courseService;
-    }
-
-    public CourseModuleService getCourseModuleService() {
-        return courseModuleService;
-    }
 }

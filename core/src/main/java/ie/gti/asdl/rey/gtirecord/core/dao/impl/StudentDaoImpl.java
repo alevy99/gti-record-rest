@@ -1,21 +1,14 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.StudentDao;
-import ie.gti.asdl.rey.gtirecord.core.dao.mapper.UserRowMapper;
-import ie.gti.asdl.rey.gtirecord.model.entity.Department;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import ie.gti.asdl.rey.gtirecord.model.entity.Student;
-import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -59,14 +52,14 @@ public class StudentDaoImpl implements StudentDao {
     public void insert(Student student) {
         if ((student == null) || (student.getPerson() == null) || (student.getPerson().getId() == null)) return;
         final String sql = "INSERT INTO student(person_id, certificates) VALUES (?, ?)";
-        jdbcTemplate.update(sql, student.getPerson().getId(), student.getCertificates());
+        jdbcTemplate.update(sql, student.getPerson().getId(), student.getEducation());
     }
 
     @Override
     public void update(Student student) {
         if ((student == null) || (student.getPerson() == null) || (student.getPerson().getId() == null)) return;
         final String sql = "UPDATE student SET certificates = ? WHERE person_id = ?";
-        jdbcTemplate.update(sql, student.getCertificates(), student.getPerson().getId());
+        jdbcTemplate.update(sql, student.getEducation(), student.getPerson().getId());
     }
 
     @Override

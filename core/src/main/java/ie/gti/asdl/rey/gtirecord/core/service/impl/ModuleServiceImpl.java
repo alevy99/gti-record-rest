@@ -25,13 +25,20 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
-    public Optional<Module> getById(int id) {
+    public Optional<Module> getById(Integer id) {
+        if (id == null) return Optional.empty();
         return moduleDao.getById(id);
     }
 
     @Override
-    public List<Module> getByCourseId(int courseId) {
+    public List<Module> getByCourseId(Integer courseId) {
+        if (courseId == null) return List.of();
         return moduleDao.getByCourseId(courseId);
+    }
+
+    @Override
+    public List<Module> getByTeacherPersonId(Integer teacherPersonId) {
+        return moduleDao.getByTeacherPersonId(teacherPersonId);
     }
 
     @Override

@@ -19,25 +19,29 @@ public class CourseModuleDaoImpl implements CourseModuleDao {
     }
 
     @Override
-    public void insert(int courseId, int moduleId) {
+    public void insert(Integer courseId, Integer moduleId) {
+        if (courseId == null || moduleId == null) return;
         final String sql = "INSERT INTO course_has_module (course_id, module_id) VALUES (?, ?)";
         jdbcTemplate.update(sql, courseId, moduleId);
     }
 
     @Override
-    public void delete(int courseId, int moduleId) {
+    public void delete(Integer courseId, Integer moduleId) {
+        if (courseId == null || moduleId == null) return;
         final String sql = "DELETE FROM course_has_module WHERE course_id = ? and module_id = ?";
         jdbcTemplate.update(sql, courseId, moduleId);
     }
 
     @Override
-    public void deleteByCourseId(int courseId) {
+    public void deleteByCourseId(Integer courseId) {
+        if (courseId == null) return;
         final String sql = "DELETE FROM course_has_module WHERE course_id = ?";
         jdbcTemplate.update(sql, courseId);
     }
 
     @Override
-    public void deleteByModuleId(int moduleId) {
+    public void deleteByModuleId(Integer moduleId) {
+        if (moduleId == null) return;
         final String sql = "DELETE FROM course_has_module WHERE module_id = ?";
         jdbcTemplate.update(sql, moduleId);
     }

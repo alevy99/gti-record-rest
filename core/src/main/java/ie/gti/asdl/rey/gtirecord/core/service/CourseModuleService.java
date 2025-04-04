@@ -8,12 +8,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CourseModuleService {
 
-    void insert(int courseId, int moduleId);
+    void insert(Integer courseId, Integer moduleId);
 
-    void delete(int courseId, int moduleId);
+    void delete(Integer courseId, Integer moduleId);
 
-    void deleteByCourseId(int courseId);
+    void deleteByCourseId(Integer courseId);
 
-    void deleteByModuleId(int moduleId);
+    void deleteByModuleId(Integer moduleId);
 
 }

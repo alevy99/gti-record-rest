@@ -7,5 +7,6 @@ public enum ShortDescriptionFormat {
     DEFAULT,      // As is (normal field)
     FIRST_LETTER, // First Capital letter and a dot
     UPPERCASE,    // Only UPPERCASE
-    LOWERCASE     // Only lowercase
+    LOWERCASE,    // Only lowercase
+    NAME_FORMAT;  // As a 'Name'
 }

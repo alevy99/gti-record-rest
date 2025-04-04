@@ -7,6 +7,10 @@ public class Student {
     
     private Person person;
 
-    private String certificates;
+    private String education;
+
+    private Boolean onErasmus;
+
+    private String emergencyContacts;
 
 }

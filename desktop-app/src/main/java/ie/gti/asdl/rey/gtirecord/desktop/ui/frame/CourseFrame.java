@@ -35,7 +35,7 @@ import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeList
  */
 public class CourseFrame extends AbstractTableDataFrame<Course> {
 
-    enum COLUMNS {
+    private enum COLUMNS {
         ID(0), NAME(1), CODE(2),
         DEPARTMENT(3), TYPE(4), QQI_LEVEL(5);
 

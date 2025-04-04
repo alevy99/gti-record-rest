@@ -21,5 +21,5 @@ public interface ModuleDao {
 
     void delete(int id);
 
-
+    List<Module> getByTeacherPersonId(Integer teacherPersonId);
 }

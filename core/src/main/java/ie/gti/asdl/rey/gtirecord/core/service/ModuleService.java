@@ -9,9 +9,11 @@ import java.util.Optional;
 @Service
 public interface ModuleService {
 
-    Optional<Module> getById(int id);
+    Optional<Module> getById(Integer id);
 
-    List<Module> getByCourseId(int courseId);
+    List<Module> getByCourseId(Integer courseId);
+
+    List<Module> getByTeacherPersonId(Integer teacherPersonId);
 
     List<Module> getAll();
 

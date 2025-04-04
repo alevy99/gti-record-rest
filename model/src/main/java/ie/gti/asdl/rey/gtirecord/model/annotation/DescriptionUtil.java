@@ -38,13 +38,14 @@ public class DescriptionUtil {
                 .collect(Collectors.joining(" "));
     }
 
-    // Применяем форматирование в зависимости от типа
+    // Apply format base on the format type
     private static String applyFormat(String value, ShortDescriptionFormat format) {
         return switch (format) {
-            case FIRST_LETTER -> value.charAt(0) + ".";
+            case FIRST_LETTER -> value.toUpperCase().charAt(0) + ".";
             case UPPERCASE -> value.toUpperCase();
             case LOWERCASE -> value.toLowerCase();
-            default -> value; // DEFAULT — как есть
+            case NAME_FORMAT -> value.toUpperCase().charAt(0) + value.substring(1);
+            default -> value; // DEFAULT — as is
         };
     }
 }

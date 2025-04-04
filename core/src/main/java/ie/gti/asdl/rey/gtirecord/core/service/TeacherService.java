@@ -3,6 +3,7 @@ package ie.gti.asdl.rey.gtirecord.core.service;
 import ie.gti.asdl.rey.gtirecord.model.entity.Teacher;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -11,9 +12,11 @@ import java.util.Optional;
 @Service
 public interface TeacherService {
 
+    List<Teacher> getAll();
+
     Optional<Teacher> getByPersonId(Integer personId);
 
-    void insert(Teacher teacher);
+    Optional<Integer> insert(Teacher teacher);
 
     void update(Teacher teacher);
 
