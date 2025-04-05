@@ -187,11 +187,18 @@ public class UserFrame extends AbstractTableDataFrame<User> {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, true, true, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         tblUsers.setFillsViewportHeight(true);
@@ -395,12 +402,12 @@ public class UserFrame extends AbstractTableDataFrame<User> {
             return;
         }
         PersonFrame personFrame = getFrameManager().getFrame(PERSON);
-
         personFrame.setUser(selectedUser);
         getFrameManager().showSub(PERSON);
     }
 
     private void fillUserRoles(int row, User user) {
+        user.getRoles().clear();
         if ((Boolean) tblUsers.getValueAt(row, USER_TBL_COL.IS_STUDENT.index)) {
             user.getRoles().add(Role.RoleType.STUDENT.asRole());
         }

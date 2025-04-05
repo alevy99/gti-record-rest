@@ -103,7 +103,8 @@ public class CourseDaoImpl implements CourseDao {
         if (keyHolder.getKey() == null) {
             return Optional.empty();
         } else {
-            return Optional.of(keyHolder.getKey().intValue());
+            course.setId(keyHolder.getKey().intValue());
+            return Optional.of(course.getId());
         }
     }
 

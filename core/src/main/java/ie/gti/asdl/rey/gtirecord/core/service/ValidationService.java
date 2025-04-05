@@ -7,7 +7,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface ValidationService {
-
-    boolean isEmailValid(String email);
-
+    <T> boolean validate(T object, Class<?>... groups);
 }

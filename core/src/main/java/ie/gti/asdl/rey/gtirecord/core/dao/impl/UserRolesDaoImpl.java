@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class UserRolesDaoImpl implements UserRolesDao {
@@ -22,7 +23,7 @@ public class UserRolesDaoImpl implements UserRolesDao {
     }
 
     @Override
-    public void insert(int userId, List<Role> roles) {
+    public void insert(int userId, Set<Role> roles) {
         String sql = "INSERT INTO users_roles (user_id, role_id) VALUES (?, ?)";
 
         jdbcTemplate.batchUpdate(sql, roles, roles.size(), new ParameterizedPreparedStatementSetter<Role>() {
@@ -35,7 +36,7 @@ public class UserRolesDaoImpl implements UserRolesDao {
     }
 
     @Override
-    public void deleteByUserId(int userId, List<Role> roles) {
+    public void deleteByUserId(int userId, Set<Role> roles) {
         final String sql = "DELETE FROM users_roles WHERE user_id = ? and role_id = ?";
         jdbcTemplate.batchUpdate(sql, roles, roles.size(), new ParameterizedPreparedStatementSetter<Role>() {
             @Override

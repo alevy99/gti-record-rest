@@ -1,9 +1,14 @@
 package ie.gti.asdl.rey.gtirecord.core.service.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.service.ValidationService;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.regex.Pattern;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Andrei Levchenko
@@ -11,11 +16,24 @@ import java.util.regex.Pattern;
 @Service
 public class ValidationServiceImpl implements ValidationService {
 
-    private static final Pattern EMAIL_PATTERN =
-            Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+    private static final Logger logger = LoggerFactory.getLogger(ValidationServiceImpl.class);
+
+    private final Validator validator;
+
+    public ValidationServiceImpl(Validator validator) {
+        this.validator = validator;
+    }
 
     @Override
-    public boolean isEmailValid(String email) {
-        return email != null && EMAIL_PATTERN.matcher(email).matches();
+    public <T> boolean validate(T object, Class<?>... groups) {
+        Set<ConstraintViolation<T>> violations = validator.validate(object, groups);
+        boolean valid = violations.isEmpty();
+        if (!valid && logger.isDebugEnabled()) {
+            String message = violations.stream()
+                    .map(v -> v.getPropertyPath() + ": " + v.getMessage())
+                    .collect(Collectors.joining("; "));
+            logger.debug("Validation failed: {}", message);
+        }
+        return valid;
     }
 }

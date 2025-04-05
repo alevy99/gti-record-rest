@@ -64,7 +64,8 @@ public class DepartmentDaoImpl implements DepartmentDao {
         if (keyHolder.getKey() == null) {
             return Optional.empty();
         } else {
-            return Optional.of(keyHolder.getKey().intValue());
+            department.setId(keyHolder.getKey().intValue());
+            return Optional.of(department.getId());
         }
     }
 

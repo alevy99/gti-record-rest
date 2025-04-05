@@ -17,6 +17,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +43,7 @@ public class ModuleDaoImpl implements ModuleDao {
 
     @Override
     public List<Module> getByCourseId(Integer courseId) {
-        if (courseId == null) return List.of();
+        if (courseId == null) return new ArrayList<>();
         final String sql = """
                 SELECT m.id,  m.name, m.code
                 FROM module m, course_has_module cm
@@ -53,7 +54,7 @@ public class ModuleDaoImpl implements ModuleDao {
 
     @Override
     public List<Module> getByTeacherPersonId(Integer teacherPersonId) {
-        if (teacherPersonId == null) return List.of();
+        if (teacherPersonId == null) return new ArrayList<>();
         final String sql = """
                 SELECT m.id,  m.name, m.code
                 FROM module m, teacher_has_module tm
@@ -87,7 +88,8 @@ public class ModuleDaoImpl implements ModuleDao {
         if (keyHolder.getKey() == null) {
             return Optional.empty();
         } else {
-            return Optional.of(keyHolder.getKey().intValue());
+            module.setId(keyHolder.getKey().intValue());
+            return Optional.of(module.getId());
         }
     }
 

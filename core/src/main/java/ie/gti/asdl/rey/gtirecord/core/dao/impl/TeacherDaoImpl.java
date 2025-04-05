@@ -84,26 +84,29 @@ public class TeacherDaoImpl implements TeacherDao {
     public Optional<Integer> insert(Teacher teacher) {
         if ((teacher == null) || (teacher.getPerson() == null) || (teacher.getPerson().getId() == null)) return Optional.empty();
         final String sql = "INSERT INTO teacher(person_id, position, degree, work_experience) VALUES (?, ?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(new PreparedStatementCreator() {
-            @Override
-            @NonNull
-            public PreparedStatement createPreparedStatement(@NonNull Connection connection) throws SQLException {
-                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ps.setInt(1, teacher.getPerson().getId());
-                ps.setString(2, teacher.getPosition());
-                ps.setString(3, teacher.getDegree());
-                ps.setInt(4, teacher.getWorkExperience());
-                return ps;
-            }
-        }, keyHolder);
+        jdbcTemplate.update(sql, teacher.getPerson().getId(), teacher.getPosition(), teacher.getDegree(), teacher.getWorkExperience());
 
-        if (keyHolder.getKey() == null) {
-            return Optional.empty();
-        } else {
-            return Optional.of(keyHolder.getKey().intValue());
-        }
+        return Optional.of(teacher.getPerson().getId());
+
+//        jdbcTemplate.update(new PreparedStatementCreator() {
+//            @Override
+//            @NonNull
+//            public PreparedStatement createPreparedStatement(@NonNull Connection connection) throws SQLException {
+//                PreparedStatement ps = connection.prepareStatement(sql);
+//                ps.setInt(1, teacher.getPerson().getId());
+//                ps.setString(2, teacher.getPosition());
+//                ps.setString(3, teacher.getDegree());
+//                if (teacher.getWorkExperience() == null) {
+//                    ps.setNull(4, Types.INTEGER);
+//                } else {
+//                    ps.setInt(4, teacher.getWorkExperience());
+//                }
+//                return ps;
+//            }
+//        });
+
+//        return Optional.of(teacher.getPerson().getId());
 
 
 //        final String sql = "INSERT INTO teacher(person_id, position, degree, work_experience) VALUES (?, ?, ?, ?)";

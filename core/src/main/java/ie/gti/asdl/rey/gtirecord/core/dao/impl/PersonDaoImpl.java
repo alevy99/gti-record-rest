@@ -76,7 +76,8 @@ public class PersonDaoImpl implements PersonDao {
         if (keyHolder.getKey() == null) {
             return Optional.empty();
         } else {
-            return Optional.of(keyHolder.getKey().intValue());
+            person.setId(keyHolder.getKey().intValue());
+            return Optional.of(person.getId());
         }
     }
 

@@ -5,42 +5,37 @@
 package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 
 import ie.gti.asdl.rey.gtirecord.core.ServiceManager;
-import ie.gti.asdl.rey.gtirecord.core.service.ModuleService;
-import ie.gti.asdl.rey.gtirecord.core.service.TeacherModuleService;
-import ie.gti.asdl.rey.gtirecord.core.service.TeacherService;
+import ie.gti.asdl.rey.gtirecord.core.service.*;
 import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractTableDataFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataListCellRendered;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataTableModel;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedDataCellRenderer;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedJTable;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.component.*;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils;
 import ie.gti.asdl.rey.gtirecord.model.annotation.DescriptionUtil;
+import ie.gti.asdl.rey.gtirecord.model.entity.*;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
-import ie.gti.asdl.rey.gtirecord.model.entity.Teacher;
+import ie.gti.asdl.rey.gtirecord.model.util.Pair;
 import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.util.*;
+import java.util.List;
 
-import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.MODULE;
-import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.TEACHER;
+import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.*;
 import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeListener;
 
 /**
  *
  * @author Andrei
  */
-//@Component
-public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
+public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
 
     private enum COLUMNS {
-        PERSON_ID(0), FULLNAME(1), POSITION(2),
-        DEGREE(3),
-        WORK_EXPERIENCE(4);
+        PERSON_ID(0), FIRST_NAME(1), LAST_NAME(2),
+        USERNAME(3), PASSWORD(4),
+        POSITION(5), DEGREE(6), WORK_EXPERIENCE(7);
 //        CONTRACT_START_DATE(4), CONTRACT_END_DATE(5);
 
         final int index;
@@ -53,12 +48,17 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
 
     private final TeacherService teacherService;
 
+    private final UserService userService;
+
     private final TeacherModuleService teacherModuleService;
 
-    private Teacher selectedTeacher;
+    private Pair<Teacher, User> selectedPair;
+//    private Teacher selectedTeacher;
+//
+//    private User selectedTeacherUser;
 
-    List<Module> allModules;
-    List<Module> teacherModules;
+    private List<Module> allModules;
+    private List<Module> teacherModules;
 
     private Integer highlightedRow;
 
@@ -67,9 +67,11 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
      */
     public TeacherFrame(FrameManager frameManager, ServiceManager serviceManager) {
         super(frameManager);
-        moduleService = serviceManager.getModuleService();
         teacherService = serviceManager.getTeacherService();
+//        departmentService = serviceManager.getDepartmentService();
+        moduleService = serviceManager.getModuleService();
         teacherModuleService = serviceManager.getTeacherModuleService();
+        userService = serviceManager.getUserService();
         initComponents();
         initFrame();
     }
@@ -80,60 +82,49 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
         initTableModel();
         super.initFrame();
 
-        tblTeachers.setHighlightedRowSupplier(() -> highlightedRow);
-
-        setMinimumSize(new java.awt.Dimension(1150, 850));
-        jPanel1.setPreferredSize(new java.awt.Dimension(1120, 820));
-
-        DataListCellRendered listCellRendered = new DataListCellRendered();
-        PaddedDataCellRenderer dataCellRenderer = new PaddedDataCellRenderer(() -> highlightedRow);
-
-        // Set Department custom JComboBox Renderer and Editor
-//        TableColumn departmentColumn = getTable().getColumnModel().getColumn(CourseFrame.COLUMNS.DEPARTMENT.index);
-//        departmentCombo.setRenderer(listCellRendered);
-//        departmentColumn.setCellEditor(new DefaultCellEditor(departmentCombo));
-//        departmentColumn.setCellRenderer(dataCellRenderer);
-//
-//        // Set Course Type custom JComboBox Renderer and Editor
-//        TableColumn courseTypeColumn = getTable().getColumnModel().getColumn(CourseFrame.COLUMNS.TYPE.index);
-//        courseTypeCombo.setRenderer(listCellRendered);
-//        courseTypeColumn.setCellEditor(new DefaultCellEditor(courseTypeCombo));
-//        courseTypeColumn.setCellRenderer(dataCellRenderer);
-//
-//        // Set QQI level custom JComboBox Renderer and Editor
-//        TableColumn qqiLevelColumn = getTable().getColumnModel().getColumn(CourseFrame.COLUMNS.QQI_LEVEL.index);
-//        qqiLevelCombo.setRenderer(listCellRendered);
-//        qqiLevelColumn.setCellEditor(new DefaultCellEditor(qqiLevelCombo));
-//        qqiLevelColumn.setCellRenderer(dataCellRenderer);
+        tblTeacher.setHighlightedRowSupplier(() -> highlightedRow);
 
         TableColumnModel columnModel = getTable().getColumnModel();
-//        columnModel.getColumn(COLUMNS.PERSON_ID.index)      .setMaxWidth(60);
-//        columnModel.getColumn(COLUMNS.FULLNAME.index)       .setMinWidth(160);
-//        columnModel.getColumn(COLUMNS.POSITION.index)       .setMinWidth(100);
-//        columnModel.getColumn(COLUMNS.DEGREE.index)         .setMinWidth(100);
-//        columnModel.getColumn(COLUMNS.WORK_EXPERIENCE.index).setMaxWidth(50);
-//        columnModel.getColumn(COLUMNS.CONTRACT_END_DATE.index)  .setMinWidth(80);
+        columnModel.getColumn(COLUMNS.PERSON_ID.index)      .setMaxWidth(60);
+        columnModel.getColumn(COLUMNS.FIRST_NAME.index)     .setMinWidth(80);
+        columnModel.getColumn(COLUMNS.LAST_NAME.index)      .setMinWidth(80);
+        columnModel.getColumn(COLUMNS.USERNAME.index)       .setMinWidth(80);
+        columnModel.getColumn(COLUMNS.PASSWORD.index)       .setMinWidth(80);
+        columnModel.getColumn(COLUMNS.POSITION.index)       .setMaxWidth(80);
+        columnModel.getColumn(COLUMNS.DEGREE.index)         .setMinWidth(80);
+        columnModel.getColumn(COLUMNS.WORK_EXPERIENCE.index).setMaxWidth(60);
+//        columnModel.getColumn(COLUMNS.QQI_LEVEL.index)      .setMinWidth(80);
 
         // Init module table
-        tblTeachers.getSelectionModel().addListSelectionListener(createSafeListener(event -> onTeacherSelect()));
+        tblTeacher.getSelectionModel().addListSelectionListener(createSafeListener(event -> onTeacherSelect()));
 
         initModuleTable();
     }
 
+    @Override
+    protected void updateUI() {
+        super.updateUI();
+        btnPersonInfo.setEnabled(
+                (selectedPair != null)
+                && (selectedPair.getValue1() != null)
+                && (selectedPair.getValue1().getPerson() != null)
+                && (selectedPair.getValue1().getPerson().getId() != null));
+    }
+
     private void onTeacherSelect() {
-        reloadTeachersModules();
+        reloadTeacherModules();
         updateModulesTableUI();
     }
 
-    private void reloadTeachersModules() {
+    private void reloadTeacherModules() {
         tblTeacherModules.clear();
 
-        // Show modules for the first course
-        Arrays.stream(tblTeachers.getSelectedRows()).findFirst().ifPresentOrElse(row -> {
+        // Show modules for the first teacher
+        Arrays.stream(tblTeacher.getSelectedRows()).findFirst().ifPresentOrElse(row -> {
             highlightedRow = row; // Set new highlighted row
-            tblTeachers.repaint(); // Repaint after we changed highlightedRow
-            selectedTeacher = getTableModel().getData(tblTeachers.convertRowIndexToModel(row));
-            teacherModules = moduleService.getByTeacherPersonId(selectedTeacher.getPerson().getId());
+            tblTeacher.repaint(); // Repaint after we changed highlightedRow
+            selectedPair = getTableModel().getData(tblTeacher.convertRowIndexToModel(row));
+            teacherModules = moduleService.getByTeacherPersonId(selectedPair.getValue1().getPerson().getId());
         }, () -> {
             if (teacherModules != null) {
                 teacherModules.clear();
@@ -148,19 +139,19 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
 
     private void initTableModel() {
         if (! (getTable().getModel() instanceof DataTableModel)) {
-            getTable().setModel(new DataTableModel<Teacher>(
+            getTable().setModel(new DataTableModel<Pair<Teacher, User>>(
                     new Object [][] {
-                            {null, null, null, null, null, null}
+
                     },
                     new String [] {
-                            "Person ID", "Full name", "Position", "Degree", "Work Experience (years)"
+                            "Person ID", "First name", "Last name", "Username", "Password", "Position", "Degree", "Work Experience"
                     }
             ) {
                 Class[] types = new Class [] {
-                        java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class,
+                        java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
                 };
                 boolean[] canEdit = new boolean [] {
-                        false, false, true, true, true
+                        false, true, true, true, true, true, true, true
                 };
 
                 public Class getColumnClass(int columnIndex) {
@@ -191,29 +182,29 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
     }
 
     private void updateModulesTableUI() {
-        lblCourseModulesTitle.setText(
-                (selectedTeacher == null) ? "Course Modules" : DescriptionUtil.getShortDescription(selectedTeacher.getPerson()) + " Modules");
+        lblTeacherModulesTitle.setText((selectedPair == null) || (selectedPair.getValue1() == null) ? "Teacher Modules" :
+                DescriptionUtil.getShortDescription(selectedPair.getValue1().getPerson()) + " Modules");
 
         tblTeacherModules.clear();
         tblAllModules.clear();
 
         if (teacherModules != null) {
             teacherModules.forEach(module -> {
-                getCourseModulesTableModel().addRow(module, new Object[] {module.getId(), module.getName(), module.getCode()});
+                getTeacherModulesTableModel().addRow(module, new Object[] {module.getId(), module.getName(), module.getCode()});
             });
         }
         if (allModules != null) {
-            List<Module> allExceptCourseModules = new ArrayList<>(allModules);
+            List<Module> allExceptTeacherModules = new ArrayList<>(allModules);
             if (teacherModules != null) {
-                allExceptCourseModules.removeAll(teacherModules);
+                allExceptTeacherModules.removeAll(teacherModules);
             }
-            allExceptCourseModules.forEach(module -> {
+            allExceptTeacherModules.forEach(module -> {
                 getAllModulesTableModel().addRow(module, new Object[] {module.getId(), module.getName(), module.getCode()});
             });
         }
     }
 
-    protected DataTableModel<Module> getCourseModulesTableModel() {
+    protected DataTableModel<Module> getTeacherModulesTableModel() {
         return (DataTableModel<Module>) tblTeacherModules.getModel();
     }
 
@@ -225,7 +216,7 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
     protected void onFrameShown() {
         super.onFrameShown();
         reloadAllModules();
-        reloadTeachersModules();
+        reloadTeacherModules();
         updateModulesTableUI();
     }
 
@@ -239,12 +230,12 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblTeachers = new PaddedJTable();
+        tblTeacher = new PaddedJTable();
         jTitle = new javax.swing.JLabel();
         pnlTeacherModules = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblTeacherModules = new PaddedJTable();
-        lblCourseModulesTitle = new javax.swing.JLabel();
+        lblTeacherModulesTitle = new javax.swing.JLabel();
         pnlAddRemoveModules = new javax.swing.JPanel();
         btnRemoveModuleFromTeacher = new javax.swing.JButton();
         btnAddModuleToTeacher = new javax.swing.JButton();
@@ -252,6 +243,7 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
         jScrollPane3 = new javax.swing.JScrollPane();
         tblAllModules = new PaddedJTable();
         jLabel4 = new javax.swing.JLabel();
+        btnOpenModules = new javax.swing.JButton();
         pnlControls = new javax.swing.JPanel();
         btnAdd = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
@@ -259,34 +251,33 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
         btnReload = new javax.swing.JButton();
         jUpdatePanel = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        tfCourseFilter = new javax.swing.JTextField();
+        tfTeacherFilter = new javax.swing.JTextField();
         jUpdatePanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         tfModuleFilter = new javax.swing.JTextField();
-        btnOpenModules = new javax.swing.JButton();
-        btnClose1 = new javax.swing.JButton();
+        btnClose = new javax.swing.JButton();
+        btnPersonInfo = new javax.swing.JButton();
 
-        setPreferredSize(new java.awt.Dimension(1057, 824));
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
         jPanel1.setPreferredSize(new java.awt.Dimension(1033, 755));
 
-        tblTeachers.setAutoCreateRowSorter(true);
-        tblTeachers.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        tblTeachers.setModel(new javax.swing.table.DefaultTableModel(
+        tblTeacher.setAutoCreateRowSorter(true);
+        tblTeacher.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        tblTeacher.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
-                "Person ID", "Full name", "Position", "Degree", "Work Experience"
+                "Person ID", "First name", "Last name", "Username", "Password", "Position", "Degree", "Work Experience"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, true, true, true
+                false, true, true, true, true, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -297,7 +288,7 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tblTeachers);
+        jScrollPane1.setViewportView(tblTeacher);
 
         jTitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jTitle.setForeground(new java.awt.Color(0, 51, 204));
@@ -309,10 +300,7 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
         tblTeacherModules.setAutoCreateRowSorter(true);
         tblTeacherModules.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String [] {
                 "ID", "Module name", "Module code"
@@ -328,10 +316,10 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
         });
         jScrollPane2.setViewportView(tblTeacherModules);
 
-        lblCourseModulesTitle.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblCourseModulesTitle.setForeground(new java.awt.Color(0, 51, 204));
-        lblCourseModulesTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblCourseModulesTitle.setText("Teacher Modules");
+        lblTeacherModulesTitle.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblTeacherModulesTitle.setForeground(new java.awt.Color(0, 51, 204));
+        lblTeacherModulesTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTeacherModulesTitle.setText("Teacher Modules");
 
         javax.swing.GroupLayout pnlTeacherModulesLayout = new javax.swing.GroupLayout(pnlTeacherModules);
         pnlTeacherModules.setLayout(pnlTeacherModulesLayout);
@@ -340,7 +328,7 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
             .addGroup(pnlTeacherModulesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlTeacherModulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblCourseModulesTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTeacherModulesTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pnlTeacherModulesLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -350,7 +338,7 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
             pnlTeacherModulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlTeacherModulesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblCourseModulesTitle)
+                .addComponent(lblTeacherModulesTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -379,10 +367,7 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
         tblAllModules.setAutoCreateRowSorter(true);
         tblAllModules.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String [] {
                 "ID", "Module name", "Module code"
@@ -426,26 +411,42 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        btnOpenModules.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnOpenModules.setForeground(new java.awt.Color(0, 51, 204));
+        btnOpenModules.setText("<html><center>Open<br/>Modules</center></html>");
+        btnOpenModules.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOpenModulesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlAddRemoveModulesLayout = new javax.swing.GroupLayout(pnlAddRemoveModules);
         pnlAddRemoveModules.setLayout(pnlAddRemoveModulesLayout);
         pnlAddRemoveModulesLayout.setHorizontalGroup(
             pnlAddRemoveModulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlAddRemoveModulesLayout.createSequentialGroup()
-                .addGap(14, 14, 14)
                 .addGroup(pnlAddRemoveModulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnRemoveModuleFromTeacher)
-                    .addComponent(btnAddModuleToTeacher))
-                .addGap(18, 18, 18)
+                    .addGroup(pnlAddRemoveModulesLayout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addGroup(pnlAddRemoveModulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnRemoveModuleFromTeacher)
+                            .addComponent(btnAddModuleToTeacher)))
+                    .addGroup(pnlAddRemoveModulesLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnOpenModules)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pnlAllModules, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlAddRemoveModulesLayout.setVerticalGroup(
             pnlAddRemoveModulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlAddRemoveModulesLayout.createSequentialGroup()
-                .addGap(96, 96, 96)
+                .addGap(63, 63, 63)
                 .addComponent(btnRemoveModuleFromTeacher)
-                .addGap(38, 38, 38)
+                .addGap(23, 23, 23)
                 .addComponent(btnAddModuleToTeacher)
+                .addGap(27, 27, 27)
+                .addComponent(btnOpenModules, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(pnlAllModules, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -493,10 +494,10 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 3, 15)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 51, 204));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel2.setText("Teachers filter");
+        jLabel2.setText("Teacher filter");
 
-        tfCourseFilter.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        tfCourseFilter.setForeground(new java.awt.Color(0, 51, 204));
+        tfTeacherFilter.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        tfTeacherFilter.setForeground(new java.awt.Color(0, 51, 204));
 
         javax.swing.GroupLayout jUpdatePanelLayout = new javax.swing.GroupLayout(jUpdatePanel);
         jUpdatePanel.setLayout(jUpdatePanelLayout);
@@ -505,7 +506,7 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
             .addGroup(jUpdatePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tfCourseFilter)
+                    .addComponent(tfTeacherFilter)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -514,7 +515,7 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
             .addGroup(jUpdatePanelLayout.createSequentialGroup()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfCourseFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tfTeacherFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -587,21 +588,21 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
                 .addContainerGap())
         );
 
-        btnOpenModules.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnOpenModules.setForeground(new java.awt.Color(0, 51, 204));
-        btnOpenModules.setText("Manage Modules");
-        btnOpenModules.addActionListener(new java.awt.event.ActionListener() {
+        btnClose.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnClose.setForeground(new java.awt.Color(0, 51, 204));
+        btnClose.setText("Close");
+        btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnOpenModulesActionPerformed(evt);
+                btnCloseActionPerformed(evt);
             }
         });
 
-        btnClose1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnClose1.setForeground(new java.awt.Color(0, 51, 204));
-        btnClose1.setText("Close");
-        btnClose1.addActionListener(new java.awt.event.ActionListener() {
+        btnPersonInfo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnPersonInfo.setForeground(new java.awt.Color(0, 51, 204));
+        btnPersonInfo.setText("Personal details");
+        btnPersonInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnClose1ActionPerformed(evt);
+                btnPersonInfoActionPerformed(evt);
             }
         });
 
@@ -609,6 +610,7 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -616,35 +618,34 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
                         .addComponent(pnlTeacherModules, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(pnlAddRemoveModules, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(15, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(pnlControls, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(btnOpenModules, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnClose1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(36, 36, 36))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnPersonInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(24, 24, 24))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
+                .addGap(9, 9, 9)
                 .addComponent(jTitle)
                 .addGap(12, 12, 12)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlControls, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnOpenModules, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnClose1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(pnlControls, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(btnPersonInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(2, 2, 2)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pnlTeacherModules, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -656,26 +657,48 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1046, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1057, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 815, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 812, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAddModuleToTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddModuleToTeacherActionPerformed
+        if ((selectedPair == null)
+                || (selectedPair.getValue1() == null)
+                || (selectedPair.getValue1().getPerson() == null)
+                || (selectedPair.getValue1().getPerson().getId() == null)
+                || (teacherModules == null)
+                || (tblAllModules.getSelectedRowCount() == 0)) {
+            return;
+        }
+
+        Arrays.stream(tblAllModules.getSelectedRows()).forEach(row -> {
+            int modelRow = tblAllModules.convertRowIndexToModel(row);
+            Module module = getAllModulesTableModel().getData(modelRow);
+            if ((module != null) && (module.getId() != null)) {
+                teacherModuleService.insert(selectedPair.getValue1().getPerson().getId(), module.getId());
+                getTeacherModulesTableModel().addRow(module, new Object[] {module.getId(), module.getName(), module.getCode()});
+                teacherModules.add(module);
+            }
+        });
+        updateModulesTableUI();
+    }//GEN-LAST:event_btnAddModuleToTeacherActionPerformed
+
     private void btnRemoveModuleFromTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveModuleFromTeacherActionPerformed
-        if ((selectedTeacher == null)
-            || (selectedTeacher.getPerson() == null)
-            || (selectedTeacher.getPerson().getId() == null)
-            || (teacherModules == null)
-            || (tblTeacherModules.getSelectedRowCount() == 0)) {
+        if ((selectedPair == null)
+                || (selectedPair.getValue1() == null)
+                || (selectedPair.getValue1().getPerson() == null)
+                || (selectedPair.getValue1().getPerson().getId() == null)
+                || (teacherModules == null)
+                || (tblTeacherModules.getSelectedRowCount() == 0)) {
             return;
         }
 
@@ -683,9 +706,9 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
 
         Arrays.stream(tblTeacherModules.getSelectedRows()).forEach(row -> {
             int modelRow = tblTeacherModules.convertRowIndexToModel(row);
-            Module module = getCourseModulesTableModel().getData(modelRow);
+            Module module = getTeacherModulesTableModel().getData(modelRow);
             if ((module != null) && (module.getId() != null)) {
-                teacherModuleService.delete(selectedTeacher.getPerson().getId(), module.getId());
+                teacherModuleService.delete(selectedPair.getValue1().getPerson().getId(), module.getId());
                 // Collect deleted rows, since we can't change model here,
                 // as RowSorter use it to map viewRows to Model rows properly
                 deletedModelRows.add(modelRow);
@@ -694,31 +717,11 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
         });
         // Sort in reverse order, so we will delete from the last to the first
         deletedModelRows.sort(Comparator.reverseOrder());
-        deletedModelRows.forEach(modelRow -> getCourseModulesTableModel().removeRow(modelRow));
+        deletedModelRows.forEach(modelRow -> getTeacherModulesTableModel().removeRow(modelRow));
 
         updateModulesTableUI();
+
     }//GEN-LAST:event_btnRemoveModuleFromTeacherActionPerformed
-
-    private void btnAddModuleToTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddModuleToTeacherActionPerformed
-        if ((selectedTeacher == null)
-            || (selectedTeacher.getPerson() == null)
-            || (selectedTeacher.getPerson().getId() == null)
-            || (teacherModules == null)
-            || (tblAllModules.getSelectedRowCount() == 0)) {
-            return;
-        }
-
-        Arrays.stream(tblAllModules.getSelectedRows()).forEach(row -> {
-            int modelRow = tblAllModules.convertRowIndexToModel(row);
-            Module module = getAllModulesTableModel().getData(modelRow);
-            if ((module != null) && (module.getId() != null)) {
-                teacherModuleService.insert(selectedTeacher.getPerson().getId(), module.getId());
-                getCourseModulesTableModel().addRow(module, new Object[] {module.getId(), module.getName(), module.getCode()});
-                teacherModules.add(module);
-            }
-        });
-        updateModulesTableUI();
-    }//GEN-LAST:event_btnAddModuleToTeacherActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         onAddLine();
@@ -736,13 +739,27 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
         reloadTableData();
     }//GEN-LAST:event_btnReloadActionPerformed
 
+    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
+        getFrameManager().showParent();
+    }//GEN-LAST:event_btnCloseActionPerformed
+
     private void btnOpenModulesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenModulesActionPerformed
         getFrameManager().showSub(MODULE);
     }//GEN-LAST:event_btnOpenModulesActionPerformed
 
-    private void btnClose1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClose1ActionPerformed
-        getFrameManager().showParent();
-    }//GEN-LAST:event_btnClose1ActionPerformed
+    private void btnPersonInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPersonInfoActionPerformed
+        onShowPersonInfo();
+    }//GEN-LAST:event_btnPersonInfoActionPerformed
+
+    private void onShowPersonInfo() {
+        if ((selectedPair == null) || (selectedPair.getValue1() == null)) {
+            btnPersonInfo.setEnabled(false);
+            return;
+        }
+        PersonFrame personFrame = getFrameManager().getFrame(PERSON);
+        personFrame.setPerson(selectedPair.getValue1().getPerson());
+        getFrameManager().showSub(PERSON);
+    }
 
     /**
      * @param args the command line arguments
@@ -756,21 +773,15 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
                 manager.showSub(TEACHER);
             }
         });
-
-    }
-
-
-    @Override
-    public void setVisible(boolean b) {
-        super.setVisible(b);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnAddModuleToTeacher;
-    private javax.swing.JButton btnClose1;
+    private javax.swing.JButton btnClose;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnOpenModules;
+    private javax.swing.JButton btnPersonInfo;
     private javax.swing.JButton btnReload;
     private javax.swing.JButton btnRemoveModuleFromTeacher;
     private javax.swing.JButton btnSave;
@@ -784,22 +795,21 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
     private javax.swing.JLabel jTitle;
     private javax.swing.JPanel jUpdatePanel;
     private javax.swing.JPanel jUpdatePanel2;
-    private javax.swing.JLabel lblCourseModulesTitle;
+    private javax.swing.JLabel lblTeacherModulesTitle;
     private javax.swing.JPanel pnlAddRemoveModules;
     private javax.swing.JPanel pnlAllModules;
     private javax.swing.JPanel pnlControls;
     private javax.swing.JPanel pnlTeacherModules;
     private PaddedJTable tblAllModules;
+    private PaddedJTable tblTeacher;
     private PaddedJTable tblTeacherModules;
-    private PaddedJTable tblTeachers;
-    private javax.swing.JTextField tfCourseFilter;
     private javax.swing.JTextField tfModuleFilter;
+    private javax.swing.JTextField tfTeacherFilter;
     // End of variables declaration//GEN-END:variables
-
 
     @Override
     protected PaddedJTable getTable() {
-        return tblTeachers;
+        return tblTeacher;
     }
 
     @Override
@@ -814,57 +824,65 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
 
     @Override
     protected JTextField getTableFilterField() {
-        return tfCourseFilter;
+        return tfTeacherFilter;
     }
 
     @Override
     protected int getDataDescriptionColumn() {
-        return COLUMNS.FULLNAME.index;
+        return COLUMNS.FIRST_NAME.index;
     }
 
     @Override
-    protected Teacher createDataInstance() {
-        return new Teacher();
+    protected Pair<Teacher, User> createDataInstance() {
+        var teacher = new Teacher();
+        teacher.setPerson(new Person());
+        User user = new User();
+        user.getRoles().add(Role.RoleType.TEACHER.asRole());
+        return new Pair<>(teacher, user);
     }
 
     @Override
     protected void doReloadData() {
-//        departmentCombo.removeAllItems();
-//        departmentService.getAll().forEach(departmentCombo::addItem);
-//
-//        qqiLevelCombo.removeAllItems();
-//        qqiLevelCombo.addItem(QQILevel.QQILevelType.QQI5.asQQILevel());
-//        qqiLevelCombo.addItem(QQILevel.QQILevelType.QQI6.asQQILevel());
-//
-//        courseTypeCombo.removeAllItems();
-//        courseTypeCombo.addItem(CourseType.CourseTypeType.FULL_TIME.asCourseType());
-//        courseTypeCombo.addItem(CourseType.CourseTypeType.PART_TIME.asCourseType());
-//        courseTypeCombo.addItem(CourseType.CourseTypeType.ONLINE.asCourseType());
-//        courseTypeCombo.addItem(CourseType.CourseTypeType.EVENING.asCourseType());
-
         teacherService.getAll().forEach(teacher -> {
-            getTableModel().addRow(teacher, new Object[]{teacher.getPerson().getId(),
-                    DescriptionUtil.getShortDescription(teacher.getPerson()), teacher.getPosition(), teacher.getDegree(),
+            Pair<Teacher, User> pair = new Pair<>(teacher, null);
+            userService.getByPersonId(teacher.getPerson().getId()).ifPresentOrElse(user -> {
+                user.setPersonId(teacher.getPerson().getId());
+                pair.setValue2(user);
+            }, () -> {
+                User user = new User();
+                user.setPersonId(teacher.getPerson().getId());
+                user.getRoles().add(Role.RoleType.TEACHER.asRole());
+                user.setUsername("");
+                user.setPassword("");
+                pair.setValue2(user);
+            });
+
+            getTableModel().addRow(pair, new Object[]{teacher.getPerson().getId(),
+                    teacher.getPerson().getFirstName(), teacher.getPerson().getLastName(),
+                    pair.getValue2().getUsername(), pair.getValue2().getPassword(),
+                    teacher.getPosition(), teacher.getDegree(),
                     teacher.getWorkExperience()
             });
         });
 
-        if (getTableModel().getDataList().contains(selectedTeacher)) {
-            int viewRow = tblTeachers.convertRowIndexToView(getTableModel().getDataList().indexOf(selectedTeacher));
-            tblTeachers.setRowSelectionInterval(viewRow, viewRow);
+        if (getTableModel().getDataList().contains(selectedPair)) {
+            int viewRow = tblTeacher.convertRowIndexToView(getTableModel().getDataList().indexOf(selectedPair));
+            tblTeacher.setRowSelectionInterval(viewRow, viewRow);
         } else {
-            selectedTeacher = null;
+            selectedPair = null;
         }
     }
 
     @Override
-    protected Optional<Integer> doInsertData(Teacher teacher) {
-        return teacherService.insert(teacher);
+    protected Optional<Integer> doInsertData(Pair<Teacher, User> pair) {
+        if (pair == null) return Optional.empty();
+        return teacherService.saveWithUser(pair.getValue1(), pair.getValue2());
     }
 
     @Override
-    protected void doUpdateData(Teacher teacher) {
-        teacherService.update(teacher);
+    protected void doUpdateData(Pair<Teacher, User> pair) {
+        if (pair == null) return;
+        teacherService.saveWithUser(pair.getValue1(), pair.getValue2());
     }
 
     @Override
@@ -875,24 +893,32 @@ public class TeacherFrame extends AbstractTableDataFrame<Teacher> {
     }
 
     @Override
-    protected boolean isDataValid(Teacher teacher) {
-        return (teacher != null);
+    protected boolean isDataValid(Pair<Teacher, User> pair) {
+        return (pair != null);
 //                && (teacher.getName() != null) && ! teacher.getName().isBlank()
 //                && teacher.getDepartment() != null && teacher.getCourseType() != null && teacher.getQqiLevel() != null;
     }
 
     @Override
-    protected void fillDataObjectFromTable(Teacher teacher, Integer row) {
+    protected void fillDataObjectFromTable(Pair<Teacher, User> pair, Integer row) {
+        Teacher teacher = pair.getValue1();
         if (getTable().getValueAt(row, COLUMNS.PERSON_ID.index) instanceof Integer id) {
             teacher.getPerson().setId(id);
         }
+        teacher.getPerson().setFirstName(getTable().getValueAt(row, COLUMNS.FIRST_NAME.index).toString());
+        teacher.getPerson().setLastName(getTable().getValueAt(row, COLUMNS.LAST_NAME.index).toString());
         teacher.setPosition(getTable().getValueAt(row, COLUMNS.POSITION.index).toString());
         teacher.setDegree(getTable().getValueAt(row, COLUMNS.DEGREE.index).toString());
         teacher.setWorkExperience((Integer) getTable().getValueAt(row, COLUMNS.WORK_EXPERIENCE.index));
+
+        User user = pair.getValue2();
+        user.setUsername(getTable().getValueAt(row, COLUMNS.USERNAME.index).toString());
+        user.setPassword(getTable().getValueAt(row, COLUMNS.PASSWORD.index).toString());
     }
 
     @Override
     protected void addEmptyRowToModel() {
-        getTableModel().addRow(createDataInstance(), new Object[]{null, "", "", "", 0});
+        getTableModel().addRow(createDataInstance(), new Object[]{null, "", "", "", "", "", "", null});
     }
+
 }

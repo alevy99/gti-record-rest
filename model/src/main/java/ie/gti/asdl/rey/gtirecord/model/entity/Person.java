@@ -14,10 +14,10 @@ public class Person implements Serializable {
     @KeyField
     private Integer id;
 
-    @ShortDescriptionField(order = 1, format = ShortDescriptionFormat.NAME_FORMAT)
+    @ShortDescriptionField(format = ShortDescriptionFormat.NAME_FORMAT)
     private String firstName;
 
-    @ShortDescriptionField(format = ShortDescriptionFormat.NAME_FORMAT)
+    @ShortDescriptionField(order = 1, format = ShortDescriptionFormat.NAME_FORMAT)
     private String lastName;
 
     private String gender;

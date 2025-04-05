@@ -5,6 +5,7 @@ import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedJTable;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils;
 import ie.gti.asdl.rey.gtirecord.model.annotation.KeyUtil;
+import ie.gti.asdl.rey.gtirecord.model.util.Pair;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,11 +76,21 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
                 return;
             }
 
-            if (KeyUtil.hasKey(data)) {
+            boolean setKeyNeeded = (data instanceof Pair<?,?>);
+            Object keyData;
+            if (setKeyNeeded) {
+                keyData = ((Pair<?,?>) data).getValue1(); // Assume we have keys only in the first entity
+            } else {
+                keyData = data;
+            }
+
+            if (KeyUtil.hasKey(keyData)) {
                 doUpdateData(data);
             } else {
                 doInsertData(data).ifPresentOrElse((newId -> {
-                    KeyUtil.setKey(data, newId);
+                    if (setKeyNeeded) {
+                        KeyUtil.setKey(keyData, newId);
+                    }
                     getTable().setValueAt(newId, row, 0);
                 }), () -> errors.add(data.toString()));
             }
@@ -99,8 +110,16 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
                 .map(row -> getTable().convertRowIndexToModel(row)).forEach(modelRow -> {
             T data = getTableModel().getData(modelRow);
 
+            boolean setKeyNeeded = (data instanceof Pair<?,?>);
+            Object keyData;
+            if (data instanceof Pair<?,?> pair) {
+                keyData = pair.getValue1(); // Assume we have keys only in the first entity
+            } else {
+                keyData = data;
+            }
+
             // data has key -> call delete service
-            if (KeyUtil.hasKey(data)) {
+            if (KeyUtil.hasKey(keyData)) {
                 dataList.add(data);
                 modelRows.add(modelRow);
             } else {
@@ -114,7 +133,15 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
             return;
         }
 
-        dataList.stream().map(KeyUtil::getKey).forEach(this::doDeleteData);
+        dataList.stream()
+                .map(data ->  {
+                    Object keyData = data;
+                    if (data instanceof Pair<?,?> pair) {
+                        keyData = pair.getValue1(); // Assume we have keys only in the first entity
+                    }
+                    return KeyUtil.getKey(keyData);
+                })
+                .forEach(this::doDeleteData);
 
         // Delete from the model in reverse order
         modelRows.sort(Comparator.reverseOrder());

@@ -19,6 +19,7 @@ import ie.gti.asdl.rey.gtirecord.model.entity.Address;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import ie.gti.asdl.rey.gtirecord.model.util.AddressUtils;
+import lombok.Setter;
 import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
@@ -29,6 +30,7 @@ import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.function.Supplier;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.PERSON;
 import static ie.gti.asdl.rey.gtirecord.desktop.util.ImageUtils.resizeIcon;
@@ -39,11 +41,19 @@ import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.addTextFieldVa
  */
 public class PersonFrame extends AbstractFrame {
 
-    private Integer personId;
+//    @Setter
+//    private Integer personId;
 
-    //    @Setter
+    /**
+     * -- SETTER --
+     * /        initForm
+     * (
+     * )
+     */ //    }
+    @Setter
     private User user;
 
+    @Setter
     private Person person;
 
     private DatePicker dobDatePicker;
@@ -83,8 +93,21 @@ public class PersonFrame extends AbstractFrame {
     }
 
     private void loadData() {
-        person = personService.getById(personId).orElseGet(Person::new);
-        user = user != null ? user : userService.getByPersonId(personId).orElseGet(User::new);
+        if (person == null) {
+            if ((user != null) && (user.getPersonId() != null)) {
+                person = personService.getById(user.getPersonId()).orElseGet(Person::new);
+            } else {
+                person = new Person();
+            }
+        }
+        if (person.getId() != null) {
+            user = user != null ? user : userService.getByPersonId(person.getId())
+                    .orElseGet(() -> {
+                        User user = new User();
+                        user.setUsername("");
+                        return user;
+                    });
+        }
     }
 
     private void updateUI() {
@@ -139,18 +162,8 @@ public class PersonFrame extends AbstractFrame {
     @Override
     protected void resetFrame() {
         super.resetFrame();
-        personId = null;
         user = null;
-    }
-
-    public void setPersonId(Integer personId) {
-        this.personId = personId;
-//        initForm();
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-        this.personId = user.getPersonId();
+        person = null;
     }
 
     private void initUI() {
@@ -380,7 +393,7 @@ public class PersonFrame extends AbstractFrame {
 
         jLabel16.setText("Gender");
 
-        cbGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "       ", "Male", "Female", " " }));
+        cbGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Male", "Female" }));
 
         javax.swing.GroupLayout pnlGenderLayout = new javax.swing.GroupLayout(pnlGender);
         pnlGender.setLayout(pnlGenderLayout);
@@ -856,7 +869,9 @@ public class PersonFrame extends AbstractFrame {
                 ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, args);
                 FrameManager manager = context.getBean(FrameManager.class);
                 PersonFrame personFrame = manager.getFrame(PERSON);
-                personFrame.setPersonId(6);
+                Person person = new Person();
+                person.setId(6);
+                personFrame.setPerson(person);
                 manager.showSub(PERSON);
             }
         });

@@ -61,8 +61,8 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
 
     private Course selectedCourse;
 
-    List<Module> allModules;
-    List<Module> courseModules;
+    private List<Module> allModules;
+    private List<Module> courseModules;
 
     private Integer highlightedRow;
 

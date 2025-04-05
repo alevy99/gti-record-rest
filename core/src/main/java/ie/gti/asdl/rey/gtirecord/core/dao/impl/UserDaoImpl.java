@@ -3,15 +3,18 @@ package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 import ie.gti.asdl.rey.gtirecord.core.dao.UserDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.RoleRowMapper;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.UserRowMapper;
-import ie.gti.asdl.rey.gtirecord.model.entity.Role;
+import ie.gti.asdl.rey.gtirecord.core.service.ValidationService;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
+import ie.gti.asdl.rey.gtirecord.model.validation.OnUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
+import jakarta.validation.Validator;
 
 import java.sql.*;
 import java.util.*;
@@ -20,6 +23,8 @@ import java.util.*;
 public class UserDaoImpl implements UserDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final ValidationService validationService;
+
 
     private final static UserRowMapper userMapper = new UserRowMapper();
     public final static RoleRowMapper roleMapper = new RoleRowMapper();
@@ -42,10 +47,10 @@ public class UserDaoImpl implements UserDao {
     };
 
     @Autowired
-    public UserDaoImpl(JdbcTemplate jdbcTemplate) {
+    public UserDaoImpl(JdbcTemplate jdbcTemplate, ValidationService validationService1) {
         this.jdbcTemplate = jdbcTemplate;
+        this.validationService = validationService1;
     }
-
 
     @Override
     public Optional<User> getById(Integer id) {
@@ -117,7 +122,9 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<Integer> insert(User user) {
-        final String sql = "INSERT INTO user (username, password) VALUES (?, ?)";
+//        if (!validationService.validate(user, OnUpdate.class)) return Optional.empty();
+
+        final String sql = "INSERT INTO user (person_id, username, password) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(new PreparedStatementCreator() {
@@ -125,8 +132,13 @@ public class UserDaoImpl implements UserDao {
             @NonNull
             public PreparedStatement createPreparedStatement(@NonNull Connection connection) throws SQLException {
                 PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, user.getUsername());
-                ps.setString(2, user.getPassword());
+                if (user.getPersonId() != null) {
+                    ps.setInt(1, user.getPersonId());
+                } else {
+                    ps.setNull(1, Types.INTEGER);
+                }
+                ps.setString(2, user.getUsername());
+                ps.setString(3, user.getPassword());
                 return ps;
             }
         }, keyHolder);
@@ -134,7 +146,8 @@ public class UserDaoImpl implements UserDao {
         if (keyHolder.getKey() == null) {
             return Optional.empty();
         } else {
-            return Optional.of(keyHolder.getKey().intValue());
+            user.setId(keyHolder.getKey().intValue());
+            return Optional.of(user.getId());
         }
     }
 

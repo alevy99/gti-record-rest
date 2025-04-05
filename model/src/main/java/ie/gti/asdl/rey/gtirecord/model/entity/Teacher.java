@@ -1,12 +1,12 @@
 package ie.gti.asdl.rey.gtirecord.model.entity;
 
+import ie.gti.asdl.rey.gtirecord.model.annotation.KeyField;
 import lombok.Data;
-
-import java.time.LocalDate;
 
 @Data
 public class Teacher {
-    
+
+    @KeyField
     private Person person;
 
     private String position;

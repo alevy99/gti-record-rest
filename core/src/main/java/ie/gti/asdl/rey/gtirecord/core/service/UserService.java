@@ -15,6 +15,8 @@ public interface UserService {
 
     void update(User user);
 
+    Optional<Integer> saveUserWithRoles(User user);
+
     void delete(int id);
 
     List<User> getAll();

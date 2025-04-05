@@ -32,7 +32,7 @@ public class StudentDaoImpl implements StudentDao {
     public Optional<Student> getByPersonId(Integer personId) {
         if (personId == null) return Optional.empty();
         final String sql = """
-                SELECT s.certificates, p.*
+                SELECT s.*, p.*
                 FROM student s, person p
                 WHERE s.person_id = p.id AND s.person_id = ?""";
         return Optional.ofNullable(jdbcTemplate.query(sql, rs -> {
@@ -51,15 +51,15 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public void insert(Student student) {
         if ((student == null) || (student.getPerson() == null) || (student.getPerson().getId() == null)) return;
-        final String sql = "INSERT INTO student(person_id, certificates) VALUES (?, ?)";
-        jdbcTemplate.update(sql, student.getPerson().getId(), student.getEducation());
+        final String sql = "INSERT INTO student(person_id, education, is_on_erasmus, emergency_contacts) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, student.getPerson().getId(), student.getEducation(), student.getOnErasmus(), student.getEmergencyContacts());
     }
 
     @Override
     public void update(Student student) {
         if ((student == null) || (student.getPerson() == null) || (student.getPerson().getId() == null)) return;
-        final String sql = "UPDATE student SET certificates = ? WHERE person_id = ?";
-        jdbcTemplate.update(sql, student.getEducation(), student.getPerson().getId());
+        final String sql = "UPDATE student SET education = ?, is_on_erasmus = ?, emergency_contacts = ? WHERE person_id = ?";
+        jdbcTemplate.update(sql, student.getEducation(), student.getOnErasmus(), student.getEmergencyContacts(), student.getPerson().getId());
     }
 
     @Override

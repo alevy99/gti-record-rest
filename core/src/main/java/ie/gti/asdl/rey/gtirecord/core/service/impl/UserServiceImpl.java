@@ -1,7 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.core.service.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.*;
-import ie.gti.asdl.rey.gtirecord.core.service.PersonService;
 import ie.gti.asdl.rey.gtirecord.core.service.UserService;
 import ie.gti.asdl.rey.gtirecord.model.entity.*;
 import org.slf4j.Logger;
@@ -10,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -27,17 +24,15 @@ public class UserServiceImpl implements UserService {
 
     private final PersonDao personDao;
 
-    private final PersonService personService;
     private final StudentDao studentDao;
     private final TeacherDao teacherDao;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, UserRolesDao userRolesDao, PersonDao personDao, PersonService personService, StudentDao studentDao, TeacherDao teacherDao) {
+    public UserServiceImpl(UserDao userDao, UserRolesDao userRolesDao, PersonDao personDao, StudentDao studentDao, TeacherDao teacherDao) {
         super();
         this.userDao = userDao;
         this.userRolesDao = userRolesDao;
         this.personDao = personDao;
-        this.personService = personService;
         this.studentDao = studentDao;
         this.teacherDao = teacherDao;
     }
@@ -60,7 +55,7 @@ public class UserServiceImpl implements UserService {
             userDao.update(user);
             logRoles("New roles: {}", user.getRoles());
 
-            List<Role> currentRoles = userDB.getRoles();
+            Set<Role> currentRoles = userDB.getRoles();
             logRoles("Current roles: {}", currentRoles);
 
             insertMissingRoles(user, currentRoles);
@@ -70,7 +65,7 @@ public class UserServiceImpl implements UserService {
             // but in that case we would delete some data of the student or teacher
             // It is better to delete it when working directly with students or teachers,
             // rather than with a user
-            List<Role> rolesToDelete = new ArrayList<>(currentRoles);
+            Set<Role> rolesToDelete = new HashSet<>(currentRoles);
             rolesToDelete.removeAll(user.getRoles());
             logRoles("Roles to delete: {}", rolesToDelete);
             userRolesDao.deleteByUserId(user.getId(), rolesToDelete);
@@ -79,8 +74,8 @@ public class UserServiceImpl implements UserService {
         });
     }
 
-    private void insertMissingRoles(User user, List<Role> currentRoles) {
-        List<Role> rolesToInsert = new ArrayList<>(user.getRoles());
+    private void insertMissingRoles(User user, Set<Role> currentRoles) {
+        Set<Role> rolesToInsert = new HashSet<>(user.getRoles());
         rolesToInsert.removeAll(currentRoles);
         logRoles("Roles to insert: {}", rolesToInsert);
         userRolesDao.insert(user.getId(), rolesToInsert);
@@ -115,7 +110,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void logRoles(String message, List<Role> roles) {
+    private void logRoles(String message, Set<Role> roles) {
         if (logger.isTraceEnabled()) {
             logger.trace(message, roles.stream()
                     .map(Role::getName)
@@ -126,6 +121,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void update(User user) {
         userDao.update(user);
+    }
+
+    @Transactional
+    @Override
+    public Optional<Integer> saveUserWithRoles(User user) {
+        Optional<Integer> userIdOpt;
+        if (user.getId() == null) {
+            userIdOpt = insert(user);
+        } else {
+            updateUserWithRoles(user);
+            userIdOpt = Optional.of(user.getId());
+        }
+        return userIdOpt;
     }
 
     @Transactional
