@@ -206,9 +206,14 @@
                       <EmptySpace pref="75" max="32767" attributes="0"/>
                       <Component id="btnUser" min="-2" pref="151" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
-                      <Component id="btnTeacher" min="-2" pref="151" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
-                      <Component id="btnModule" min="-2" pref="151" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="btnTeacher" min="-2" pref="151" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
+                              <Component id="btnModule" min="-2" pref="151" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="btnStudent" min="-2" pref="151" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="btnCourse" min="-2" pref="151" max="-2" attributes="0"/>
@@ -229,7 +234,10 @@
                           <Component id="btnCourse" alignment="3" min="-2" pref="84" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
-                      <Component id="btnDepartment" min="-2" pref="84" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="btnDepartment" alignment="3" min="-2" pref="84" max="-2" attributes="0"/>
+                          <Component id="btnStudent" alignment="3" min="-2" pref="84" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace pref="292" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -271,6 +279,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCourseActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnStudent">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="STUDENTS"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnStudentActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

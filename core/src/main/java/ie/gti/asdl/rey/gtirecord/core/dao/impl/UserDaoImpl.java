@@ -5,6 +5,7 @@ import ie.gti.asdl.rey.gtirecord.core.dao.mapper.RoleRowMapper;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.UserRowMapper;
 import ie.gti.asdl.rey.gtirecord.core.service.ValidationService;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
+import ie.gti.asdl.rey.gtirecord.model.validation.OnCreate;
 import ie.gti.asdl.rey.gtirecord.model.validation.OnUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -47,9 +48,9 @@ public class UserDaoImpl implements UserDao {
     };
 
     @Autowired
-    public UserDaoImpl(JdbcTemplate jdbcTemplate, ValidationService validationService1) {
+    public UserDaoImpl(JdbcTemplate jdbcTemplate, ValidationService validationService) {
         this.jdbcTemplate = jdbcTemplate;
-        this.validationService = validationService1;
+        this.validationService = validationService;
     }
 
     @Override
@@ -122,7 +123,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<Integer> insert(User user) {
-//        if (!validationService.validate(user, OnUpdate.class)) return Optional.empty();
+        if (!validationService.validate(user, OnCreate.class)) return Optional.empty();
 
         final String sql = "INSERT INTO user (person_id, username, password) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();

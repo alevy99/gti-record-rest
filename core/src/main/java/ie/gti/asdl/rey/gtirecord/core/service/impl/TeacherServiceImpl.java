@@ -6,6 +6,7 @@ import ie.gti.asdl.rey.gtirecord.core.service.UserService;
 import ie.gti.asdl.rey.gtirecord.model.entity.Role;
 import ie.gti.asdl.rey.gtirecord.model.entity.Teacher;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
+import ie.gti.asdl.rey.gtirecord.model.util.ContainerOfAny;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,11 +50,16 @@ public class TeacherServiceImpl implements TeacherService {
     @Transactional
     @Override
     public Optional<Integer> insert(Teacher teacher) {
-        Optional<Integer> newTeacherPersonIdOpt = Optional.empty();
-        if (personDao.insert(teacher.getPerson()).isPresent()) {
-            newTeacherPersonIdOpt = teacherDao.insert(teacher);
-        }
-        return newTeacherPersonIdOpt;
+        final ContainerOfAny<Optional<Integer>> result = new ContainerOfAny<>();
+        result.setValue(Optional.empty());
+        personDao.getById(teacher.getPerson().getId()).ifPresentOrElse((person) -> {
+            result.setValue(teacherDao.insert(teacher));
+        }, () -> {
+            if (personDao.insert(teacher.getPerson()).isPresent()) {
+                result.setValue(teacherDao.insert(teacher));
+            }
+        });
+        return result.getValue();
     }
 
     @Transactional

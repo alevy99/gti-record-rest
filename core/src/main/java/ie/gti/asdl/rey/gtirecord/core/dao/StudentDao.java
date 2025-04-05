@@ -3,6 +3,7 @@ package ie.gti.asdl.rey.gtirecord.core.dao;
 import ie.gti.asdl.rey.gtirecord.model.entity.Student;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -11,11 +12,14 @@ import java.util.Optional;
 @Repository
 public interface StudentDao {
 
-    Optional<Student> getByPersonId(Integer id);
+    List<Student> getAll();
 
-    void insert(Student student);
+    Optional<Student> getByPersonId(Integer personId);
 
-    void update(Student student);
+    Optional<Integer> insert(Student teacher);
+
+    void update(Student teacher);
 
     void delete(Integer personId);
+
 }

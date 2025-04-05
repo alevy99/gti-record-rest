@@ -172,4 +172,9 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         getDeleteBtn().setEnabled(getTable().getSelectedRowCount() > 0);
     }
 
+    protected String getTableStringValueAt(Integer row, int column) {
+        if (getTable().getValueAt(row, column) == null) return "";
+        return getTable().getValueAt(row, column).toString();
+    }
+
 }

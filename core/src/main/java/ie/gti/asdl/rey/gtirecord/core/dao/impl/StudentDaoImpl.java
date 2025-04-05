@@ -1,6 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.StudentDao;
+import ie.gti.asdl.rey.gtirecord.core.dao.mapper.StudentRowMapper;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import ie.gti.asdl.rey.gtirecord.model.entity.Student;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,35 @@ public class StudentDaoImpl implements StudentDao {
 
     private static final RowMapper<Person> personRowMapper = new BeanPropertyRowMapper<>(Person.class);
 
-    private static final RowMapper<Student> studentRowMapper = new BeanPropertyRowMapper<>(Student.class);
+    private static final RowMapper<Student> studentRowMapper = new StudentRowMapper();
 
     @Autowired
     public StudentDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public List<Student> getAll() {
+        final String sql = """
+                SELECT s.*, p.*
+                FROM student s, person p
+                WHERE s.person_id = p.id;
+                """;
+        return jdbcTemplate.query(sql, (rs) -> {
+            List<Student> students = new ArrayList<>();
+
+            int row = 0;
+            while (rs.next()) {
+                Student student = studentRowMapper.mapRow(rs, row);
+                Person person = personRowMapper.mapRow(rs, row);
+                if (student != null) {
+                    student.setPerson(person);
+                }
+                students.add(student);
+                row++;
+            }
+            return students;
+        });
     }
 
     @Override
@@ -49,10 +74,11 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public void insert(Student student) {
-        if ((student == null) || (student.getPerson() == null) || (student.getPerson().getId() == null)) return;
+    public Optional<Integer> insert(Student student) {
+        if ((student == null) || (student.getPerson() == null) || (student.getPerson().getId() == null)) return Optional.empty();
         final String sql = "INSERT INTO student(person_id, education, is_on_erasmus, emergency_contacts) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(sql, student.getPerson().getId(), student.getEducation(), student.getOnErasmus(), student.getEmergencyContacts());
+        return Optional.of(student.getPerson().getId());
     }
 
     @Override

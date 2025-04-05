@@ -9,7 +9,6 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@AllArgsConstructor
 public class ContainerOfAny<T> {
     private T value;
 }

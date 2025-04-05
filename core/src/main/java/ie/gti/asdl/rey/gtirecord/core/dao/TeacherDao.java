@@ -12,6 +12,8 @@ import java.util.Optional;
 @Repository
 public interface TeacherDao {
 
+    List<Teacher> getAll();
+
     Optional<Teacher> getByPersonId(Integer personId);
 
     Optional<Integer> insert(Teacher teacher);
@@ -19,6 +21,4 @@ public interface TeacherDao {
     void update(Teacher teacher);
 
     void delete(Integer personId);
-
-    List<Teacher> getAll();
 }

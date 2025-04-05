@@ -26,6 +26,7 @@ public class FrameManager {
         USER(UserFrame.class),
         PERSON(PersonFrame.class),
         TEACHER(TeacherFrame.class),
+        STUDENT(StudentFrame.class),
         GROUP(GroupFrame.class),
         DEPARTMENT(DepartmentFrame.class),
         MODULE(ModuleFrame.class),

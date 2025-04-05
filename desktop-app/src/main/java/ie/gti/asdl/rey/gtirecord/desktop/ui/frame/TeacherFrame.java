@@ -53,9 +53,6 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
     private final TeacherModuleService teacherModuleService;
 
     private Pair<Teacher, User> selectedPair;
-//    private Teacher selectedTeacher;
-//
-//    private User selectedTeacherUser;
 
     private List<Module> allModules;
     private List<Module> teacherModules;
@@ -68,7 +65,6 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
     public TeacherFrame(FrameManager frameManager, ServiceManager serviceManager) {
         super(frameManager);
         teacherService = serviceManager.getTeacherService();
-//        departmentService = serviceManager.getDepartmentService();
         moduleService = serviceManager.getModuleService();
         teacherModuleService = serviceManager.getTeacherModuleService();
         userService = serviceManager.getUserService();
@@ -93,7 +89,6 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
         columnModel.getColumn(COLUMNS.POSITION.index)       .setMaxWidth(80);
         columnModel.getColumn(COLUMNS.DEGREE.index)         .setMinWidth(80);
         columnModel.getColumn(COLUMNS.WORK_EXPERIENCE.index).setMaxWidth(60);
-//        columnModel.getColumn(COLUMNS.QQI_LEVEL.index)      .setMinWidth(80);
 
         // Init module table
         tblTeacher.getSelectionModel().addListSelectionListener(createSafeListener(event -> onTeacherSelect()));
@@ -852,8 +847,8 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
                 User user = new User();
                 user.setPersonId(teacher.getPerson().getId());
                 user.getRoles().add(Role.RoleType.TEACHER.asRole());
-                user.setUsername("");
-                user.setPassword("");
+//                user.setUsername("");
+//                user.setPassword("");
                 pair.setValue2(user);
             });
 
@@ -905,15 +900,15 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
         if (getTable().getValueAt(row, COLUMNS.PERSON_ID.index) instanceof Integer id) {
             teacher.getPerson().setId(id);
         }
-        teacher.getPerson().setFirstName(getTable().getValueAt(row, COLUMNS.FIRST_NAME.index).toString());
-        teacher.getPerson().setLastName(getTable().getValueAt(row, COLUMNS.LAST_NAME.index).toString());
-        teacher.setPosition(getTable().getValueAt(row, COLUMNS.POSITION.index).toString());
-        teacher.setDegree(getTable().getValueAt(row, COLUMNS.DEGREE.index).toString());
+        teacher.getPerson().setFirstName(getTableStringValueAt(row, COLUMNS.FIRST_NAME.index));
+        teacher.getPerson().setLastName(getTableStringValueAt(row, COLUMNS.LAST_NAME.index));
+        teacher.setPosition(getTableStringValueAt(row, COLUMNS.POSITION.index));
+        teacher.setDegree(getTableStringValueAt(row, COLUMNS.DEGREE.index));
         teacher.setWorkExperience((Integer) getTable().getValueAt(row, COLUMNS.WORK_EXPERIENCE.index));
 
         User user = pair.getValue2();
-        user.setUsername(getTable().getValueAt(row, COLUMNS.USERNAME.index).toString());
-        user.setPassword(getTable().getValueAt(row, COLUMNS.PASSWORD.index).toString());
+        user.setUsername(getTableStringValueAt(row, COLUMNS.USERNAME.index));
+        user.setPassword(getTableStringValueAt(row, COLUMNS.PASSWORD.index));
     }
 
     @Override

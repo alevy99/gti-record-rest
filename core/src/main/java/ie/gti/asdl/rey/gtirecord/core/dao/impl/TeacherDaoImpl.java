@@ -39,6 +39,30 @@ public class TeacherDaoImpl implements TeacherDao {
     }
 
     @Override
+    public List<Teacher> getAll() {
+        final String sql = """
+                SELECT *
+                FROM teacher t, person p
+                WHERE t.person_id = p.id;
+                """;
+        return jdbcTemplate.query(sql, (rs) -> {
+            List<Teacher> teachers = new ArrayList<>();
+
+            int row = 0;
+            while (rs.next()) {
+                Teacher teacher = teacherRowMapper.mapRow(rs, row);
+                Person person = personRowMapper.mapRow(rs, row);
+                if (teacher != null) {
+                    teacher.setPerson(person);
+                }
+                teachers.add(teacher);
+                row++;
+            }
+            return teachers;
+        });
+    }
+
+    @Override
     public Optional<Teacher> getByPersonId(Integer personId) {
         if (personId == null) return Optional.empty();
         final String sql = """
@@ -59,28 +83,6 @@ public class TeacherDaoImpl implements TeacherDao {
     }
 
     @Override
-    public List<Teacher> getAll() {
-        final String sql = """
-                SELECT *
-                FROM teacher t, person p
-                WHERE t.person_id = p.id;
-                """;
-        return jdbcTemplate.query(sql, (rs) -> {
-            List<Teacher> teachers = new ArrayList<>();
-
-            while (rs.next()) {
-                Teacher teacher = teacherRowMapper.mapRow(rs, 0);
-                Person person = personRowMapper.mapRow(rs, 0);
-                if (teacher != null) {
-                    teacher.setPerson(person);
-                }
-                teachers.add(teacher);
-            }
-            return teachers;
-        });
-    }
-
-    @Override
     public Optional<Integer> insert(Teacher teacher) {
         if ((teacher == null) || (teacher.getPerson() == null) || (teacher.getPerson().getId() == null)) return Optional.empty();
         final String sql = "INSERT INTO teacher(person_id, position, degree, work_experience) VALUES (?, ?, ?, ?)";
@@ -88,29 +90,6 @@ public class TeacherDaoImpl implements TeacherDao {
         jdbcTemplate.update(sql, teacher.getPerson().getId(), teacher.getPosition(), teacher.getDegree(), teacher.getWorkExperience());
 
         return Optional.of(teacher.getPerson().getId());
-
-//        jdbcTemplate.update(new PreparedStatementCreator() {
-//            @Override
-//            @NonNull
-//            public PreparedStatement createPreparedStatement(@NonNull Connection connection) throws SQLException {
-//                PreparedStatement ps = connection.prepareStatement(sql);
-//                ps.setInt(1, teacher.getPerson().getId());
-//                ps.setString(2, teacher.getPosition());
-//                ps.setString(3, teacher.getDegree());
-//                if (teacher.getWorkExperience() == null) {
-//                    ps.setNull(4, Types.INTEGER);
-//                } else {
-//                    ps.setInt(4, teacher.getWorkExperience());
-//                }
-//                return ps;
-//            }
-//        });
-
-//        return Optional.of(teacher.getPerson().getId());
-
-
-//        final String sql = "INSERT INTO teacher(person_id, position, degree, work_experience) VALUES (?, ?, ?, ?)";
-//        return Optional.ofNullable(jdbcTemplate.update(sql, teacher.getPerson().getId(), teacher.getPosition(), teacher.getDegree(), teacher.getWorkExperience()));
     }
 
     @Override
