@@ -155,6 +155,11 @@ public class MainFrame extends AbstractFrame {
         jTabbedPane.addTab("Teacher", jTeacherTabPanel);
 
         btnModule.setText("MODULE");
+        btnModule.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModuleActionPerformed(evt);
+            }
+        });
 
         btnUser.setText("USERS");
         btnUser.addActionListener(new java.awt.event.ActionListener() {
@@ -298,6 +303,10 @@ public class MainFrame extends AbstractFrame {
     private void btnStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStudentActionPerformed
         getFrameManager().showSub(STUDENT);
     }//GEN-LAST:event_btnStudentActionPerformed
+
+    private void btnModuleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModuleActionPerformed
+        getFrameManager().showSub(MODULE);
+    }//GEN-LAST:event_btnModuleActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

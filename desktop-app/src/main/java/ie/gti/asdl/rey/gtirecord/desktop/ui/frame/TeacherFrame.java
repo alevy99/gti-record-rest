@@ -847,8 +847,6 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
                 User user = new User();
                 user.setPersonId(teacher.getPerson().getId());
                 user.getRoles().add(Role.RoleType.TEACHER.asRole());
-//                user.setUsername("");
-//                user.setPassword("");
                 pair.setValue2(user);
             });
 

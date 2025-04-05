@@ -248,8 +248,8 @@ public class PersonFrame extends AbstractFrame {
         pnlMain = new javax.swing.JPanel();
         pnlUsername = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        lblFNValidStatus1 = new javax.swing.JLabel();
         lblUsername = new javax.swing.JLabel();
+        lblFNValidStatus1 = new javax.swing.JLabel();
         pnlFirstName = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         tfFirstName = new javax.swing.JTextField();
@@ -305,7 +305,7 @@ public class PersonFrame extends AbstractFrame {
 
         pnlMain.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        pnlUsername.setMaximumSize(new java.awt.Dimension(339, 32767));
+        pnlUsername.setMaximumSize(new java.awt.Dimension(339, 339));
 
         jLabel4.setText("Username");
 
@@ -324,7 +324,7 @@ public class PersonFrame extends AbstractFrame {
                 .addComponent(lblUsername)
                 .addGap(98, 98, 98)
                 .addComponent(lblFNValidStatus1)
-                .addContainerGap(97, Short.MAX_VALUE))
+                .addGap(97, 97, 97))
         );
         pnlUsernameLayout.setVerticalGroup(
             pnlUsernameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -355,7 +355,7 @@ public class PersonFrame extends AbstractFrame {
                 .addComponent(tfFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblFNValidStatus)
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlFirstNameLayout.setVerticalGroup(
             pnlFirstNameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -563,8 +563,6 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
                 User user = new User();
                 user.setPersonId(student.getPerson().getId());
                 user.getRoles().add(Role.RoleType.STUDENT.asRole());
-//                user.setUsername("");
-//                user.setPassword("");
                 pair.setValue2(user);
             });
 
