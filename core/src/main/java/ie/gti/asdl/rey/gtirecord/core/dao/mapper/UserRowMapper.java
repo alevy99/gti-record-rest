@@ -4,6 +4,7 @@ import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 public class UserRowMapper implements RowMapper<User> {

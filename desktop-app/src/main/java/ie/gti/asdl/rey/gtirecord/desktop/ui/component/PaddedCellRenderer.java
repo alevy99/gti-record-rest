@@ -41,7 +41,10 @@ public class PaddedCellRenderer extends DefaultTableCellRenderer {
             setHorizontalAlignment(SwingConstants.LEFT); // Default alignment for other types
         }
 
-        if ((table.getSelectedRowCount() > 1)
+        if (!table.isEnabled()) {
+            c.setForeground(Color.GRAY);
+            c.setBackground(new Color(240, 240, 240));
+        } else if ((table.getSelectedRowCount() > 1)
                 && (highlightedRowSupplier != null)
                 && (highlightedRowSupplier.get() != null)
                 && (highlightedRowSupplier.get() == row)) {

@@ -58,20 +58,16 @@ public class CourseDaoImpl implements CourseDao {
                     WHERE c.department_id = d.id and c.course_type_id = ct.id and c.qqi_level_id = q.id
                     ORDER BY c.department_id;
                 """;
-        return jdbcTemplate.query(sql,
-                new ResultSetExtractor<Map<Department, List<Course>>>() {
-                    @Override
-                    public Map<Department, List<Course>> extractData(ResultSet rs) throws SQLException, DataAccessException {
-                        Map<Department, List<Course>> map = new HashMap<>();
-                        int rowNum = 0;
-                        while (rs.next()) {
-                            Course course = courseRowMapper.mapRow(rs, rowNum);
-                            assert course != null;
-                            map.computeIfAbsent(course.getDepartment(), department -> new ArrayList<>()).add(course);
-                            rowNum++;
-                        }
-                        return map;
+        return jdbcTemplate.query(sql, rs -> {
+                    Map<Department, List<Course>> map = new HashMap<>();
+                    int rowNum = 0;
+                    while (rs.next()) {
+                        Course course = courseRowMapper.mapRow(rs, rowNum);
+                        assert course != null;
+                        map.computeIfAbsent(course.getDepartment(), department -> new ArrayList<>()).add(course);
+                        rowNum++;
                     }
+                    return map;
                 }
         );
     }

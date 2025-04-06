@@ -10,6 +10,7 @@ import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractTableDataFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataTableModel;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DepartmentTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedJTable;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.model.entity.Department;
@@ -57,27 +58,7 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
 
     private void initTableModel() {
         if (! (tblDepartment.getModel() instanceof DataTableModel)) {
-            tblDepartment.setModel(new DataTableModel<Department>(
-                    new Object[][]{
-                            {null, null}
-                    },
-                    new String[]{
-                            "ID", "Name"
-                    }
-            ) {
-                Class[] types = new Class[]{
-                        Integer.class, String.class
-                };
-                boolean[] canEdit = new boolean[]{
-                        false, true
-                };
-                public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return canEdit[columnIndex];
-                }
-                public Class getColumnClass(int columnIndex) {
-                    return types[columnIndex];
-                }
-            });
+            tblDepartment.setModel(new DepartmentTableModel(true));
         }
     }
 
@@ -109,8 +90,7 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
         tblDepartment.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         tblDepartment.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null}
+
             },
             new String [] {
                 "ID", "Name"
@@ -362,9 +342,7 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
 
     @Override
     protected void doReloadData() {
-        List<Department> departments = departmentService.getAll();
-
-        departments.forEach(department -> {
+        departmentService.getAll().forEach(department -> {
             getTableModel().addRow(department, new Object[]{department.getId(), department.getName()});
         });
     }

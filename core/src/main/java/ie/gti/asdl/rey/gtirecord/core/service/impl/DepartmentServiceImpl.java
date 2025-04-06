@@ -20,7 +20,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public Optional<Department> getById(int id) {
+    public Optional<Department> getById(Integer id) {
         return departmentDao.getById(id);
     }
 

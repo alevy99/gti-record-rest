@@ -14,6 +14,8 @@ public class CourseRowMapper implements RowMapper<Course> {
 
     @Override
     public Course mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
+        ResultSetHelper helper = new ResultSetHelper(rs);
+
         Course course = new Course();
         course.setId(rs.getInt("id"));
         course.setName(rs.getString("name"));
@@ -21,17 +23,23 @@ public class CourseRowMapper implements RowMapper<Course> {
 
         Department department = new Department();
         department.setId(rs.getInt("department_id"));
-        department.setName(rs.getString("department_name"));
+        if (helper.hasColumn("department_name")) {
+            department.setName(rs.getString("department_name"));
+        }
         course.setDepartment(department);
 
         CourseType courseType = new CourseType();
         courseType.setId(rs.getInt("course_type_id"));
-        courseType.setType(rs.getString("type"));
+        if (helper.hasColumn("type")) {
+            courseType.setType(rs.getString("type"));
+        }
         course.setCourseType(courseType);
 
         QQILevel qqiLevel = new QQILevel();
         qqiLevel.setId(rs.getInt("qqi_level_id"));
-        qqiLevel.setName(rs.getString("qqi_name"));
+        if (helper.hasColumn("qqi_name")) {
+            qqiLevel.setName(rs.getString("qqi_name"));
+        }
         course.setQqiLevel(qqiLevel);
 
         return course;

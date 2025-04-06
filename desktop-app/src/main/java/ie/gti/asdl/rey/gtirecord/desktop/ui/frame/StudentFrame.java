@@ -41,15 +41,28 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
         }
     }
 
-//    private final ModuleService moduleService;
-
     private final StudentService studentService;
 
     private final UserService userService;
 
-//    private final TeacherModuleService teacherModuleService;
+    private final DepartmentService departmentService;
+
+    private final CourseService courseService;
+
+    private final GroupService groupService;
+
 
     private Pair<Student, User> selectedPair;
+
+    private Map<Department, List<Course>> coursesByDepartment = new HashMap<>();
+    private Map<Course, List<Group>> groupsByCourse = new HashMap<>();
+
+
+    private Department selectedDepartment;
+
+    private Course selectedCourse;
+
+    private Group selectedGroup;
 
 //    private List<Module> allModules;
 //    private List<Module> teacherModules;
@@ -62,8 +75,9 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
     public StudentFrame(FrameManager frameManager, ServiceManager serviceManager) {
         super(frameManager);
         studentService = serviceManager.getStudentService();
-//        moduleService = serviceManager.getModuleService();
-//        teacherModuleService = serviceManager.getTeacherModuleService();
+        departmentService = serviceManager.getDepartmentService();
+        groupService = serviceManager.getGroupService();
+        courseService = serviceManager.getCourseService();
         userService = serviceManager.getUserService();
         initComponents();
         initFrame();
@@ -88,25 +102,81 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
         columnModel.getColumn(COLUMNS.ON_ERASMUS.index)         .setMinWidth(40);
         columnModel.getColumn(COLUMNS.EMERGENCY_CONTACTS.index) .setMaxWidth(60);
 
+        tblStudent.getColumnModel().getColumn(COLUMNS.PASSWORD.index).setCellRenderer(new PasswordCellRenderer(() -> highlightedRow));
+        tblStudent.getColumnModel().getColumn(COLUMNS.PASSWORD.index).setCellEditor(new PasswordCellEditor());
+
         // Init module table
         tblStudent.getSelectionModel().addListSelectionListener(createSafeListener(event -> onStudentSelect()));
 
-//        initModuleTable();
+        initGroupFilterTables();
+    }
+
+    private void initGroupFilterTables() {
+        initGroupFilterTableModels();
+
+        tblDepartment.getSelectionModel().addListSelectionListener(createSafeListener(listener -> onDepartmentSelect()));
+        tblCourse.getSelectionModel().addListSelectionListener(createSafeListener(listener -> onCourseSelect()));
+        tblGroup.getSelectionModel().addListSelectionListener(createSafeListener(listener -> onGroupSelect()));
+    }
+
+    private void onDepartmentSelect() {
+        if (tblDepartment.getSelectedRowCount() != 1) return;
+        selectedDepartment = getDeparmentTableModel().getData(tblDepartment.convertRowIndexToModel(tblDepartment.getSelectedRow()));
+        if (selectedDepartment == null) return;
+
+        tblCourse.clear();
+        Optional.ofNullable(coursesByDepartment.get(selectedDepartment))
+                .stream()
+                .flatMap(List::stream)
+                .forEach(course -> {
+                    getCourseTableModel().addRow(course, new Object[]{
+                            course.getId(), course.getName(), course.getCode(),
+                            course.getCourseType(), course.getQqiLevel()
+                    });
+                });
+    }
+
+    private void onCourseSelect() {
+        if (tblCourse.getSelectedRowCount() != 1) return;
+        selectedCourse = getCourseTableModel().getData(tblCourse.convertRowIndexToModel(tblCourse.getSelectedRow()));
+        if (selectedCourse == null) return;
+        tblGroup.clear();
+
+        Optional.ofNullable(groupsByCourse.get(selectedCourse))
+                .stream()
+                .flatMap(List::stream)
+                .forEach(group -> {
+                    getGroupTableModel().addRow(group, new Object[]{
+                            group.getId(), group.getName(), group.getCode()
+                    });
+                });
+    }
+
+    private void onGroupSelect() {
+
+    }
+
+    private boolean isSelected() {
+        return (selectedPair != null)
+                && (selectedPair.getValue1() != null)
+                && (selectedPair.getValue1().getPerson() != null)
+                && (selectedPair.getValue1().getPerson().getId() != null);
     }
 
     @Override
     protected void updateUI() {
         super.updateUI();
-        btnPersonInfo.setEnabled(
-                (selectedPair != null)
-                && (selectedPair.getValue1() != null)
-                && (selectedPair.getValue1().getPerson() != null)
-                && (selectedPair.getValue1().getPerson().getId() != null));
+        var selected = isSelected();
+        btnPersonInfo.setEnabled(selected);
+//        tblDepartment.setEnabled(selected);
+//        tblCourse.setEnabled(selected);
+//        tblGroup.setEnabled(selected);
     }
 
     private void onStudentSelect() {
         reloadStudent();
         updateModulesTableUI();
+//        reloadGroupTables();
     }
 
     private void reloadStudent() {
@@ -118,11 +188,11 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
         });
     }
 
+
 //    private void reloadAllModules() {
 //        tblAllModules.clear();
 //        allModules = moduleService.getAll();
 //    }
-
     private void initTableModel() {
         if (! (getTable().getModel() instanceof DataTableModel)) {
             getTable().setModel(new DataTableModel<Pair<Student, User>>(
@@ -151,14 +221,48 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
         }
     }
 
-//    private void initModuleTable() {
-//        SwingUIUtils.addTableFilter(tblTeacherModules, tfModuleFilter);
-//        SwingUIUtils.addTableFilter(tblAllModules, tfModuleFilter);
-//
-//        tblTeacherModules.getSelectionModel().addListSelectionListener(createSafeListener(listener -> updateButtonsUI()));
-//        tblAllModules.getSelectionModel().addListSelectionListener(createSafeListener(listener -> updateButtonsUI()));
-//    }
-//
+    protected DataTableModel<Department> getDeparmentTableModel() {
+        return (DataTableModel<Department>) tblDepartment.getModel();
+    }
+
+    protected DataTableModel<Course> getCourseTableModel() {
+        return (DataTableModel<Course>) tblCourse.getModel();
+    }
+
+    protected DataTableModel<Group> getGroupTableModel() {
+        return (DataTableModel<Group>) tblGroup.getModel();
+    }
+
+    private void initGroupFilterTableModels() {
+        if (! (tblDepartment.getModel() instanceof DataTableModel)) {
+            tblDepartment.setModel(new DepartmentTableModel(false));
+        }
+        if (! (tblGroup.getModel() instanceof DataTableModel)) {
+            tblGroup.setModel(new GroupTableModel(false));
+        }
+        if (!(tblCourse.getModel() instanceof DataTableModel)) {
+            tblCourse.setModel(new DataTableModel<Course>(
+                    new Object[][]{
+                    },
+                    new String[]{
+                            "ID", "Name", "Code", "Type", "QQI"
+                    }
+            ) {
+                Class[] types = new Class[]{
+                        java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                };
+
+                public Class getColumnClass(int columnIndex) {
+                    return types[columnIndex];
+                }
+
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return false;
+                }
+            });
+        }
+    }
+
 //    private void updateButtonsUI() {
 //        btnAddModuleToTeacher.setEnabled(tblAllModules.getSelectedRowCount() > 0);
 //        btnRemoveModuleFromTeacher.setEnabled(tblTeacherModules.getSelectedRowCount() > 0);
@@ -225,7 +329,22 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
         tfStudentFilter = new javax.swing.JTextField();
         btnClose = new javax.swing.JButton();
         btnPersonInfo = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
+        pnlGroupFilter = new javax.swing.JPanel();
+        pnlDepartments = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblDepartment = new PaddedJTable();
+        btnOpenDepartments = new javax.swing.JButton();
+        pnlCourses = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblCourse = new PaddedJTable();
+        btnOpenCourses = new javax.swing.JButton();
+        pnlGroups = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        tblGroup = new PaddedJTable();
+        btnOpenGroups = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -235,18 +354,18 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
         tblStudent.setAutoCreateRowSorter(true);
         tblStudent.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         tblStudent.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+            new Object [][] {
 
-                },
-                new String [] {
-                        "Person ID", "First name", "Last name", "Username", "Password", "Group", "Education", "On Erasmus", "Contacts"
-                }
+            },
+            new String [] {
+                "Person ID", "First name", "Last name", "Username", "Password", "Group", "Education", "On Erasmus", "Contacts"
+            }
         ) {
             Class[] types = new Class [] {
-                    java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                    false, true, true, true, true, false, true, true, true
+                false, true, true, true, true, false, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -386,15 +505,235 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
             }
         });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 51, 204));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("DEPARTMENTS");
+
+        tblDepartment.setAutoCreateRowSorter(true);
+        tblDepartment.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Name"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblDepartment.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tblDepartment.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane2.setViewportView(tblDepartment);
+
+        btnOpenDepartments.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnOpenDepartments.setForeground(new java.awt.Color(0, 51, 204));
+        btnOpenDepartments.setText("Open");
+        btnOpenDepartments.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOpenDepartmentsActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlDepartmentsLayout = new javax.swing.GroupLayout(pnlDepartments);
+        pnlDepartments.setLayout(pnlDepartmentsLayout);
+        pnlDepartmentsLayout.setHorizontalGroup(
+            pnlDepartmentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlDepartmentsLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(pnlDepartmentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(pnlDepartmentsLayout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnOpenDepartments))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 207, Short.MAX_VALUE)
+        pnlDepartmentsLayout.setVerticalGroup(
+            pnlDepartmentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlDepartmentsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlDepartmentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(btnOpenDepartments))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 51, 204));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("COURSES");
+        jLabel3.setMaximumSize(new java.awt.Dimension(45, 16));
+        jLabel3.setMinimumSize(new java.awt.Dimension(45, 16));
+        jLabel3.setPreferredSize(new java.awt.Dimension(45, 16));
+
+        tblCourse.setAutoCreateRowSorter(true);
+        tblCourse.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Name", "Code", "Type", "QQI"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblCourse.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tblCourse.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane3.setViewportView(tblCourse);
+
+        btnOpenCourses.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnOpenCourses.setForeground(new java.awt.Color(0, 51, 204));
+        btnOpenCourses.setText("Open");
+        btnOpenCourses.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOpenCoursesActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlCoursesLayout = new javax.swing.GroupLayout(pnlCourses);
+        pnlCourses.setLayout(pnlCoursesLayout);
+        pnlCoursesLayout.setHorizontalGroup(
+            pnlCoursesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlCoursesLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(pnlCoursesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlCoursesLayout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnOpenCourses))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)))
+        );
+        pnlCoursesLayout.setVerticalGroup(
+            pnlCoursesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlCoursesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlCoursesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnOpenCourses)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(0, 51, 204));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("GROUPS");
+
+        tblGroup.setAutoCreateRowSorter(true);
+        tblGroup.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Name", "Code"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblGroup.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tblGroup.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane5.setViewportView(tblGroup);
+
+        btnOpenGroups.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnOpenGroups.setForeground(new java.awt.Color(0, 51, 204));
+        btnOpenGroups.setText("Open");
+        btnOpenGroups.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOpenGroupsActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlGroupsLayout = new javax.swing.GroupLayout(pnlGroups);
+        pnlGroups.setLayout(pnlGroupsLayout);
+        pnlGroupsLayout.setHorizontalGroup(
+            pnlGroupsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlGroupsLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(pnlGroupsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlGroupsLayout.createSequentialGroup()
+                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnOpenGroups))
+                    .addGroup(pnlGroupsLayout.createSequentialGroup()
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(0, 0, 0))
+        );
+        pnlGroupsLayout.setVerticalGroup(
+            pnlGroupsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlGroupsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlGroupsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(btnOpenGroups))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout pnlGroupFilterLayout = new javax.swing.GroupLayout(pnlGroupFilter);
+        pnlGroupFilter.setLayout(pnlGroupFilterLayout);
+        pnlGroupFilterLayout.setHorizontalGroup(
+            pnlGroupFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlGroupFilterLayout.createSequentialGroup()
+                .addComponent(pnlDepartments, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlCourses, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlGroups, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        pnlGroupFilterLayout.setVerticalGroup(
+            pnlGroupFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlGroupFilterLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlGroupFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(pnlCourses, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlDepartments, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlGroups, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -405,15 +744,15 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlGroupFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addComponent(pnlControls, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnPersonInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+                            .addComponent(btnPersonInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
                             .addComponent(btnClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addGap(24, 24, 24))
+                .addGap(9, 9, 9))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -421,8 +760,7 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
                 .addGap(9, 9, 9)
                 .addComponent(jTitle)
                 .addGap(12, 12, 12)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(pnlControls, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
@@ -431,7 +769,7 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pnlGroupFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -441,12 +779,12 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1045, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1088, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 824, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 770, Short.MAX_VALUE)
         );
 
         pack();
@@ -476,6 +814,18 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
         onShowPersonInfo();
     }//GEN-LAST:event_btnPersonInfoActionPerformed
 
+    private void btnOpenDepartmentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenDepartmentsActionPerformed
+        getFrameManager().showSub(DEPARTMENT);
+    }//GEN-LAST:event_btnOpenDepartmentsActionPerformed
+
+    private void btnOpenCoursesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenCoursesActionPerformed
+        getFrameManager().showSub(COURSE);
+    }//GEN-LAST:event_btnOpenCoursesActionPerformed
+
+    private void btnOpenGroupsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenGroupsActionPerformed
+        getFrameManager().showSub(GROUP);
+    }//GEN-LAST:event_btnOpenGroupsActionPerformed
+
     private void onShowPersonInfo() {
         if ((selectedPair == null) || (selectedPair.getValue1() == null)) {
             btnPersonInfo.setEnabled(false);
@@ -504,16 +854,31 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnClose;
     private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnOpenCourses;
+    private javax.swing.JButton btnOpenDepartments;
+    private javax.swing.JButton btnOpenGroups;
     private javax.swing.JButton btnPersonInfo;
     private javax.swing.JButton btnReload;
     private javax.swing.JButton btnSave;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JLabel jTitle;
     private javax.swing.JPanel jUpdatePanel;
     private javax.swing.JPanel pnlControls;
+    private javax.swing.JPanel pnlCourses;
+    private javax.swing.JPanel pnlDepartments;
+    private javax.swing.JPanel pnlGroupFilter;
+    private javax.swing.JPanel pnlGroups;
+    private PaddedJTable tblCourse;
+    private PaddedJTable tblDepartment;
+    private PaddedJTable tblGroup;
     private PaddedJTable tblStudent;
     private javax.swing.JTextField tfStudentFilter;
     // End of variables declaration//GEN-END:variables
@@ -554,6 +919,7 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
 
     @Override
     protected void doReloadData() {
+        // Load students
         studentService.getAll().forEach(student -> {
             Pair<Student, User> pair = new Pair<>(student, null);
             userService.getByPersonId(student.getPerson().getId()).ifPresentOrElse(user -> {
@@ -575,12 +941,31 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
             });
         });
 
+        // Load departments
+        reloadDepartments();
+
+        // Update selected rows
         if (getTableModel().getDataList().contains(selectedPair)) {
             int viewRow = tblStudent.convertRowIndexToView(getTableModel().getDataList().indexOf(selectedPair));
             tblStudent.setRowSelectionInterval(viewRow, viewRow);
         } else {
             selectedPair = null;
         }
+    }
+
+    private void reloadDepartments() {
+        departmentService.getAll().forEach(department -> {
+            getDeparmentTableModel().addRow(department, new Object[]{department.getId(), department.getName()});
+        });
+        coursesByDepartment = courseService.getAllGroupedByDepartment();
+        groupsByCourse = groupService.getAllGroupedByCourse();
+
+//        courseService.getAll().forEach(course -> {
+//            getCourseTableModel().addRow(course, new Object[]{
+//                    course.getId(), course.getName(), course.getCode(),
+//                    course.getDepartment(), course.getCourseType(), course.getQqiLevel()
+//            });
+//        });
     }
 
     @Override

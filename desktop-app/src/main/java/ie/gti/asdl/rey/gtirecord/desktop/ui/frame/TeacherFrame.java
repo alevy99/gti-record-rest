@@ -90,6 +90,9 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
         columnModel.getColumn(COLUMNS.DEGREE.index)         .setMinWidth(80);
         columnModel.getColumn(COLUMNS.WORK_EXPERIENCE.index).setMaxWidth(60);
 
+        tblTeacher.getColumnModel().getColumn(COLUMNS.PASSWORD.index).setCellRenderer(new PasswordCellRenderer(() -> highlightedRow));
+        tblTeacher.getColumnModel().getColumn(COLUMNS.PASSWORD.index).setCellEditor(new PasswordCellEditor());
+
         // Init module table
         tblTeacher.getSelectionModel().addListSelectionListener(createSafeListener(event -> onTeacherSelect()));
 
