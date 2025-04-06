@@ -6,9 +6,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.util.Arrays;
-import java.util.function.IntConsumer;
 import java.util.function.Supplier;
+
+import static ie.gti.asdl.rey.gtirecord.desktop.ui.component.GuiConsts.*;
 
 
 @Setter
@@ -43,8 +43,10 @@ public class PaddedCellRenderer extends DefaultTableCellRenderer {
 
         if (!table.isEnabled()) {
             c.setForeground(Color.GRAY);
-            c.setBackground(new Color(240, 240, 240));
-        } else if ((table.getSelectedRowCount() > 1)
+            Color bg = (row % 2 == 0) ? DISABLED_EVEN_ROW_COLOR : DISABLED_ODD_ROW_COLOR;
+            setBackground(bg);
+        } else
+            if ((table.getSelectedRowCount() > 1)
                 && (highlightedRowSupplier != null)
                 && (highlightedRowSupplier.get() != null)
                 && (highlightedRowSupplier.get() == row)) {
@@ -53,8 +55,9 @@ public class PaddedCellRenderer extends DefaultTableCellRenderer {
             // Keep selection color
             setBackground(table.getSelectionBackground());
         } else {
-            // Apply alternating row colors
-            Color bg = (row % 2 == 0) ? GuiConsts.EVEN_ROW_COLOR : GuiConsts.ODD_ROW_COLOR;
+            // Apply alternating row color
+            c.setForeground(Color.BLACK);
+            Color bg = (row % 2 == 0) ? EVEN_ROW_COLOR : ODD_ROW_COLOR;
             setBackground(bg);
         }
 
