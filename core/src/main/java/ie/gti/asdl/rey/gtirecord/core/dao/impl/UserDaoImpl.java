@@ -60,7 +60,7 @@ public class UserDaoImpl implements UserDao {
                 """
                         SELECT u.id, u.person_id, u.username, u.password, r.id as role_id, r.name as role_name
                         FROM user u
-                        LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id\s
+                        LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id
                         LEFT OUTER JOIN role r ON r.id = ur.role_id
                         WHERE u.id=?""";
         return Optional.ofNullable(jdbcTemplate.query(sql, rsExtractor, id));

@@ -1,5 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.desktop.ui.component;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +8,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class DataTableModel<T> extends DefaultTableModel {
 
@@ -27,8 +29,18 @@ public class DataTableModel<T> extends DefaultTableModel {
         dataList.remove(row);
     }
 
+    @NotNull
     public T getData(int row) {
         return dataList.get(row);
+    }
+
+    public Optional<Integer> getDataRow(T data) {
+        if (dataList.contains(data)) {
+            return Optional.of(dataList.indexOf(data));
+        } else {
+            return Optional.empty();
+        }
+
     }
 
     void clear() {

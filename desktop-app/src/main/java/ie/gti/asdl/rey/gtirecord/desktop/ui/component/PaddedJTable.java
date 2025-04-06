@@ -1,5 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.desktop.ui.component;
 
+import lombok.Getter;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.*;
@@ -10,6 +12,11 @@ import static javax.swing.SwingConstants.CENTER;
 
 public class PaddedJTable extends JTable {
 
+    private Boolean suppressSelectionEvents = false;
+
+    @Getter
+    private final ListSelectionListenerCreator listSelectionListener;
+
     public PaddedJTable() {
         this(null);
     }
@@ -17,24 +24,26 @@ public class PaddedJTable extends JTable {
     public PaddedJTable(Supplier<Integer> highlightedRowSupplier) {
         super();
 //        java.awt.EventQueue.invokeLater(() -> {
-            setRowHeight(25); // Increase row height for better spacing
-            setDefaultRenderer(Object.class, new PaddedCellRenderer(highlightedRowSupplier));
-            setDefaultRenderer(String.class, new PaddedCellRenderer(highlightedRowSupplier));
-            setDefaultRenderer(Integer.class, new PaddedCellRenderer(highlightedRowSupplier));
-            setDefaultRenderer(Boolean.class, new BooleanCellRenderer(highlightedRowSupplier));
-            setDefaultEditor(Object.class, new PaddedCellEditor());
-            // Add sorter to the table
-            if (getRowSorter() == null) {
-                setRowSorter(new TableRowSorter<>(this.getModel()));
-            }
+        listSelectionListener = new ListSelectionListenerCreator(() -> suppressSelectionEvents);
 
-            JTableHeader header = getTableHeader();
-            header.setFont(new Font("Comic", Font.PLAIN, 14)); // Plain, larger font
-            header.setBackground(Color.LIGHT_GRAY); // Dark background
-            header.setForeground(Color.DARK_GRAY); // White text
-            header.setOpaque(true);
-            header.setPreferredSize(new Dimension(header.getWidth(), 30));
-            ((DefaultTableCellRenderer ) header.getDefaultRenderer()).setHorizontalAlignment(CENTER);
+        setRowHeight(25); // Increase row height for better spacing
+        setDefaultRenderer(Object.class, new PaddedCellRenderer(highlightedRowSupplier));
+        setDefaultRenderer(String.class, new PaddedCellRenderer(highlightedRowSupplier));
+        setDefaultRenderer(Integer.class, new PaddedCellRenderer(highlightedRowSupplier));
+        setDefaultRenderer(Boolean.class, new BooleanCellRenderer(highlightedRowSupplier));
+        setDefaultEditor(Object.class, new PaddedCellEditor());
+        // Add sorter to the table
+        if (getRowSorter() == null) {
+            setRowSorter(new TableRowSorter<>(this.getModel()));
+        }
+
+        JTableHeader header = getTableHeader();
+        header.setFont(new Font("Comic", Font.PLAIN, 14)); // Plain, larger font
+        header.setBackground(Color.LIGHT_GRAY); // Dark background
+        header.setForeground(Color.DARK_GRAY); // White text
+        header.setOpaque(true);
+        header.setPreferredSize(new Dimension(header.getWidth(), 30));
+        ((DefaultTableCellRenderer ) header.getDefaultRenderer()).setHorizontalAlignment(CENTER);
 //        });
     }
 
@@ -57,6 +66,7 @@ public class PaddedJTable extends JTable {
     }
 
     public void clear() {
+        suppressSelectionEvents = true;
         if (getModel() instanceof DefaultTableModel model) {
             model.setRowCount(0);
         }
@@ -64,6 +74,7 @@ public class PaddedJTable extends JTable {
             model.clear();
             model.setRowCount(0);
         }
+        suppressSelectionEvents = false;
     }
 
     // Custom Cell Editor with Padding

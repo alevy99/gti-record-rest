@@ -58,7 +58,7 @@
                           <Component id="pnlControls" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="btnPersonInfo" pref="227" max="32767" attributes="0"/>
+                              <Component id="btnPersonInfo" pref="203" max="32767" attributes="0"/>
                               <Component id="btnClose" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -163,7 +163,7 @@
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jUpdatePanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="391" max="32767" attributes="0"/>
+                      <EmptySpace pref="84" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -171,19 +171,22 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jUpdatePanel" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="btnAdd" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                                   <Component id="btnSave" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="btnDelete" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
-                                  <Component id="btnReload" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
-                              </Group>
                           </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="jUpdatePanel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="btnDelete" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                          <Component id="btnReload" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -261,21 +264,18 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="tfStudentFilter" max="32767" attributes="0"/>
-                              <Component id="jLabel2" pref="147" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace pref="9" max="32767" attributes="0"/>
+                          <Component id="jLabel2" min="-2" pref="108" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                          <Component id="tfStudentFilter" min="-2" pref="216" max="-2" attributes="0"/>
+                          <EmptySpace pref="163" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="tfStudentFilter" min="-2" pref="31" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfStudentFilter" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -290,7 +290,7 @@
                       <Color blue="cc" green="33" red="0" type="rgb"/>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="2"/>
-                    <Property name="text" type="java.lang.String" value="Student filter"/>
+                    <Property name="text" type="java.lang.String" value="Student filter:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="tfStudentFilter">

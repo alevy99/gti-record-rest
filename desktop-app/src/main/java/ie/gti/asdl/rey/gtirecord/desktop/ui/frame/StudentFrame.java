@@ -11,6 +11,7 @@ import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractTableDataFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.*;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
+import ie.gti.asdl.rey.gtirecord.model.annotation.DescriptionUtil;
 import ie.gti.asdl.rey.gtirecord.model.entity.*;
 import ie.gti.asdl.rey.gtirecord.model.util.Pair;
 import org.springframework.context.ApplicationContext;
@@ -18,6 +19,7 @@ import org.springframework.context.ApplicationContext;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.*;
 import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeListener;
@@ -56,16 +58,13 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
 
     private Map<Department, List<Course>> coursesByDepartment = new HashMap<>();
     private Map<Course, List<Group>> groupsByCourse = new HashMap<>();
-
+    private Map<Group, Department> departmentsByGroup = new HashMap<>();
 
     private Department selectedDepartment;
 
     private Course selectedCourse;
 
     private Group selectedGroup;
-
-//    private List<Module> allModules;
-//    private List<Module> teacherModules;
 
     private Integer highlightedRow;
 
@@ -106,7 +105,7 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
         tblStudent.getColumnModel().getColumn(COLUMNS.PASSWORD.index).setCellEditor(new PasswordCellEditor());
 
         // Init module table
-        tblStudent.getSelectionModel().addListSelectionListener(createSafeListener(event -> onStudentSelect()));
+        tblStudent.getSelectionModel().addListSelectionListener(createSafeListener(event -> onSelectStudent()));
 
         initGroupFilterTables();
     }
@@ -114,49 +113,85 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
     private void initGroupFilterTables() {
         initGroupFilterTableModels();
 
-        tblDepartment.getSelectionModel().addListSelectionListener(createSafeListener(listener -> onDepartmentSelect()));
-        tblCourse.getSelectionModel().addListSelectionListener(createSafeListener(listener -> onCourseSelect()));
-        tblGroup.getSelectionModel().addListSelectionListener(createSafeListener(listener -> onGroupSelect()));
+        tblDepartment.getSelectionModel().addListSelectionListener(tblDepartment.getListSelectionListener().createSafeListener(listener -> onSelectDepartment()));
+        tblCourse.getSelectionModel().addListSelectionListener(tblCourse.getListSelectionListener().createSafeListener(listener -> onSelectCourse()));
+        tblGroup.getSelectionModel().addListSelectionListener(tblGroup.getListSelectionListener().createSafeListener(listener -> onSelectGroup()));
     }
 
-    private void onDepartmentSelect() {
-        if (tblDepartment.getSelectedRowCount() != 1) return;
-        selectedDepartment = getDeparmentTableModel().getData(tblDepartment.convertRowIndexToModel(tblDepartment.getSelectedRow()));
-        if (selectedDepartment == null) return;
-
-        tblCourse.clear();
-        Optional.ofNullable(coursesByDepartment.get(selectedDepartment))
-                .stream()
-                .flatMap(List::stream)
-                .forEach(course -> {
-                    getCourseTableModel().addRow(course, new Object[]{
-                            course.getId(), course.getName(), course.getCode(),
-                            course.getCourseType(), course.getQqiLevel()
-                    });
-                });
+    private void onSelectStudent() {
+        reloadStudent();
+        updateGroupFilterTableUI();
+//        reloadGroupTables();
     }
 
-    private void onCourseSelect() {
-        if (tblCourse.getSelectedRowCount() != 1) return;
-        selectedCourse = getCourseTableModel().getData(tblCourse.convertRowIndexToModel(tblCourse.getSelectedRow()));
-        if (selectedCourse == null) return;
-        tblGroup.clear();
+    private void onSelectDepartment() {
+        switch (tblDepartment.getSelectedRowCount()) {
+            case 0 -> {
+                tblCourse.clear();
+                tblGroup.clear();
+            }
+            case 1 -> {
+                selectedDepartment = getDeparmentTableModel().getData(tblDepartment.convertRowIndexToModel(tblDepartment.getSelectedRow()));
 
-        Optional.ofNullable(groupsByCourse.get(selectedCourse))
-                .stream()
-                .flatMap(List::stream)
-                .forEach(group -> {
-                    getGroupTableModel().addRow(group, new Object[]{
-                            group.getId(), group.getName(), group.getCode()
-                    });
-                });
-    }
-
-    private void onGroupSelect() {
+                tblCourse.clear();
+                tblGroup.clear(); // Clear groups as well
+                Optional.ofNullable(coursesByDepartment.get(selectedDepartment))
+                        .stream()
+                        .flatMap(List::stream)
+                        .forEach(course -> {
+                            getCourseTableModel().addRow(course, new Object[]{
+                                    course.getId(), course.getName(), course.getCode(),
+                                    course.getCourseType(), course.getQqiLevel()
+                            });
+                        });
+            }
+            default -> throw new IllegalStateException("Too many departments selected: " + tblDepartment.getSelectedRowCount());
+        }
 
     }
 
-    private boolean isSelected() {
+    private void onSelectCourse() {
+        switch (tblCourse.getSelectedRowCount()) {
+            case 0 -> {
+                tblGroup.clear();
+            }
+            case 1 -> {
+                selectedCourse = getCourseTableModel().getData(tblCourse.convertRowIndexToModel(tblCourse.getSelectedRow()));
+                tblGroup.clear();
+
+                Optional.ofNullable(groupsByCourse.get(selectedCourse))
+                        .stream()
+                        .flatMap(List::stream)
+                        .forEach(group -> {
+                            getGroupTableModel().addRow(group, new Object[]{
+                                    group.getId(), group.getName(), group.getCode()
+                            });
+                        });
+            }
+        }
+    }
+
+    private void onSelectGroup() {
+        if (selectedPair == null) return;
+        switch (tblGroup.getSelectedRowCount()) {
+            case 0 -> {
+                selectedGroup = new Group();
+            }
+            case 1 -> {
+                selectedGroup = getGroupTableModel().getData(tblGroup.convertRowIndexToModel(tblGroup.getSelectedRow()));
+            }
+            default -> { return; }
+        }
+        selectedPair.getValue1().setGroup(selectedGroup);
+//        int studentModelRow = tblStudent.convertRowIndexToModel(highlightedRow);
+//        getTableModel().getData()
+//        if (KeyUtil.hasKey(selectedGroup)) {
+            getTableModel().setValueAt(DescriptionUtil.getShortDescription(selectedGroup),
+                    tblStudent.convertRowIndexToModel(tblStudent.getSelectedRow()), COLUMNS.GROUP.index);
+//        }
+    }
+
+    private boolean isSelectedSavedData() {
         return (selectedPair != null)
                 && (selectedPair.getValue1() != null)
                 && (selectedPair.getValue1().getPerson() != null)
@@ -166,17 +201,17 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
     @Override
     protected void updateUI() {
         super.updateUI();
-        var selected = isSelected();
+        var selected = isSelectedSavedData();
         btnPersonInfo.setEnabled(selected);
 //        tblDepartment.setEnabled(selected);
 //        tblCourse.setEnabled(selected);
 //        tblGroup.setEnabled(selected);
     }
 
-    private void onStudentSelect() {
-        reloadStudent();
-        updateModulesTableUI();
-//        reloadGroupTables();
+    private void clearGroupFilterSelection() {
+        tblDepartment.clearSelection();
+        tblCourse.clearSelection();
+        tblGroup.clearSelection();
     }
 
     private void reloadStudent() {
@@ -185,6 +220,23 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
             highlightedRow = row; // Set new highlighted row
             tblStudent.repaint(); // Repaint after we changed highlightedRow
             selectedPair = getTableModel().getData(tblStudent.convertRowIndexToModel(row));
+            Student student = selectedPair.getValue1();
+            selectedDepartment = departmentsByGroup.getOrDefault(student.getGroup(), new Department());
+            getDeparmentTableModel().getDataRow(selectedDepartment).ifPresentOrElse(modelRow -> {
+                int viewRow = tblDepartment.convertRowIndexToView(modelRow);
+                tblDepartment.setRowSelectionInterval(viewRow, viewRow);
+                onSelectDepartment();
+                getCourseTableModel().getDataRow(student.getGroup().getCourse()).ifPresentOrElse(courseModelRow -> {
+                    int viewCourseRow = tblCourse.convertRowIndexToView(courseModelRow);
+                    tblCourse.setRowSelectionInterval(viewCourseRow, viewCourseRow);
+                    onSelectCourse();
+                    getGroupTableModel().getDataRow(student.getGroup()).ifPresentOrElse(groupModelRow -> {
+                        int viewGroupRow = tblGroup.convertRowIndexToView(groupModelRow);
+                        tblGroup.setRowSelectionInterval(viewGroupRow, viewGroupRow);
+                        onSelectGroup();
+                    }, this::clearGroupFilterSelection);
+                }, this::clearGroupFilterSelection);
+            }, this::clearGroupFilterSelection);
         });
     }
 
@@ -268,27 +320,12 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
 //        btnRemoveModuleFromTeacher.setEnabled(tblTeacherModules.getSelectedRowCount() > 0);
 //    }
 
-    private void updateModulesTableUI() {
-//        lblTeacherModulesTitle.setText((selectedPair == null) || (selectedPair.getValue1() == null) ? "Teacher Modules" :
-//                DescriptionUtil.getShortDescription(selectedPair.getValue1().getPerson()) + " Modules");
-//
-//        tblTeacherModules.clear();
-//        tblAllModules.clear();
-//
-//        if (teacherModules != null) {
-//            teacherModules.forEach(module -> {
-//                getTeacherModulesTableModel().addRow(module, new Object[] {module.getId(), module.getName(), module.getCode()});
-//            });
-//        }
-//        if (allModules != null) {
-//            List<Module> allExceptTeacherModules = new ArrayList<>(allModules);
-//            if (teacherModules != null) {
-//                allExceptTeacherModules.removeAll(teacherModules);
-//            }
-//            allExceptTeacherModules.forEach(module -> {
-//                getAllModulesTableModel().addRow(module, new Object[] {module.getId(), module.getName(), module.getCode()});
-//            });
-//        }
+    private void updateGroupFilterTableUI() {
+        if (tblStudent.getSelectedRowCount() == 0) {
+            tblDepartment.clearSelection();
+            tblCourse.clear();
+            tblGroup.clear();
+        }
     }
 
 //    protected DataTableModel<Module> getTeacherModulesTableModel() {
@@ -304,7 +341,7 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
         super.onFrameShown();
 //        reloadAllModules();
 //        reloadTeacherModules();
-        updateModulesTableUI();
+        updateGroupFilterTableUI();
     }
 
     /**
@@ -426,7 +463,7 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 3, 15)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 51, 204));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel2.setText("Student filter");
+        jLabel2.setText("Student filter:");
 
         tfStudentFilter.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         tfStudentFilter.setForeground(new java.awt.Color(0, 51, 204));
@@ -437,18 +474,16 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
             jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jUpdatePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tfStudentFilter)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE))
-                .addContainerGap(9, Short.MAX_VALUE))
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(tfStudentFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(163, Short.MAX_VALUE))
         );
         jUpdatePanelLayout.setVerticalGroup(
             jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jUpdatePanelLayout.createSequentialGroup()
+            .addGroup(jUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfStudentFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(tfStudentFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout pnlControlsLayout = new javax.swing.GroupLayout(pnlControls);
@@ -468,22 +503,24 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
                     .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(391, Short.MAX_VALUE))
+                .addContainerGap(84, Short.MAX_VALUE))
         );
         pnlControlsLayout.setVerticalGroup(
             pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlControlsLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(pnlControlsLayout.createSequentialGroup()
+                .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlControlsLayout.createSequentialGroup()
                         .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlControlsLayout.createSequentialGroup()
+                        .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(2, 2, 2)))
+                .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -750,7 +787,7 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
                         .addComponent(pnlControls, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnPersonInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                            .addComponent(btnPersonInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
                             .addComponent(btnClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(9, 9, 9))
         );
@@ -912,6 +949,7 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
     protected Pair<Student, User> createDataInstance() {
         var student = new Student();
         student.setPerson(new Person());
+        student.setGroup(new Group());
         User user = new User();
         user.getRoles().add(Role.RoleType.STUDENT.asRole());
         return new Pair<>(student, user);
@@ -935,7 +973,7 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
             getTableModel().addRow(pair, new Object[]{student.getPerson().getId(),
                     student.getPerson().getFirstName(), student.getPerson().getLastName(),
                     pair.getValue2().getUsername(), pair.getValue2().getPassword(),
-                    "",
+                    DescriptionUtil.getShortDescription(student.getGroup()),
                     student.getEducation(), student.getOnErasmus() == null ? false : student.getOnErasmus(),
                     student.getEmergencyContacts()
             });
@@ -948,6 +986,7 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
         if (getTableModel().getDataList().contains(selectedPair)) {
             int viewRow = tblStudent.convertRowIndexToView(getTableModel().getDataList().indexOf(selectedPair));
             tblStudent.setRowSelectionInterval(viewRow, viewRow);
+            onSelectStudent();
         } else {
             selectedPair = null;
         }
@@ -959,6 +998,21 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
         });
         coursesByDepartment = courseService.getAllGroupedByDepartment();
         groupsByCourse = groupService.getAllGroupedByCourse();
+
+
+//        coursesByDepartment
+
+        departmentsByGroup =
+                coursesByDepartment.entrySet().stream()
+                        .flatMap(entry -> {
+                            Department department = entry.getKey();
+                            List<Course> courses = entry.getValue();
+                            return courses.stream()
+                                    .flatMap(course -> groupsByCourse.getOrDefault(course, List.of()).stream() // List<Group>
+                                            .map(group -> Map.entry(group, department))
+                                    );
+                        })
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
 //        courseService.getAll().forEach(course -> {
 //            getCourseTableModel().addRow(course, new Object[]{

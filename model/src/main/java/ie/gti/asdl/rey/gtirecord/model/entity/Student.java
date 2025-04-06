@@ -9,6 +9,8 @@ public class Student {
     @KeyField
     private Person person;
 
+    private Group group;
+
     private String education;
 
     private Boolean onErasmus;

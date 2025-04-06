@@ -1,7 +1,9 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.StudentDao;
+import ie.gti.asdl.rey.gtirecord.core.dao.mapper.GroupRowMapper;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.StudentRowMapper;
+import ie.gti.asdl.rey.gtirecord.model.entity.Group;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import ie.gti.asdl.rey.gtirecord.model.entity.Student;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,9 @@ public class StudentDaoImpl implements StudentDao {
 
     private static final RowMapper<Person> personRowMapper = new BeanPropertyRowMapper<>(Person.class);
 
-    private static final RowMapper<Student> studentRowMapper = new StudentRowMapper();
+    private static final StudentRowMapper studentRowMapper = new StudentRowMapper();
+
+    private static final GroupRowMapper groupRowMapper = new GroupRowMapper();
 
     @Autowired
     public StudentDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -32,9 +36,10 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public List<Student> getAll() {
         final String sql = """
-                SELECT s.*, p.*
-                FROM student s, person p
-                WHERE s.person_id = p.id;
+                SELECT s.*, p.*, g.id as group_id, g.course_id, g.name as group_name, g.code as group_code
+                FROM student s
+                INNER JOIN person p on p.id = s.person_id
+                LEFT OUTER JOIN `group` g ON s.group_id = g.id
                 """;
         return jdbcTemplate.query(sql, (rs) -> {
             List<Student> students = new ArrayList<>();
@@ -43,8 +48,10 @@ public class StudentDaoImpl implements StudentDao {
             while (rs.next()) {
                 Student student = studentRowMapper.mapRow(rs, row);
                 Person person = personRowMapper.mapRow(rs, row);
+                Group group = groupRowMapper.mapRow(rs, row);
                 if (student != null) {
                     student.setPerson(person);
+                    student.setGroup(group);
                 }
                 students.add(student);
                 row++;
@@ -76,16 +83,16 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public Optional<Integer> insert(Student student) {
         if ((student == null) || (student.getPerson() == null) || (student.getPerson().getId() == null)) return Optional.empty();
-        final String sql = "INSERT INTO student(person_id, education, is_on_erasmus, emergency_contacts) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, student.getPerson().getId(), student.getEducation(), student.getOnErasmus(), student.getEmergencyContacts());
+        final String sql = "INSERT INTO student(person_id, group_id, education, is_on_erasmus, emergency_contacts) VALUES (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, student.getPerson().getId(), student.getGroup().getId(), student.getEducation(), student.getOnErasmus(), student.getEmergencyContacts());
         return Optional.of(student.getPerson().getId());
     }
 
     @Override
     public void update(Student student) {
         if ((student == null) || (student.getPerson() == null) || (student.getPerson().getId() == null)) return;
-        final String sql = "UPDATE student SET education = ?, is_on_erasmus = ?, emergency_contacts = ? WHERE person_id = ?";
-        jdbcTemplate.update(sql, student.getEducation(), student.getOnErasmus(), student.getEmergencyContacts(), student.getPerson().getId());
+        final String sql = "UPDATE student SET group_id = ?, education = ?, is_on_erasmus = ?, emergency_contacts = ? WHERE person_id = ?";
+        jdbcTemplate.update(sql, student.getGroup().getId(), student.getEducation(), student.getOnErasmus(), student.getEmergencyContacts(), student.getPerson().getId());
     }
 
     @Override
