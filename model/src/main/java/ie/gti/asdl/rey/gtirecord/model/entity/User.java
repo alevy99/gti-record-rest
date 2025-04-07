@@ -22,10 +22,10 @@ public class User implements Serializable {
     private Integer id;
 
     @ShortDescriptionField
-    @NotBlank(groups = {OnCreate.class, OnUpdate.class})
+    @NotBlank
     private String username;
 
-//    @NotBlank(groups = {OnCreate.class, OnUpdate.class})
+//    @NotBlank
     private String password;
 
     private final Set<Role> roles = new HashSet<>();

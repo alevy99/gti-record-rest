@@ -2,6 +2,9 @@ package ie.gti.asdl.rey.gtirecord.model.entity;
 
 import ie.gti.asdl.rey.gtirecord.model.annotation.KeyField;
 import ie.gti.asdl.rey.gtirecord.model.annotation.ShortDescriptionField;
+import ie.gti.asdl.rey.gtirecord.model.validation.OnUpdate;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -30,9 +33,11 @@ public class CourseType {
     }
 
     @KeyField
+    @NotNull(groups = OnUpdate.class)
     private Integer id;
 
     @ShortDescriptionField
+    @NotBlank
     private String type;
 
     @Override

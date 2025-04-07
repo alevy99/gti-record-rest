@@ -2,6 +2,9 @@ package ie.gti.asdl.rey.gtirecord.model.entity;
 
 import ie.gti.asdl.rey.gtirecord.model.annotation.KeyField;
 import ie.gti.asdl.rey.gtirecord.model.annotation.ShortDescriptionField;
+import ie.gti.asdl.rey.gtirecord.model.validation.OnUpdate;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -43,9 +46,11 @@ public class Role implements Serializable {
     }
 
     @KeyField
+    @NotNull(groups = OnUpdate.class)
     private Integer id;
 
     @ShortDescriptionField
+    @NotBlank
     private String name;
 
     public boolean isValid() {

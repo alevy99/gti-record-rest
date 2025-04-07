@@ -2,6 +2,8 @@ package ie.gti.asdl.rey.gtirecord.model.entity;
 
 import ie.gti.asdl.rey.gtirecord.model.annotation.KeyField;
 import ie.gti.asdl.rey.gtirecord.model.annotation.ShortDescriptionField;
+import ie.gti.asdl.rey.gtirecord.model.validation.OnUpdate;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -10,6 +12,7 @@ import java.io.Serializable;
 public class Address implements Serializable {
 
     @KeyField
+    @NotNull
     private Integer personId;
 
     private String line1;
