@@ -22,4 +22,5 @@ public interface StudentDao {
 
     void delete(Integer personId);
 
+    List<Student> getByGroupId(Integer groupId);
 }

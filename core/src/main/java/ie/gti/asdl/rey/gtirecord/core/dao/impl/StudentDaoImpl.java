@@ -23,11 +23,7 @@ public class StudentDaoImpl implements StudentDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-//    private static final RowMapper<Person> personRowMapper = new BeanPropertyRowMapper<>(Person.class);
-
     private static final StudentRowMapper studentRowMapper = new StudentRowMapper();
-
-//    private static final GroupRowMapper groupRowMapper = new GroupRowMapper();
 
     @Autowired
     public StudentDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -43,25 +39,7 @@ public class StudentDaoImpl implements StudentDao {
                 INNER JOIN person p on p.id = s.person_id
                 LEFT OUTER JOIN `group` g ON s.group_id = g.id
                 """;
-//        p.first_name, p.last_name, p.gender, p.date_of_birth, p.phone_num, p.email, p.ppsn,
         return jdbcTemplate.query(sql, studentRowMapper);
-//        return jdbcTemplate.query(sql, (rs) -> {
-//            List<Student> students = new ArrayList<>();
-//
-//            int row = 0;
-//            while (rs.next()) {
-////                Student student = studentRowMapper.mapRow(rs, row);
-////                Person person = personRowMapper.mapRow(rs, row);
-////                Group group = groupRowMapper.mapRow(rs, row);
-////                if (student != null) {
-////                    student.setPerson(person);
-////                    student.setGroup(group);
-////                }
-//                students.add(studentRowMapper.mapRow(rs, row));
-//                row++;
-//            }
-//            return students;
-//        });
     }
 
     @Override
@@ -73,18 +51,17 @@ public class StudentDaoImpl implements StudentDao {
                 WHERE s.person_id = p.id AND s.person_id = ?""";
         List<Student> students = jdbcTemplate.query(sql, studentRowMapper, personId);
         return students.isEmpty() ? Optional.empty() : Optional.of(students.getFirst());
-//        return Optional.ofNullable(jdbcTemplate.query(sql, rs -> {
-//            if (! rs.next()) return null;
-//
-//            // Always take the very first result from the ResultSet
-////            Student student = studentRowMapper.mapRow(rs, 0);
-////            Person person = personRowMapper.mapRow(rs, 0);
-////            if (student != null) {
-////                student.setPerson(person);
-////            }
-//            // Always take the very first result from the ResultSet
-//            return studentRowMapper.mapRow(rs, 0);
-//        }, personId));
+    }
+
+    @Override
+    public List<Student> getByGroupId(Integer groupId) {
+        final String sql = """
+                SELECT s.*, p.*,
+                       g.name as group_name, g.code as group_code, g.course_id
+                FROM student s, person p, `group` g
+                WHERE p.id = s.person_id and s.group_id = g.id and g.id = ?
+                """;
+        return jdbcTemplate.query(sql, studentRowMapper, groupId);
     }
 
     @Override
