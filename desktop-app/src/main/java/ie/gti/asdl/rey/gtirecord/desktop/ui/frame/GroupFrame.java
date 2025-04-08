@@ -1359,19 +1359,8 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
 
     @Override
     protected void doReloadData() {
-//        departmentCombo.removeAllItems();
-//        departmentService.getAll().forEach(departmentCombo::addItem);
-//
-//        qqiLevelCombo.removeAllItems();
-//        qqiLevelCombo.addItem(QQILevel.QQILevelType.QQI5.asQQILevel());
-//        qqiLevelCombo.addItem(QQILevel.QQILevelType.QQI6.asQQILevel());
-
         courseCombo.removeAllItems();
         courseService.getAll().forEach(courseCombo::addItem);
-//        courseCombo.addItem(CourseType.CourseTypeType.FULL_TIME.asCourseType());
-//        courseCombo.addItem(CourseType.CourseTypeType.PART_TIME.asCourseType());
-//        courseCombo.addItem(CourseType.CourseTypeType.ONLINE.asCourseType());
-//        courseCombo.addItem(CourseType.CourseTypeType.EVENING.asCourseType());
 
         groupService.getAll().forEach(group -> {
             getTableModel().addRow(group, new Object[]{
@@ -1420,20 +1409,6 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
         group.setCode(getTableStringValueAt(row, GROUP_COLUMNS.CODE.index));
 
         group.setCourse((Course) getTable().getValueAt(row, GROUP_COLUMNS.COURSE.index));
-//        Course course = (Course) getTable().getValueAt(row, GROUP_COLUMNS.COURSE.index);
-//        if (course != null) {
-//            group.setCourse(course);
-//        }
-//
-//        CourseType courseType = (CourseType) getTable().getValueAt(row, COLUMNS.TYPE.index);
-//        if (courseType != null) {
-//            course.setCourseType(courseType);
-//        }
-//
-//        QQILevel qqiLevel = (QQILevel) getTable().getValueAt(row, COLUMNS.QQI_LEVEL.index);
-//        if (qqiLevel != null) {
-//            course.setQqiLevel(qqiLevel);
-//        }
     }
 
     @Override
