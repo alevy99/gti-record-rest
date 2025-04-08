@@ -33,7 +33,8 @@ public class CourseDaoImpl implements CourseDao {
     public Optional<Course> getById(Integer id) {
         if (id == null) return Optional.empty();
         final String sql = """
-                    SELECT c.id, c.department_id, c.course_type_id, c.qqi_level_id, c.name, c.code, d.name as department_name, ct.type, q.name as qqi_name
+                    SELECT c.id as course_id, c.department_id, c.course_type_id, c.qqi_level_id, c.name as course_name,
+                           c.code as course_code, d.name as department_name, ct.type as course_type_name, q.name as qqi_name
                     FROM course c, department d, course_type ct, qqi_level q
                     WHERE c.department_id = d.id and c.course_type_id = ct.id and c.qqi_level_id = q.id and c.id = ?
                 """;
@@ -43,7 +44,8 @@ public class CourseDaoImpl implements CourseDao {
     @Override
     public List<Course> getAll() {
         final String sql = """
-                    SELECT c.id, c.department_id, c.course_type_id, c.qqi_level_id, c.name, c.code, d.name as department_name, ct.type, q.name as qqi_name
+                    SELECT c.id as course_id, c.department_id, c.course_type_id, c.qqi_level_id, c.name as course_name,
+                           c.code as course_code, d.name as department_name, ct.type as course_type_name, q.name as qqi_name
                     FROM course c, department d, course_type ct, qqi_level q
                     WHERE c.department_id = d.id and c.course_type_id = ct.id and c.qqi_level_id = q.id
                 """;
@@ -53,7 +55,8 @@ public class CourseDaoImpl implements CourseDao {
     @Override
     public Map<Department, List<Course>> getAllGroupedByDepartment() {
         final String sql = """
-                    SELECT c.id, c.department_id, c.course_type_id, c.qqi_level_id, c.name, c.code, d.name as department_name, ct.type, q.name as qqi_name
+                    SELECT c.id as course_id, c.department_id, c.course_type_id, c.qqi_level_id, c.name as course_name,
+                           c.code as course_code, d.name as department_name, ct.type as course_type_name, q.name as qqi_name
                     FROM course c, department d, course_type ct, qqi_level q
                     WHERE c.department_id = d.id and c.course_type_id = ct.id and c.qqi_level_id = q.id
                     ORDER BY c.department_id;

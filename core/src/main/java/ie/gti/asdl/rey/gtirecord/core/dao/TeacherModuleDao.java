@@ -1,6 +1,9 @@
 package ie.gti.asdl.rey.gtirecord.core.dao;
 
+import ie.gti.asdl.rey.gtirecord.model.entity.TeacherModule;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author Andrei Levchenko
@@ -8,6 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TeacherModuleDao {
 
+    List<TeacherModule> getByGroupId(Integer groupId);
 
     void insert(Integer teacherPersonId, Integer moduleId);
 

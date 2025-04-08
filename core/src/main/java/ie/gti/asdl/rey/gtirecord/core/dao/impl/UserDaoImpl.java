@@ -8,6 +8,7 @@ import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import ie.gti.asdl.rey.gtirecord.model.validation.OnCreate;
 import ie.gti.asdl.rey.gtirecord.model.validation.OnUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -58,7 +59,7 @@ public class UserDaoImpl implements UserDao {
         if (id == null) return Optional.empty();
         final String sql =
                 """
-                        SELECT u.id, u.person_id, u.username, u.password, r.id as role_id, r.name as role_name
+                        SELECT u.id as user_id, u.person_id, u.username, u.password, r.id as role_id, r.name as role_name
                         FROM user u
                         LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id
                         LEFT OUTER JOIN role r ON r.id = ur.role_id
@@ -70,7 +71,7 @@ public class UserDaoImpl implements UserDao {
     public Optional<User> getByUsername(String username) {
         final String sql =
                 """
-                        SELECT u.id, u.person_id, u.username, u.password, r.id as role_id, r.name as role_name
+                        SELECT u.id as user_id, u.person_id, u.username, u.password, r.id as role_id, r.name as role_name
                         FROM user u
                         LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id\s
                         LEFT OUTER JOIN role r ON r.id = ur.role_id
@@ -83,7 +84,7 @@ public class UserDaoImpl implements UserDao {
         if (personId == null) return Optional.empty();
         final String sql =
                 """
-                        SELECT u.id, u.person_id, u.username, u.password, r.id as role_id, r.name as role_name
+                        SELECT u.id as user_id, u.person_id, u.username, u.password, r.id as role_id, r.name as role_name
                         FROM user u
                         LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id\s
                         LEFT OUTER JOIN role r ON r.id = ur.role_id
@@ -95,20 +96,20 @@ public class UserDaoImpl implements UserDao {
     public List<User> getAll() {
         final String sql =
                 """
-                        SELECT u.id, u.person_id, u.username, u.password, r.id as role_id, r.name as role_name
+                        SELECT u.id as user_id, u.person_id, u.username, u.password, r.id as role_id, r.name as role_name
                         FROM user u
                         LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id
                         LEFT OUTER JOIN role r ON r.id = ur.role_id""";
-        return jdbcTemplate.query(sql, (ResultSetExtractor<List<User>>) rs -> {
+        return jdbcTemplate.query(sql, rs -> {
             Map<Integer, User> userMap = new HashMap<>();
 
             int row = 0;
             while (rs.next()) {
-                int userID = rs.getInt("id");
-                User user = userMap.get(userID);
-                if (user == null)  {
+                int userId = rs.getInt("user_id");
+                User user = userMap.get(userId);
+                if (user == null) {
                     user = userMapper.mapRow(rs, row);
-                    userMap.put(userID, user);
+                    userMap.put(userId, user);
                 }
                 assert user != null;
                 var role = roleMapper.mapRow(rs, row);

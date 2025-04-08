@@ -16,7 +16,7 @@ public class AddressDaoImpl implements AddressDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Address> addressRowMapper = new BeanPropertyRowMapper<Address>();
+    private final RowMapper<Address> addressRowMapper = new BeanPropertyRowMapper<>(Address.class);
 
     @Autowired
     public AddressDaoImpl(JdbcTemplate jdbcTemplate) {

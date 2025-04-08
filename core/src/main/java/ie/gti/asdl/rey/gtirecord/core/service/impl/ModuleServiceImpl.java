@@ -38,6 +38,11 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
+    public List<Module> getByGroupId(Integer groupId) {
+        return moduleDao.getByGroupId(groupId);
+    }
+
+    @Override
     public List<Module> getByTeacherPersonId(Integer teacherPersonId) {
         return moduleDao.getByTeacherPersonId(teacherPersonId);
     }

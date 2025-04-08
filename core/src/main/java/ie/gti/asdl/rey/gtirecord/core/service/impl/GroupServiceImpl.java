@@ -32,7 +32,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<Group> getAll() {
-        return List.of();
+        return groupDao.getAll();
     }
 
     @Override

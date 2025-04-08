@@ -17,29 +17,23 @@ public class CourseRowMapper implements RowMapper<Course> {
         ResultSetHelper helper = new ResultSetHelper(rs);
 
         Course course = new Course();
-        course.setId(rs.getInt("id"));
-        course.setName(rs.getString("name"));
-        course.setCode(rs.getString("code"));
+        helper.setIntIfPresent("course_id", course::setId);
+        helper.setStringIfPresent("course_name", course::setName);
+        helper.setStringIfPresent("course_code", course::setCode);
 
         Department department = new Department();
-        department.setId(rs.getInt("department_id"));
-        if (helper.hasColumn("department_name")) {
-            department.setName(rs.getString("department_name"));
-        }
+        helper.setIntIfPresent("department_id", department::setId);
+        helper.setStringIfPresent("department_name", department::setName);
         course.setDepartment(department);
 
         CourseType courseType = new CourseType();
-        courseType.setId(rs.getInt("course_type_id"));
-        if (helper.hasColumn("type")) {
-            courseType.setType(rs.getString("type"));
-        }
+        helper.setIntIfPresent("course_type_id", courseType::setId);
+        helper.setStringIfPresent("course_type_name", courseType::setType);
         course.setCourseType(courseType);
 
         QQILevel qqiLevel = new QQILevel();
-        qqiLevel.setId(rs.getInt("qqi_level_id"));
-        if (helper.hasColumn("qqi_name")) {
-            qqiLevel.setName(rs.getString("qqi_name"));
-        }
+        helper.setIntIfPresent("qqi_level_id", courseType::setId);
+        helper.setStringIfPresent("qqi_name", qqiLevel::setName);
         course.setQqiLevel(qqiLevel);
 
         return course;

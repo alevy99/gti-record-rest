@@ -15,15 +15,15 @@ import java.util.Optional;
 @Repository
 public interface GroupDao {
 
-    Optional<Department> getById(Integer id);
+    Optional<Group> getById(Integer id);
 
-    List<Department> getAll();
+    List<Group> getAll();
 
     Map<Course, List<Group>> getAllGroupedByCourse();
 
-    Optional<Integer> insert(Department department);
+    Optional<Integer> insert(Group group);
 
-    void update(Department department);
+    void update(Group group);
 
     void delete(Integer id);
 

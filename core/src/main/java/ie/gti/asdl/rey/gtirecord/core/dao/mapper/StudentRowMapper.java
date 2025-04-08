@@ -12,12 +12,20 @@ import java.sql.SQLException;
  */
 public class StudentRowMapper implements RowMapper<Student> {
 
+    private static final PersonRowMapper personRowMapper = new PersonRowMapper();
+    private static final GroupRowMapper groupRowMapper = new GroupRowMapper();
+
     @Override
     public Student mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         Student student = new Student();
+
         student.setEducation(resultSet.getString("education"));
         student.setEmergencyContacts(resultSet.getString("emergency_contacts"));
         student.setOnErasmus(resultSet.getBoolean("is_on_erasmus"));
+
+        student.setPerson(personRowMapper.mapRow(resultSet, rowNum));
+        student.setGroup(groupRowMapper.mapRow(resultSet, rowNum));
+
         return student;
     }
 

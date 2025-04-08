@@ -87,7 +87,7 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
 
         tblCourse.setHighlightedRowSupplier(() -> highlightedRow);
 
-        DataListCellRendered listCellRendered = new DataListCellRendered();
+        DataListCellRenderer listCellRendered = new DataListCellRenderer();
         PaddedDataCellRenderer dataCellRenderer = new PaddedDataCellRenderer(() -> highlightedRow);
 
         // Set Department custom JComboBox Renderer and Editor

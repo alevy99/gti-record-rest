@@ -15,6 +15,8 @@ public interface TeacherService {
 
     List<Teacher> getAll();
 
+    List<Teacher> getByModuleId(Integer moduleId);
+
     Optional<Teacher> getByPersonId(Integer personId);
 
     Optional<Integer> insert(Teacher teacher);

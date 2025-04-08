@@ -21,7 +21,6 @@ public class GroupModule {
     @Valid
     private Module module;
 
-    @NotNull(message = "Teacher must be provided")
     @Valid
     private Teacher teacher;
 }

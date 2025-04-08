@@ -1,6 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.PersonDao;
+import ie.gti.asdl.rey.gtirecord.core.dao.mapper.PersonRowMapper;
 import ie.gti.asdl.rey.gtirecord.model.annotation.DescriptionUtil;
 import ie.gti.asdl.rey.gtirecord.model.entity.Department;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
@@ -23,7 +24,7 @@ public class PersonDaoImpl implements PersonDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Person> personRowMapper = new BeanPropertyRowMapper<>(Person.class);
+    private final PersonRowMapper personRowMapper = new PersonRowMapper();
 
     @Autowired
     public PersonDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -32,14 +33,19 @@ public class PersonDaoImpl implements PersonDao {
 
     @Override
     public List<Person> getAll() {
-        final String sql = "SELECT * FROM person";
+        final String sql = """
+                   SELECT id as person_id, first_name, last_name, gender, date_of_birth, phone_num, email, ppsn
+                   FROM person""";
         return jdbcTemplate.query(sql, personRowMapper);
     }
 
     @Override
     public Optional<Person> getById(Integer id) {
         if (id == null) return Optional.empty();
-        final String sql = "SELECT * FROM person WHERE id = ?";
+        final String sql = """
+                   SELECT id as person_id, first_name, last_name, gender, date_of_birth, phone_num, email, ppsn
+                   FROM person
+                   WHERE id = ?""";
         List<Person> persons = jdbcTemplate.query(sql, personRowMapper, id);
         return persons.isEmpty() ? Optional.empty() : Optional.of(persons.getFirst());
     }

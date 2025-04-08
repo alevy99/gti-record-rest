@@ -1,9 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.model.annotation;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -12,9 +10,16 @@ import java.util.stream.Collectors;
 public class DescriptionUtil {
 
     public static String getShortDescription(Object obj) {
-        if (obj == null) {
+        return getShortDescriptionRecursive(obj, new HashSet<>()); // избегаем циклов
+    }
+
+    private static String getShortDescriptionRecursive(Object obj, Set<Object> visited) {
+        if (obj == null || visited.contains(obj)) {
             return "";
         }
+
+        visited.add(obj); // чтобы не зациклиться на взаимных ссылках
+
         List<Field> fields = Arrays.stream(obj.getClass().getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(ShortDescriptionField.class))
                 .sorted(Comparator.comparingInt(f -> f.getAnnotation(ShortDescriptionField.class).order()))
@@ -29,7 +34,12 @@ public class DescriptionUtil {
 
                         ShortDescriptionFormat format = field.getAnnotation(ShortDescriptionField.class).format();
 
-                        return applyFormat(value.toString(), format);
+                        if (isSimpleType(value)) {
+                            return applyFormat(value.toString(), format);
+                        } else {
+                            // Рекурсивный вызов для вложенных объектов
+                            return getShortDescriptionRecursive(value, visited);
+                        }
                     } catch (Exception e) {
                         return "";
                     }
@@ -38,7 +48,15 @@ public class DescriptionUtil {
                 .collect(Collectors.joining(" "));
     }
 
-    // Apply format base on the format type
+    private static boolean isSimpleType(Object value) {
+        Class<?> type = value.getClass();
+        return type.isPrimitive() ||
+                type == String.class ||
+                Number.class.isAssignableFrom(type) ||
+                type == Boolean.class ||
+                type == Character.class;
+    }
+
     private static String applyFormat(String value, ShortDescriptionFormat format) {
         return switch (format) {
             case FIRST_LETTER -> value.toUpperCase().charAt(0) + ".";

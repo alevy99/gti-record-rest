@@ -13,6 +13,8 @@ public interface ModuleService {
 
     List<Module> getByCourseId(Integer courseId);
 
+    List<Module> getByGroupId(Integer groupId);
+
     List<Module> getByTeacherPersonId(Integer teacherPersonId);
 
     List<Module> getAll();

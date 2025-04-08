@@ -13,6 +13,10 @@ public interface ModuleDao {
 
     List<Module> getByCourseId(Integer courseId);
 
+    List<Module> getByGroupId(Integer groupId);
+
+    List<Module> getByTeacherPersonId(Integer teacherPersonId);
+
     List<Module> getAll();
 
     Optional<Integer> insert(Module module);
@@ -20,6 +24,4 @@ public interface ModuleDao {
     void update(Module module);
 
     void delete(int id);
-
-    List<Module> getByTeacherPersonId(Integer teacherPersonId);
 }

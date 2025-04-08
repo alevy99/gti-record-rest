@@ -1,6 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.ModuleDao;
+import ie.gti.asdl.rey.gtirecord.core.dao.mapper.ModuleRowMapper;
 import ie.gti.asdl.rey.gtirecord.model.entity.Department;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class ModuleDaoImpl implements ModuleDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private static final RowMapper<Module> moduleRowMapper = new BeanPropertyRowMapper<Module>(Module.class);
+    private static final ModuleRowMapper moduleRowMapper = new ModuleRowMapper();
 
     @Autowired
     public ModuleDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -36,7 +37,10 @@ public class ModuleDaoImpl implements ModuleDao {
     @Override
     public Optional<Module> getById(Integer id) {
         if (id == null) return Optional.empty();
-        final String sql = "SELECT * FROM module WHERE id = ?";
+        final String sql = """
+                SELECT m.id as module_id, m.name as module_name, m.code as module_code
+                FROM module m
+                WHERE id = ?""";
         List<Module> modules = jdbcTemplate.query(sql, moduleRowMapper, id);
         return modules.isEmpty() ? Optional.empty() : Optional.of(modules.getFirst());
     }
@@ -45,7 +49,7 @@ public class ModuleDaoImpl implements ModuleDao {
     public List<Module> getByCourseId(Integer courseId) {
         if (courseId == null) return new ArrayList<>();
         final String sql = """
-                SELECT m.id,  m.name, m.code
+                SELECT m.id as module_id, m.name as module_name, m.code as module_code
                 FROM module m, course_has_module cm
                 WHERE m.id = cm.module_id and cm.course_id = ?;
             """;
@@ -53,10 +57,21 @@ public class ModuleDaoImpl implements ModuleDao {
     }
 
     @Override
+    public List<Module> getByGroupId(Integer groupId) {
+        if (groupId == null) return new ArrayList<>();
+        final String sql = """
+                SELECT m.id as module_id, m.name as module_name, m.code as module_code
+                FROM module m, group_has_module gm
+                WHERE m.id = gm.module_id and gm.group_id = ?;
+            """;
+        return jdbcTemplate.query(sql, moduleRowMapper, groupId);
+    }
+
+    @Override
     public List<Module> getByTeacherPersonId(Integer teacherPersonId) {
         if (teacherPersonId == null) return new ArrayList<>();
         final String sql = """
-                SELECT m.id,  m.name, m.code
+                SELECT m.id as module_id, m.name as module_name, m.code as module_code
                 FROM module m, teacher_has_module tm
                 WHERE m.id = tm.module_id and tm.teacher_person_id = ?;
             """;
@@ -65,7 +80,9 @@ public class ModuleDaoImpl implements ModuleDao {
 
     @Override
     public List<Module> getAll() {
-        final String sql = "SELECT * FROM module";
+        final String sql = """
+                SELECT m.id as module_id, m.name as module_name, m.code as module_code
+                FROM module m""";
         return jdbcTemplate.query(sql, moduleRowMapper);
     }
 

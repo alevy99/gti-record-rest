@@ -43,6 +43,11 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    public List<Teacher> getByModuleId(Integer moduleId) {
+        return teacherDao.getByModuleId(moduleId);
+    }
+
+    @Override
     public Optional<Teacher> getByPersonId(Integer personId) {
         return teacherDao.getByPersonId(personId);
     }

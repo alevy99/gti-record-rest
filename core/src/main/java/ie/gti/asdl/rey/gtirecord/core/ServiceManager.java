@@ -29,10 +29,12 @@ public class ServiceManager {
 
     private final GroupService groupService;
 
+    private final GroupModuleService groupModuleService;
+
     @Autowired
     public ServiceManager(UserService userService, PersonService personService, DepartmentService departmentService,
                           ModuleService moduleService, CourseService courseService, CourseModuleService courseModuleService,
-                          TeacherService teacherService, StudentService studentService, TeacherModuleService teacherModuleService, GroupService groupService) {
+                          TeacherService teacherService, StudentService studentService, TeacherModuleService teacherModuleService, GroupService groupService, GroupModuleService groupModuleService) {
         this.userService = userService;
         this.personService = personService;
         this.departmentService = departmentService;
@@ -43,6 +45,7 @@ public class ServiceManager {
         this.studentService = studentService;
         this.teacherModuleService = teacherModuleService;
         this.groupService = groupService;
+        this.groupModuleService = groupModuleService;
     }
 
 }

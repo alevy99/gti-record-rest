@@ -44,12 +44,6 @@ public class PersonFrame extends AbstractFrame {
 //    @Setter
 //    private Integer personId;
 
-    /**
-     * -- SETTER --
-     * /        initForm
-     * (
-     * )
-     */ //    }
     @Setter
     private User user;
 

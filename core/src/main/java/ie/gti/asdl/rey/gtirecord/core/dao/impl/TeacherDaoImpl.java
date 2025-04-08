@@ -1,7 +1,9 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.TeacherDao;
+import ie.gti.asdl.rey.gtirecord.core.dao.mapper.TeacherRowMapper;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
+import ie.gti.asdl.rey.gtirecord.model.entity.Student;
 import ie.gti.asdl.rey.gtirecord.model.entity.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -29,9 +31,9 @@ public class TeacherDaoImpl implements TeacherDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private static final RowMapper<Person> personRowMapper = new BeanPropertyRowMapper<>(Person.class);
+//    private static final RowMapper<Person> personRowMapper = new BeanPropertyRowMapper<>(Person.class);
 
-    private static final RowMapper<Teacher> teacherRowMapper = new BeanPropertyRowMapper<>(Teacher.class);
+    private static final TeacherRowMapper teacherRowMapper = new TeacherRowMapper();
 
     @Autowired
     public TeacherDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -41,45 +43,44 @@ public class TeacherDaoImpl implements TeacherDao {
     @Override
     public List<Teacher> getAll() {
         final String sql = """
-                SELECT *
+                SELECT t.*, p.*
                 FROM teacher t, person p
                 WHERE t.person_id = p.id;
                 """;
-        return jdbcTemplate.query(sql, (rs) -> {
-            List<Teacher> teachers = new ArrayList<>();
+        return jdbcTemplate.query(sql, teacherRowMapper);
+    }
 
-            int row = 0;
-            while (rs.next()) {
-                Teacher teacher = teacherRowMapper.mapRow(rs, row);
-                Person person = personRowMapper.mapRow(rs, row);
-                if (teacher != null) {
-                    teacher.setPerson(person);
-                }
-                teachers.add(teacher);
-                row++;
-            }
-            return teachers;
-        });
+    @Override
+    public List<Teacher> getByModuleId(Integer moduleId) {
+        if (moduleId == null) return new ArrayList<>();
+        final String sql = """
+                SELECT t.*, p.*
+                FROM teacher t, person p, teacher_has_module tm
+                WHERE t.person_id = p.id and p.id = tm.teacher_person_id and tm.module_id = ?
+                """;
+        return jdbcTemplate.query(sql, teacherRowMapper, moduleId);
     }
 
     @Override
     public Optional<Teacher> getByPersonId(Integer personId) {
         if (personId == null) return Optional.empty();
         final String sql = """
-                SELECT t.person_id, t.position, t.degree, t.work_experience, p.*
+                SELECT t.*, p.*
                 FROM teacher t, person p
                 WHERE t.person_id = p.id AND p.id = ?""";
-        return Optional.ofNullable(jdbcTemplate.query(sql, (rs) -> {
-            if (! rs.next()) return null;
-
-            // Always take the very first result from the ResultSet
-            Teacher teacher = teacherRowMapper.mapRow(rs, 0);
-            Person person = personRowMapper.mapRow(rs, 0);
-            if (teacher != null) {
-                teacher.setPerson(person);
-            }
-            return teacher;
-        }, personId));
+        List<Teacher> teachers = jdbcTemplate.query(sql, teacherRowMapper, personId);
+        return teachers.isEmpty() ? Optional.empty() : Optional.of(teachers.getFirst());
+//        return Optional.ofNullable(jdbcTemplate.query(sql, (rs) -> {
+//            if (! rs.next()) return null;
+//
+//            // Always take the very first result from the ResultSet
+////            Teacher teacher = teacherRowMapper.mapRow(rs, 0);
+////            Person person = personRowMapper.mapRow(rs, 0);
+////            if (teacher != null) {
+////                teacher.setPerson(person);
+////            }
+//            return teacherRowMapper.mapRow(rs, 0);
+//        }, personId));
     }
 
     @Override

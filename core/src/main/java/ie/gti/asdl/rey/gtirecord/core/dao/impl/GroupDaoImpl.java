@@ -3,19 +3,25 @@ package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 import ie.gti.asdl.rey.gtirecord.core.dao.GroupDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.CourseRowMapper;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.GroupRowMapper;
+import ie.gti.asdl.rey.gtirecord.core.service.ValidationService;
 import ie.gti.asdl.rey.gtirecord.model.entity.Course;
-import ie.gti.asdl.rey.gtirecord.model.entity.Department;
 import ie.gti.asdl.rey.gtirecord.model.entity.Group;
+import ie.gti.asdl.rey.gtirecord.model.entity.Person;
+import ie.gti.asdl.rey.gtirecord.model.entity.Student;
+import ie.gti.asdl.rey.gtirecord.model.validation.OnUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 
 /**
@@ -24,25 +30,46 @@ import java.util.*;
 @Repository
 public class GroupDaoImpl implements GroupDao {
 
-    private static final RowMapper<Group> groupRowMapper = new GroupRowMapper();
-
-    private static final RowMapper<Course> courseRowMapper = new CourseRowMapper();
+    private static final GroupRowMapper groupRowMapper = new GroupRowMapper();
+    private static final CourseRowMapper courseRowMapper = new CourseRowMapper();
 
     private final JdbcTemplate jdbcTemplate;
+    private final ValidationService validationService;
 
     @Autowired
-    public GroupDaoImpl(JdbcTemplate jdbcTemplate) {
+    public GroupDaoImpl(JdbcTemplate jdbcTemplate, ValidationService validationService) {
         this.jdbcTemplate = jdbcTemplate;
+        this.validationService = validationService;
     }
 
     @Override
-    public Optional<Department> getById(Integer id) {
+    public Optional<Group> getById(Integer id) {
         return Optional.empty();
     }
 
     @Override
-    public List<Department> getAll() {
-        return List.of();
+    public List<Group> getAll() {
+        final String sql = """
+                    SELECT g.id as group_id, g.name as group_name, g.code as group_code, c.id as course_id, c.name as course_name,
+                           c.code as course_code, c.department_id, c.course_type_id, c.qqi_level_id
+                    FROM `group` g, course c
+                    WHERE g.course_id = c.id
+                """;
+        return jdbcTemplate.query(sql, (rs) -> {
+            List<Group> groups = new ArrayList<>();
+
+            int row = 0;
+            while (rs.next()) {
+                Group group = groupRowMapper.mapRow(rs, row);
+                Course course = courseRowMapper.mapRow(rs, row);
+                if (group != null) {
+                    group.setCourse(course);
+                }
+                groups.add(group);
+                row++;
+            }
+            return groups;
+        });
     }
 
     @Override
@@ -70,17 +97,42 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public Optional<Integer> insert(Department department) {
-        return Optional.empty();
+    public Optional<Integer> insert(Group group) {
+        if (!validationService.validate(group)) return Optional.empty();
+
+        final String sql = "INSERT INTO `group` (course_id, name, code) VALUES (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
+            @NonNull
+            public PreparedStatement createPreparedStatement(@NonNull Connection connection) throws SQLException {
+                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setInt(1, group.getCourse().getId());
+                ps.setString(2, group.getName());
+                ps.setString(3, group.getCode());
+                return ps;
+            }
+        }, keyHolder);
+
+        if (keyHolder.getKey() == null) {
+            return Optional.empty();
+        } else {
+            group.setId(keyHolder.getKey().intValue());
+            return Optional.of(group.getId());
+        }
     }
 
     @Override
-    public void update(Department department) {
-
+    public void update(Group group) {
+        if (!validationService.validate(group, OnUpdate.class)) return;
+        final String sql = "UPDATE `group` SET course_id = ?, name = ?, code = ? WHERE id = ?";
+        jdbcTemplate.update(sql, group.getCourse().getId(), group.getName(), group.getCode(), group.getId());
     }
 
     @Override
     public void delete(Integer id) {
-
+        final String sql = "DELETE FROM `group` WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }
