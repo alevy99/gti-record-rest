@@ -26,7 +26,8 @@ public class Assignment {
     @NotBlank(message = "Assignment name must be provided")
     private String name;
 
-    private Double weighting;
+    // In %
+    private Integer weighting;
 
     private LocalDateTime openDate;
 

@@ -212,7 +212,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
         tblGroupStudents.getSelectionModel().addListSelectionListener(createSafeListener(listener -> updateButtonsUI()));
         tblAllStudents.getSelectionModel().addListSelectionListener(createSafeListener(listener -> updateButtonsUI()));
 
-        btnOpenTeachers2.setVisible(false);
+//        btnOpenTeachers2.setVisible(false);
     }
 
     private void initStudentTable(PaddedJTable table) {
@@ -631,9 +631,9 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
                     .addGroup(pnlGroupStudentsLayout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblGroupStudentsTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(136, 136, 136)
-                        .addComponent(btnOpenTeachers2)
+                        .addComponent(lblGroupStudentsTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnOpenTeachers2, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(8, 8, 8)))
                 .addContainerGap())
         );
@@ -852,7 +852,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
 
         btnOpenTeachers.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnOpenTeachers.setForeground(new java.awt.Color(0, 51, 204));
-        btnOpenTeachers.setText("Teachers");
+        btnOpenTeachers.setText("Assignments");
         btnOpenTeachers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOpenTeachersActionPerformed(evt);
@@ -868,9 +868,9 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
                     .addGroup(pnlGroupModulesLayout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblGroupModulesTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(136, 136, 136)
-                        .addComponent(btnOpenTeachers)
+                        .addComponent(lblGroupModulesTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnOpenTeachers, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(8, 8, 8)))
                 .addContainerGap())
         );

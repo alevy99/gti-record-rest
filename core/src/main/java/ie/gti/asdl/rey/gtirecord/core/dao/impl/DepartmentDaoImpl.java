@@ -71,6 +71,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 
     @Override
     public void update(Department department) {
+        if (department == null) return;
         final String sql = "UPDATE department SET name = ? WHERE id = ?";
         jdbcTemplate.update(sql, department.getName(), department.getId());
     }

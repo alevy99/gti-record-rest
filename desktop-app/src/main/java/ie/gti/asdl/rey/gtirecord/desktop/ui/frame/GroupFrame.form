@@ -365,9 +365,9 @@
                                   <Component id="jScrollPane6" alignment="1" pref="429" max="32767" attributes="0"/>
                                   <Group type="102" alignment="1" attributes="0">
                                       <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="lblGroupStudentsTitle" min="-2" pref="196" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="136" max="-2" attributes="0"/>
-                                      <Component id="btnOpenTeachers2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblGroupStudentsTitle" min="-2" pref="278" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="btnOpenTeachers2" min="-2" pref="116" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
@@ -712,9 +712,9 @@
                                   <Component id="jScrollPane2" pref="429" max="32767" attributes="0"/>
                                   <Group type="102" attributes="0">
                                       <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="lblGroupModulesTitle" min="-2" pref="196" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="136" max="-2" attributes="0"/>
-                                      <Component id="btnOpenTeachers" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblGroupModulesTitle" min="-2" pref="278" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="btnOpenTeachers" min="-2" pref="116" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
@@ -780,7 +780,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="cc" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Teachers"/>
+                        <Property name="text" type="java.lang.String" value="Assignments"/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOpenTeachersActionPerformed"/>
