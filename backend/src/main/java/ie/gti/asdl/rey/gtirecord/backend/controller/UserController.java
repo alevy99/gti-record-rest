@@ -22,7 +22,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user/id/{id}")
+    @GetMapping("/users/id/{id}")
     public User getUser(@PathVariable Integer id) {
         return userService.getById(id)
                 .map(ResponseEntity::ok)
@@ -30,7 +30,7 @@ public class UserController {
 //        userService.getUserById(id).orElse(null);
     }
 
-    @GetMapping("/user/name/{username}")
+    @GetMapping("/users/name/{username}")
     public User getUser(@PathVariable String username) {
         return userService.getByUsername(username)
                 .map(ResponseEntity::ok)
