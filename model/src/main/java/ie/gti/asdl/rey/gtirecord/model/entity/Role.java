@@ -7,12 +7,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.io.Serializable;
-
 @Data
-public class Role implements Serializable {
+public class Role {
 
-    public static RoleType getRoleTypeByRole(Role role) {
+    public static RoleType getRoleTypeByRole(@org.jetbrains.annotations.NotNull Role role) {
         if (RoleType.STUDENT.name.equals(role.getName())) {
             return Role.RoleType.STUDENT;
         } else if (RoleType.TEACHER.name.equals(role.getName())) {

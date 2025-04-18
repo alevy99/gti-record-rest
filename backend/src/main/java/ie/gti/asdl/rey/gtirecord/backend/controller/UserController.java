@@ -37,6 +37,4 @@ public class UserController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")).getBody();
     }
 
-
-
 }
