@@ -1,5 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ie.gti.asdl.rey.gtirecord.model.annotation.KeyField;
 import ie.gti.asdl.rey.gtirecord.model.annotation.ShortDescriptionField;
 import ie.gti.asdl.rey.gtirecord.model.validation.OnUpdate;
@@ -51,6 +52,7 @@ public class Role {
     @NotBlank
     private String name;
 
+    @JsonIgnore
     public boolean isValid() {
         return id != null && name != null && !name.isEmpty();
     }
