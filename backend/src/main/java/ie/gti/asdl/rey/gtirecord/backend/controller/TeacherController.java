@@ -25,7 +25,7 @@ public class TeacherController {
     }
 
     @GetMapping("/teachers")
-    public List<Teacher> getUser(@PathVariable Integer id) {
+    public List<Teacher> getUser() {
         return teacherService.getAll();
     }
 }
