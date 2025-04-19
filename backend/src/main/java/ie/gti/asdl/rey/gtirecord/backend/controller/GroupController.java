@@ -1,7 +1,8 @@
 package ie.gti.asdl.rey.gtirecord.backend.controller;
 
-import ie.gti.asdl.rey.gtirecord.core.service.TeacherService;
-import ie.gti.asdl.rey.gtirecord.model.entity.Teacher;
+import ie.gti.asdl.rey.gtirecord.core.service.GroupService;
+import ie.gti.asdl.rey.gtirecord.model.entity.Group;
+import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,17 +16,18 @@ import java.util.List;
  */
 @Profile("web")
 @RestController
-public class TeacherController {
+public class GroupController {
 
-    private final TeacherService teacherService;
+    private final GroupService groupService;
 
     @Autowired
-    public TeacherController(TeacherService teacherService) {
-        this.teacherService = teacherService;
+    public GroupController(GroupService groupService) {
+        this.groupService = groupService;
     }
 
-    @GetMapping("/teachers")
-    public List<Teacher> getTeachers() {
-        return teacherService.getAll();
+    @GetMapping("/modules")
+    public List<Group> getGroups() {
+        return groupService.getAll();
     }
+
 }
