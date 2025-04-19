@@ -25,7 +25,7 @@ public class GroupController {
         this.groupService = groupService;
     }
 
-    @GetMapping("/modules")
+    @GetMapping("/groups")
     public List<Group> getGroups() {
         return groupService.getAll();
     }
