@@ -33,7 +33,6 @@ public class Course {
     private Department department;
 
     @NotNull(message = "QQI Level must be provided")
-    @Valid
     private QQILevel qqiLevel;
 
 }

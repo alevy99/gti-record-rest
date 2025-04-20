@@ -25,7 +25,6 @@ public class Group {
     private String code;
 
     @NotNull(message = "Course name must be provided")
-    @Valid
     private Course course;
 
 }
