@@ -42,16 +42,16 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Optional<Integer> insert(Group group) {
-        return Optional.empty();
+        return groupDao.insert(group);
     }
 
     @Override
     public void update(Group group) {
-
+        groupDao.update(group);
     }
 
     @Override
     public void delete(Integer id) {
-
+        groupDao.delete(id);
     }
 }
