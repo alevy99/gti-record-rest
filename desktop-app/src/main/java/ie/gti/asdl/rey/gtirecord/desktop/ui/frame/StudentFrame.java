@@ -1019,14 +1019,13 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
     }
 
     private void reloadDepartments() {
+        tblDepartment.clear();
+
         departmentService.getAll().forEach(department -> {
             getDeparmentTableModel().addRow(department, new Object[]{department.getId(), department.getName()});
         });
         coursesByDepartment = courseService.getAllGroupedByDepartment();
         groupsByCourse = groupService.getAllGroupedByCourse();
-
-
-//        coursesByDepartment
 
         departmentsByGroup =
                 coursesByDepartment.entrySet().stream()
