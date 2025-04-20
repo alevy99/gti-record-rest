@@ -9,8 +9,10 @@ import ie.gti.asdl.rey.gtirecord.model.util.Pair;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
+import java.util.function.IntConsumer;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.confirmBatchTableAction;
 import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeListener;
@@ -29,7 +31,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         // Add selection listener
         getTable().getSelectionModel().addListSelectionListener(createSafeListener(event -> updateUI()));
 
-        SwingUIUtils.addTableFilter(getTable(), getTableFilterField());
+        SwingUIUtils.addTableFilter(getTable(), getTableFilterField(), getOnRowSelect());
     }
 
     protected abstract PaddedJTable getTable();
@@ -41,6 +43,10 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
 
     protected int getDataIDColumn() {
         return 0;
+    }
+
+    protected IntConsumer getOnRowSelect() {
+        return (val) -> {};
     }
 
     protected abstract T createDataInstance();
@@ -84,20 +90,25 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
                 keyData = data;
             }
 
-            if (KeyUtil.hasKey(keyData)) {
-                doUpdateData(data);
-            } else {
-                doInsertData(data).ifPresentOrElse((newId -> {
-                    if (setKeyNeeded) {
-                        KeyUtil.setKey(keyData, newId);
-                    }
-                    getTable().setValueAt(newId, row, 0);
-                }), () -> errors.add(data.toString()));
+            try {
+                if (KeyUtil.hasKey(keyData)) {
+                    doUpdateData(data);
+                } else {
+                    doInsertData(data).ifPresentOrElse((newId -> {
+                        if (setKeyNeeded) {
+                            KeyUtil.setKey(keyData, newId);
+                        }
+                        getTable().setValueAt(newId, row, 0);
+                    }), () -> errors.add(data.toString()));
+                }
+            } catch (Exception e) {
+                errors.add(data.toString());
+                JOptionPane.showMessageDialog(null, "Save failed for:\n" + String.join("\n", errors), "Not valid data", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         if (!errors.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Insert failed for:\n" + String.join("\n", errors), "Not valid data", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Save failed for:\n" + String.join("\n", errors), "Not valid data", JOptionPane.ERROR_MESSAGE);
         }
         updateUI();
     }

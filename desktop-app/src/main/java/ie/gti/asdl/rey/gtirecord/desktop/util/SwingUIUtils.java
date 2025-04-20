@@ -20,6 +20,10 @@ import java.util.stream.Collectors;
 public class SwingUIUtils {
 
     public static void addTableFilter(final JTable table, JTextField filterField) {
+        addTableFilter(table, filterField, (val) -> {});
+    }
+
+    public static void addTableFilter(final JTable table, JTextField filterField, java.util.function.IntConsumer onRowSelected) {
         if (table.getRowSorter() instanceof TableRowSorter<?> sorter) {
             filterField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
                 public void insertUpdate(javax.swing.event.DocumentEvent e) {
@@ -35,12 +39,26 @@ public class SwingUIUtils {
                 }
 
                 private void filterTable() {
-                    String text = filterField.getText();
+                    String text = filterField.getText().trim();
                     if (text.trim().isEmpty()) {
                         sorter.setRowFilter(null);
                     } else {
                         sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
                     }
+
+                    SwingUtilities.invokeLater(() -> {
+                        int viewRow = table.getRowCount() > 0 ? 0 : -1;
+
+                        if (viewRow >= 0) {
+                            table.setRowSelectionInterval(viewRow, viewRow);
+                            table.scrollRectToVisible(table.getCellRect(viewRow, 0, true));
+                            int modelRow = table.convertRowIndexToModel(viewRow);
+                            onRowSelected.accept(modelRow);  // 🔔 вызов колбэка с индексом строки модели
+                        } else {
+                            table.clearSelection();
+                            onRowSelected.accept(-1); // 🔔 если строк нет
+                        }
+                    });
                 }
             });
         }
@@ -54,7 +72,8 @@ public class SwingUIUtils {
                 message + "\n" +
                         Arrays.stream(table.getSelectedRows())
                                 .mapToObj(row -> {
-                                    var description = table.getModel().getValueAt(row, descriptionColumn);
+                                    int modelRow = table.convertRowIndexToModel(row);
+                                    var description = table.getModel().getValueAt(modelRow, descriptionColumn);
                                     return description == null ? "" : description.toString();
                                 })
                                 .collect(Collectors.joining("\n")),

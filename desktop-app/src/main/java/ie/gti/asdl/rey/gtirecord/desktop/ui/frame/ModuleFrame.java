@@ -19,6 +19,7 @@ import org.springframework.context.ApplicationContext;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.util.Optional;
+import java.util.function.IntConsumer;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.MODULE;
 
@@ -65,6 +66,8 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
         columnModel.getColumn(COLUMNS.ID.index).setMaxWidth(35);
         columnModel.getColumn(COLUMNS.NAME.index).setMinWidth(140);
         columnModel.getColumn(COLUMNS.CODE.index).setMaxWidth(70);
+
+        table.setColumnUnique(COLUMNS.CODE.index);
     }
 
     /**
