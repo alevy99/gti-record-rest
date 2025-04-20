@@ -24,26 +24,26 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public Optional<Assignment> getById(Integer id) {
-        return Optional.empty();
+        return assignmentDao.getById(id);
     }
 
     @Override
     public List<Assignment> getAll() {
-        return List.of();
+        return assignmentDao.getAll();
     }
 
     @Override
     public Optional<Integer> insert(Assignment assignment) {
-        return Optional.empty();
+        return assignmentDao.insert(assignment);
     }
 
     @Override
     public void update(Assignment assignment) {
-
+        assignmentDao.update(assignment);
     }
 
     @Override
     public void delete(Integer id) {
-
+        assignmentDao.delete(id);
     }
 }

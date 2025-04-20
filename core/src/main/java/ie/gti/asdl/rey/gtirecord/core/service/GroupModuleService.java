@@ -1,10 +1,12 @@
 package ie.gti.asdl.rey.gtirecord.core.service;
 
+import ie.gti.asdl.rey.gtirecord.model.entity.Group;
 import ie.gti.asdl.rey.gtirecord.model.entity.GroupModule;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -13,7 +15,11 @@ import java.util.Optional;
 @Service
 public interface GroupModuleService {
 
+    List<GroupModule> getAll();
+
     List<GroupModule> getByGroupId(Integer groupId);
+
+    Map<Group, List<Module>> getAllGroupedByGroup();
 
     Optional<Integer> insert(GroupModule groupModule);
 

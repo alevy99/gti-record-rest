@@ -2,12 +2,16 @@ package ie.gti.asdl.rey.gtirecord.core.service.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.GroupModuleDao;
 import ie.gti.asdl.rey.gtirecord.core.service.GroupModuleService;
+import ie.gti.asdl.rey.gtirecord.model.entity.Group;
 import ie.gti.asdl.rey.gtirecord.model.entity.GroupModule;
+import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Andrei Levchenko
@@ -23,8 +27,22 @@ public class GroupModuleServiceImpl implements GroupModuleService {
     }
 
     @Override
+    public List<GroupModule> getAll() {
+        return groupModuleDao.getAll();
+    }
+
+    @Override
     public List<GroupModule> getByGroupId(Integer groupId) {
         return groupModuleDao.getByGroupId(groupId);
+    }
+
+    @Override
+    public Map<Group, List<Module>> getAllGroupedByGroup() {
+        List<GroupModule> groupModules = groupModuleDao.getAll();
+        return groupModules
+                .stream()
+                .collect(Collectors.groupingBy(GroupModule::getGroup,
+                        Collectors.mapping(GroupModule::getModule, Collectors.toList())));
     }
 
     @Override

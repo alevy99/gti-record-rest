@@ -31,7 +31,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanel1" pref="812" max="32767" attributes="0"/>
+              <Component id="jPanel1" pref="818" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -56,9 +56,14 @@
                       <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="pnlControls" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="76" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="btnOpenModules" pref="96" max="32767" attributes="0"/>
+                              <Component id="btnOpenStudents" pref="96" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="btnOpenStudents" max="32767" attributes="0"/>
+                              <Component id="btnOpenGroups" max="32767" attributes="0"/>
                               <Component id="btnClose" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -78,9 +83,15 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="pnlControls" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="btnOpenStudents" min="-2" pref="35" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="btnOpenGroups" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                              <Component id="btnOpenModules" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="btnClose" min="-2" pref="35" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="btnClose" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                              <Component id="btnOpenStudents" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
@@ -110,7 +121,7 @@
                   <Table columnCount="5" rowCount="0">
                     <Column editable="false" title="ID" type="java.lang.Integer"/>
                     <Column editable="true" title="Name" type="java.lang.String"/>
-                    <Column editable="true" title="Weighting" type="java.lang.String"/>
+                    <Column editable="true" title="Weighting" type="java.lang.Integer"/>
                     <Column editable="false" title="Group" type="java.lang.Object"/>
                     <Column editable="false" title="Module" type="java.lang.Object"/>
                   </Table>
@@ -146,8 +157,11 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblStudentResultTitle" max="32767" attributes="0"/>
                           <Component id="jScrollPane2" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="lblStudentResultTitle" min="-2" pref="818" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -178,7 +192,7 @@
                     <Property name="autoCreateRowSorter" type="boolean" value="true"/>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="5" rowCount="0">
-                        <Column editable="false" title="ID" type="java.lang.Object"/>
+                        <Column editable="false" title="ID" type="java.lang.Integer"/>
                         <Column editable="false" title="Student" type="java.lang.Object"/>
                         <Column editable="true" title="Submitted" type="java.lang.Boolean"/>
                         <Column editable="true" title="Graded" type="java.lang.Boolean"/>
@@ -333,7 +347,7 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="tfCourseFilter" alignment="0" max="32767" attributes="0"/>
+                              <Component id="tfAssignmentFilter" alignment="0" max="32767" attributes="0"/>
                               <Component id="jLabel2" alignment="0" pref="244" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
@@ -345,7 +359,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="tfCourseFilter" min="-2" pref="31" max="-2" attributes="0"/>
+                          <Component id="tfAssignmentFilter" min="-2" pref="31" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -364,7 +378,7 @@
                     <Property name="text" type="java.lang.String" value="Assignment filter"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="tfCourseFilter">
+                <Component class="javax.swing.JTextField" name="tfAssignmentFilter">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Segoe UI" size="14" style="1"/>
@@ -436,7 +450,7 @@
             </Container>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="btnOpenStudents">
+        <Component class="javax.swing.JButton" name="btnOpenGroups">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="1"/>
@@ -444,10 +458,10 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="cc" green="33" red="0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="All students"/>
+            <Property name="text" type="java.lang.String" value="Groups"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOpenStudentsActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOpenGroupsActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnClose">
@@ -462,6 +476,34 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCloseActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnOpenModules">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="14" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="cc" green="33" red="0" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Modules"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOpenModulesActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnOpenStudents">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="14" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="cc" green="33" red="0" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Students"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOpenStudentsActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

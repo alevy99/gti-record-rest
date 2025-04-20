@@ -30,8 +30,8 @@ public class FrameManager {
         GROUP(GroupFrame.class),
         DEPARTMENT(DepartmentFrame.class),
         MODULE(ModuleFrame.class),
-        COURSE(CourseFrame.class);
-//        ASSIGNMENT(AssignmentFrame.class);
+        COURSE(CourseFrame.class),
+        ASSIGNMENT(AssignmentFrame.class);
 
         private final Class<? extends AbstractFrame> frameClass;
 

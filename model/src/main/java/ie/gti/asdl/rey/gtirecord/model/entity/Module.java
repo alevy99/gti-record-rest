@@ -7,11 +7,14 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Module {
 
     @KeyField
+    @EqualsAndHashCode.Include
     @NotNull(groups = OnUpdate.class)
     private Integer id;
 

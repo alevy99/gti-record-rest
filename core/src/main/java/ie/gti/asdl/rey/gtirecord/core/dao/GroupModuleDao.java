@@ -12,6 +12,8 @@ import java.util.Optional;
 @Repository
 public interface GroupModuleDao {
 
+    List<GroupModule> getAll();
+
     List<GroupModule> getByGroupId(Integer groupId);
 
     Optional<Integer> insert(GroupModule groupModule);

@@ -32,9 +32,9 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="gti-record" options="" />
       <module name="gti-record-android-app" options="-parameters" />
-      <module name="gti-record-backend" options="-parameters" />
-      <module name="gti-record-core" options="-parameters" />
-      <module name="gti-record-desktop-app" options="-parameters" />
+      <module name="gti-record-backend" options="" />
+      <module name="gti-record-core" options="" />
+      <module name="gti-record-desktop-app" options="" />
       <module name="gti-record-model" options="-parameters" />
       <module name="gti-record-persistence" options="-parameters" />
       <module name="persistence" options="-parameters" />

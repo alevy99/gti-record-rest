@@ -65,6 +65,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
 
     @Override
     public Optional<Integer> insert(Assignment assignment) {
+        if ((assignment == null) || (assignment.getId() == null)) return Optional.empty();
         final String sql = "INSERT INTO assignment (group_module_id, name, weighting) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -94,7 +95,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
 
     @Override
     public void update(Assignment assignment) {
-        if (assignment == null) return;
+        if ((assignment == null) || (assignment.getId() == null)) return;
         final String sql = "UPDATE assignment SET name = ?, weighting = ? WHERE id = ?";
         jdbcTemplate.update(sql, assignment.getName(), assignment.getWeighting(), assignment.getId());
     }

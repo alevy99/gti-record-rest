@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/gti-record.iml" filepath="$PROJECT_DIR$/gti-record.iml" />
-      <module fileurl="file://$PROJECT_DIR$/model/gti-record-model.iml" filepath="$PROJECT_DIR$/model/gti-record-model.iml" />
     </modules>
   </component>
 </project>
