@@ -13,6 +13,7 @@ import ie.gti.asdl.rey.gtirecord.desktop.ui.component.*;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils;
 import ie.gti.asdl.rey.gtirecord.model.annotation.DescriptionUtil;
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.*;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import ie.gti.asdl.rey.gtirecord.model.util.Pair;
@@ -24,7 +25,7 @@ import java.util.*;
 import java.util.List;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.*;
-import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeListener;
+import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeListSelectionListener;
 
 /**
  *
@@ -94,7 +95,7 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
         tblTeacher.getColumnModel().getColumn(COLUMNS.PASSWORD.index).setCellEditor(new PasswordCellEditor());
 
         // Init module table
-        tblTeacher.getSelectionModel().addListSelectionListener(createSafeListener(event -> onTeacherSelect()));
+        tblTeacher.getSelectionModel().addListSelectionListener(createSafeListSelectionListener(event -> onTeacherSelect()));
 
         initModuleTable();
     }
@@ -170,8 +171,8 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
         SwingUIUtils.addTableFilter(tblTeacherModules, tfModuleFilter);
         SwingUIUtils.addTableFilter(tblAllModules, tfModuleFilter);
 
-        tblTeacherModules.getSelectionModel().addListSelectionListener(createSafeListener(listener -> updateButtonsUI()));
-        tblAllModules.getSelectionModel().addListSelectionListener(createSafeListener(listener -> updateButtonsUI()));
+        tblTeacherModules.getSelectionModel().addListSelectionListener(createSafeListSelectionListener(listener -> updateButtonsUI()));
+        tblAllModules.getSelectionModel().addListSelectionListener(createSafeListSelectionListener(listener -> updateButtonsUI()));
     }
 
     private void updateButtonsUI() {
@@ -832,9 +833,13 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
 
     @Override
     protected Pair<Teacher, User> createDataInstance() {
-        var teacher = new Teacher();
-        teacher.setPerson(new Person());
-        User user = new User();
+//        var teacher = new Teacher();
+//        teacher.setPerson(new Person());
+//        User user = new User();
+//        user.getRoles().add(Role.RoleType.TEACHER.asRole());
+//        return new Pair<>(teacher, user);
+        var teacher = InstanceFactory.create(Teacher.class);
+        var user = InstanceFactory.create(User.class);
         user.getRoles().add(Role.RoleType.TEACHER.asRole());
         return new Pair<>(teacher, user);
     }

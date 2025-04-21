@@ -4,6 +4,7 @@ import ie.gti.asdl.rey.gtirecord.model.entity.Course;
 import ie.gti.asdl.rey.gtirecord.model.entity.CourseType;
 import ie.gti.asdl.rey.gtirecord.model.entity.Department;
 import ie.gti.asdl.rey.gtirecord.model.entity.QQILevel;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.NonNull;
 
@@ -12,6 +13,7 @@ import java.sql.SQLException;
 
 public class CourseRowMapper implements RowMapper<Course> {
 
+    @NotNull
     @Override
     public Course mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
         ResultSetHelper helper = new ResultSetHelper(rs);

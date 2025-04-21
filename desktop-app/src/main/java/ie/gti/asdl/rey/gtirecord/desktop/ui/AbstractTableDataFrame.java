@@ -4,20 +4,24 @@ package ie.gti.asdl.rey.gtirecord.desktop.ui;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedJTable;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils;
+import ie.gti.asdl.rey.gtirecord.model.annotation.DescriptionUtil;
 import ie.gti.asdl.rey.gtirecord.model.annotation.KeyUtil;
 import ie.gti.asdl.rey.gtirecord.model.util.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
 import java.util.function.IntConsumer;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.confirmBatchTableAction;
-import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeListener;
+import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeListSelectionListener;
 
 public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
+
+    private final Logger logger = LoggerFactory.getLogger(AbstractTableDataFrame.class);
 
     public AbstractTableDataFrame(FrameManager frameManager) {
         super(frameManager);
@@ -29,7 +33,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         getTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         // Add selection listener
-        getTable().getSelectionModel().addListSelectionListener(createSafeListener(event -> updateUI()));
+        getTable().getSelectionModel().addListSelectionListener(createSafeListSelectionListener(event -> updateUI()));
 
         SwingUIUtils.addTableFilter(getTable(), getTableFilterField(), getOnRowSelect());
     }
@@ -78,7 +82,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
             fillDataObjectFromTable(data, row);
 
             if (! isDataValid(data)) {
-                errors.add(data.toString());
+                errors.add(DescriptionUtil.getShortDescription(data));
                 return;
             }
 
@@ -99,11 +103,11 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
                             KeyUtil.setKey(keyData, newId);
                         }
                         getTable().setValueAt(newId, row, 0);
-                    }), () -> errors.add(data.toString()));
+                    }), () -> errors.add(DescriptionUtil.getShortDescription(data)));
                 }
             } catch (Exception e) {
-                errors.add(data.toString());
-                JOptionPane.showMessageDialog(null, "Save failed for:\n" + String.join("\n", errors), "Not valid data", JOptionPane.ERROR_MESSAGE);
+                errors.add(DescriptionUtil.getShortDescription(data));
+                logger.error("Failed to save data: {}", data, e);
             }
         });
 
@@ -147,6 +151,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         dataList.stream()
                 .map(data ->  {
                     Object keyData = data;
+                    // data could be Pair with key as value 1
                     if (data instanceof Pair<?,?> pair) {
                         keyData = pair.getValue1(); // Assume we have keys only in the first entity
                     }

@@ -1,6 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.mapper;
 
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.NonNull;
 
@@ -15,6 +16,7 @@ import java.time.LocalDate;
  */
 public class PersonRowMapper implements RowMapper<Person> {
 
+    @NotNull
     @Override
     public Person mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
         ResultSetHelper helper = new ResultSetHelper(rs);

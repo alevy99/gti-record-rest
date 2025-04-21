@@ -12,7 +12,9 @@ import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.*;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.model.annotation.DescriptionUtil;
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.*;
+import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import ie.gti.asdl.rey.gtirecord.model.util.Pair;
 import org.springframework.context.ApplicationContext;
 
@@ -22,7 +24,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.*;
-import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeListener;
+import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeListSelectionListener;
 
 /**
  * @author Andrei
@@ -105,7 +107,7 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
         tblStudent.getColumnModel().getColumn(COLUMNS.PASSWORD.index).setCellEditor(new PasswordCellEditor());
 
         // Init module table
-        tblStudent.getSelectionModel().addListSelectionListener(createSafeListener(event -> onSelectStudent()));
+        tblStudent.getSelectionModel().addListSelectionListener(createSafeListSelectionListener(event -> onSelectStudent()));
 
         initGroupFilterTables();
     }
@@ -973,10 +975,13 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
 
     @Override
     protected Pair<Student, User> createDataInstance() {
-        var student = new Student();
-        student.setPerson(new Person());
-        student.setGroup(new Group());
-        User user = new User();
+//        var student = new Student();
+//        student.setPerson(new Person());
+//        student.setGroup(new Group());
+//        User user = new User();
+//        user.getRoles().add(Role.RoleType.STUDENT.asRole());
+        var student = InstanceFactory.create(Student.class);
+        var user = InstanceFactory.create(User.class);
         user.getRoles().add(Role.RoleType.STUDENT.asRole());
         return new Pair<>(student, user);
     }

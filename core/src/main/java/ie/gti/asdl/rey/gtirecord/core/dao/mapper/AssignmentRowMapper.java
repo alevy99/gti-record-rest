@@ -1,6 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.mapper;
 
 import ie.gti.asdl.rey.gtirecord.model.entity.Assignment;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.NonNull;
 
@@ -14,6 +15,7 @@ public class AssignmentRowMapper implements RowMapper<Assignment> {
 
     private static final GroupModuleRowMapper groupModuleRowMapper = new GroupModuleRowMapper();
 
+    @NotNull
     @Override
     public Assignment mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
         ResultSetHelper helper = new ResultSetHelper(rs);

@@ -1,6 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.mapper;
 
 import ie.gti.asdl.rey.gtirecord.model.entity.Teacher;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.NonNull;
 
@@ -14,6 +15,7 @@ public class TeacherRowMapper implements RowMapper<Teacher> {
 
     private static final PersonRowMapper personRowMapper = new PersonRowMapper();
 
+    @NotNull
     @Override
     public Teacher mapRow(@NonNull ResultSet resultSet, int rowNum) throws SQLException {
         ResultSetHelper helper = new ResultSetHelper(resultSet);

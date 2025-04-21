@@ -16,10 +16,13 @@ public interface AssignmentService {
 
     List<Assignment> getAll();
 
+    List<Assignment> getByGroupId(Integer groupId);
+
     Optional<Integer> insert(Assignment assignment);
 
     void update(Assignment assignment);
 
     void delete(Integer id);
 
+    void deleteByGroupId(Integer groupId);
 }

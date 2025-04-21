@@ -49,7 +49,7 @@ public class GroupModuleDaoImpl implements GroupModuleDao {
                 INNER JOIN module m ON m.id = gm.module_id
                 INNER JOIN `group` g ON g.id = gm.group_id
                 LEFT OUTER JOIN teacher t ON t.person_id = gm.teacher_person_id
-                INNER JOIN person p ON p.id = t.person_id
+                LEFT OUTER JOIN person p ON p.id = t.person_id
             """;
         return jdbcTemplate.query(sql, groupModuleRowMapper);
     }
@@ -66,7 +66,7 @@ public class GroupModuleDaoImpl implements GroupModuleDao {
                 INNER JOIN module m ON m.id = gm.module_id
                 INNER JOIN `group` g ON g.id = gm.group_id
                 LEFT OUTER JOIN teacher t ON t.person_id = gm.teacher_person_id
-                INNER JOIN person p ON p.id = t.person_id
+                LEFT OUTER JOIN person p ON p.id = t.person_id
                 WHERE gm.group_id = ?
             """;
         return jdbcTemplate.query(sql, groupModuleRowMapper, groupId);
@@ -152,5 +152,19 @@ public class GroupModuleDaoImpl implements GroupModuleDao {
         if ((groupId == null) || (moduleId == null)) return;
         final String sql = "DELETE FROM group_has_module WHERE group_id = ? and module_id = ?";
         jdbcTemplate.update(sql, groupId, moduleId);
+    }
+
+    @Override
+    public void deleteByGroupId(Integer groupId) {
+        if (groupId == null) return;
+        final String sql = "DELETE FROM group_has_module WHERE group_id = ?";
+        jdbcTemplate.update(sql, groupId);
+    }
+
+    @Override
+    public void deleteByModuleId(Integer moduleId) {
+        if (moduleId == null) return;
+        final String sql = "DELETE FROM group_has_module WHERE module_id = ?";
+        jdbcTemplate.update(sql, moduleId);
     }
 }

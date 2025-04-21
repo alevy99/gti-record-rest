@@ -9,6 +9,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.event.ItemListener;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
@@ -84,11 +85,19 @@ public class SwingUIUtils {
 
     // Checks if event is a part of multiple firing events, like f.e. ListSelectionListener
     // returns ListSelectionListener which fires only once
-    public static ListSelectionListener createSafeListener(Consumer<ListSelectionEvent> consumer) {
+    public static ListSelectionListener createSafeListSelectionListener(Consumer<ListSelectionEvent> consumer) {
         return event -> {
             if (!event.getValueIsAdjusting()) {
                 consumer.accept(event);
             }
+        };
+    }
+
+    public static ItemListener createSafeItemListener(Consumer<ItemListener> consumer) {
+        return event -> {
+//            if (!event.getValueIsAdjusting()) {
+//                consumer.accept(event);
+//            }
         };
     }
 

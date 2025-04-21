@@ -13,6 +13,8 @@ import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.ModuleTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedJTable;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
+import ie.gti.asdl.rey.gtirecord.model.entity.Group;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import org.springframework.context.ApplicationContext;
 
@@ -348,7 +350,7 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
 
     @Override
     protected Module createDataInstance() {
-        return new Module();
+        return InstanceFactory.create(Module.class);
     }
 
     @Override

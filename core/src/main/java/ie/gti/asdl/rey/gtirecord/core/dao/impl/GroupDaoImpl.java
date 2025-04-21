@@ -31,7 +31,6 @@ import java.util.*;
 public class GroupDaoImpl implements GroupDao {
 
     private static final GroupRowMapper groupRowMapper = new GroupRowMapper();
-    private static final CourseRowMapper courseRowMapper = new CourseRowMapper();
 
     private final JdbcTemplate jdbcTemplate;
     private final ValidationService validationService;
@@ -44,32 +43,26 @@ public class GroupDaoImpl implements GroupDao {
 
     @Override
     public Optional<Group> getById(Integer id) {
-        return Optional.empty();
+        final String sql = """
+                    SELECT g.id as group_id, g.name as group_name, g.code as group_code, 
+                           c.id as course_id, c.name as course_name,
+                           c.code as course_code, c.department_id, c.course_type_id, c.qqi_level_id
+                    FROM `group` g, course c
+                    WHERE g.course_id = c.id and g.id = ?
+                """;
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, groupRowMapper, id));
     }
 
     @Override
     public List<Group> getAll() {
         final String sql = """
-                    SELECT g.id as group_id, g.name as group_name, g.code as group_code, c.id as course_id, c.name as course_name,
+                    SELECT g.id as group_id, g.name as group_name, g.code as group_code,
+                           c.id as course_id, c.name as course_name,
                            c.code as course_code, c.department_id, c.course_type_id, c.qqi_level_id
                     FROM `group` g, course c
                     WHERE g.course_id = c.id
                 """;
-        return jdbcTemplate.query(sql, (rs) -> {
-            List<Group> groups = new ArrayList<>();
-
-            int row = 0;
-            while (rs.next()) {
-                Group group = groupRowMapper.mapRow(rs, row);
-                Course course = courseRowMapper.mapRow(rs, row);
-                if (group != null) {
-                    group.setCourse(course);
-                }
-                groups.add(group);
-                row++;
-            }
-            return groups;
-        });
+        return jdbcTemplate.query(sql, groupRowMapper);
     }
 
     @Override
@@ -85,9 +78,6 @@ public class GroupDaoImpl implements GroupDao {
                     int rowNum = 0;
                     while (rs.next()) {
                         Group group = groupRowMapper.mapRow(rs, rowNum);
-                        Course groupCourse = courseRowMapper.mapRow(rs, rowNum);
-                        assert group != null;
-                        group.setCourse(groupCourse);
                         map.computeIfAbsent(group.getCourse(), course -> new ArrayList<>()).add(group);
                         rowNum++;
                     }

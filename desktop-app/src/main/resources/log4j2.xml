@@ -7,7 +7,7 @@
         </Console>
 
         <!-- File Appender (Optional) -->
-        <File name="FileLogger" fileName="logs/app.log">
+        <File name="FileLogger" fileName="logs/gti-record-app.log">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} - %m%n"/>
         </File>
     </Appenders>
@@ -32,7 +32,7 @@
         <!-- Root Logger -->
         <Root level="DEBUG">
             <AppenderRef ref="Console"/>
-<!--            <AppenderRef ref="FileLogger"/>-->
+            <AppenderRef ref="FileLogger"/>
         </Root>
     </Loggers>
 </Configuration>

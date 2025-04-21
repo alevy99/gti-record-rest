@@ -66,7 +66,6 @@ public class CourseDaoImpl implements CourseDao {
                     int rowNum = 0;
                     while (rs.next()) {
                         Course course = courseRowMapper.mapRow(rs, rowNum);
-                        assert course != null;
                         map.computeIfAbsent(course.getDepartment(), department -> new ArrayList<>()).add(course);
                         rowNum++;
                     }

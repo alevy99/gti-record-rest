@@ -2,6 +2,7 @@ package ie.gti.asdl.rey.gtirecord.core.dao.mapper;
 
 import ie.gti.asdl.rey.gtirecord.model.entity.GroupModule;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.NonNull;
 
@@ -17,6 +18,7 @@ public class GroupModuleRowMapper implements RowMapper<GroupModule> {
     private static final ModuleRowMapper moduleRowMapper = new ModuleRowMapper();
     private static final TeacherRowMapper teacherRowMapper = new TeacherRowMapper();
 
+    @NotNull
     @Override
     public GroupModule mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
         ResultSetHelper helper = new ResultSetHelper(rs);

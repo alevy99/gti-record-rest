@@ -36,7 +36,9 @@ public class AssignmentDaoImpl implements AssignmentDao {
         if (id == null) return Optional.empty();
         final String sql = """
             SELECT a.id as assignment_id, a.name as assignment_name, a.weighting,
-                   gm.*, g.*, m.*
+                   g.id as group_id, g.name as group_name, g.code as group_code,
+                   m.id as module_id, m.name as module_name, m.code as module_code,
+                   gm.*
             FROM assignment a, group_has_module gm, `group` g, module m
             WHERE a.group_module_id = gm.id and gm.group_id = g.id and gm.module_id = m.id and a.id = ?""";
         return jdbcTemplate.query(sql, assignmentRowMapper, id).stream().findFirst();
@@ -47,7 +49,9 @@ public class AssignmentDaoImpl implements AssignmentDao {
         if (groupModuleId == null) return new ArrayList<>();
         final String sql = """
             SELECT a.id as assignment_id, a.name as assignment_name, a.weighting,
-                   gm.*, g.*, m.*
+                   g.id as group_id, g.name as group_name, g.code as group_code,
+                   m.id as module_id, m.name as module_name, m.code as module_code,
+                   gm.*
             FROM assignment a, group_has_module gm, `group` g, module m
             WHERE a.group_module_id = gm.id and gm.group_id = g.id and gm.module_id = m.id and gm.id = ?""";
         return jdbcTemplate.query(sql, assignmentRowMapper, groupModuleId);
@@ -56,16 +60,28 @@ public class AssignmentDaoImpl implements AssignmentDao {
     @Override
     public List<Assignment> getAll() {
         final String sql = """
-            SELECT a.id as assignment_id, a.name as assignment_name, a.weighting,
-                   gm.*, g.*, m.*
+            SELECT a.id as assignment_id, a.name as assignment_name, a.weighting, a.group_module_id,
+                   g.id as group_id, g.name as group_name, g.code as group_code,
+                   m.id as module_id, m.name as module_name, m.code as module_code,
+                   gm.*
             FROM assignment a, group_has_module gm, `group` g, module m
             WHERE a.group_module_id = gm.id and gm.group_id = g.id and gm.module_id = m.id""";
         return jdbcTemplate.query(sql, assignmentRowMapper);
     }
 
     @Override
+    public List<Assignment> getByGroupId(Integer groupId) {
+        final String sql = """
+            SELECT a.id as assignment_id, a.name as assignment_name, a.weighting,
+                   gm.*, g.*, m.*
+            FROM assignment a, group_has_module gm, `group` g, module m
+            WHERE a.group_module_id = gm.id and gm.group_id = g.id and gm.module_id = m.id and g.id = ?""";
+        return jdbcTemplate.query(sql, assignmentRowMapper, groupId);
+    }
+
+    @Override
     public Optional<Integer> insert(Assignment assignment) {
-        if ((assignment == null) || (assignment.getId() == null)) return Optional.empty();
+        if (assignment == null) return Optional.empty();
         final String sql = "INSERT INTO assignment (group_module_id, name, weighting) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -96,8 +112,8 @@ public class AssignmentDaoImpl implements AssignmentDao {
     @Override
     public void update(Assignment assignment) {
         if ((assignment == null) || (assignment.getId() == null)) return;
-        final String sql = "UPDATE assignment SET name = ?, weighting = ? WHERE id = ?";
-        jdbcTemplate.update(sql, assignment.getName(), assignment.getWeighting(), assignment.getId());
+        final String sql = "UPDATE assignment SET name = ?, weighting = ?, group_module_id = ? WHERE id = ?";
+        jdbcTemplate.update(sql, assignment.getName(), assignment.getWeighting(), assignment.getGroupModule().getId(), assignment.getId());
     }
 
     @Override
@@ -105,5 +121,16 @@ public class AssignmentDaoImpl implements AssignmentDao {
         if (id == null) return;
         final String sql = "DELETE FROM assignment WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public void deleteByGroupId(Integer groupId) {
+        if (groupId == null) return;
+        final String sql = """
+                DELETE FROM assignment
+                WHERE group_module_id IN (
+                    SELECT id FROM group_has_module WHERE group_id = ?
+                )""";
+        jdbcTemplate.update(sql, groupId);
     }
 }

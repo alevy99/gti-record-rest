@@ -70,17 +70,6 @@ public class TeacherDaoImpl implements TeacherDao {
                 WHERE t.person_id = p.id AND p.id = ?""";
         List<Teacher> teachers = jdbcTemplate.query(sql, teacherRowMapper, personId);
         return teachers.isEmpty() ? Optional.empty() : Optional.of(teachers.getFirst());
-//        return Optional.ofNullable(jdbcTemplate.query(sql, (rs) -> {
-//            if (! rs.next()) return null;
-//
-//            // Always take the very first result from the ResultSet
-////            Teacher teacher = teacherRowMapper.mapRow(rs, 0);
-////            Person person = personRowMapper.mapRow(rs, 0);
-////            if (teacher != null) {
-////                teacher.setPerson(person);
-////            }
-//            return teacherRowMapper.mapRow(rs, 0);
-//        }, personId));
     }
 
     @Override

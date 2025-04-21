@@ -25,4 +25,8 @@ public interface GroupModuleDao {
     void delete(Integer id);
 
     void delete(Integer groupId, Integer moduleId);
+
+    void deleteByGroupId(Integer groupId);
+
+    void deleteByModuleId(Integer moduleId);
 }

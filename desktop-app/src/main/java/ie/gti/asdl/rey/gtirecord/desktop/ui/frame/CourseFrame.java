@@ -15,6 +15,7 @@ import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.*;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils;
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.*;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import org.springframework.context.ApplicationContext;
@@ -24,11 +25,10 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.util.*;
 import java.util.List;
-import java.util.function.IntConsumer;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.COURSE;
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.MODULE;
-import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeListener;
+import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeListSelectionListener;
 
 /**
  *
@@ -118,7 +118,7 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
         columnModel.getColumn(COLUMNS.QQI_LEVEL.index)  .setMinWidth(80);
 
         // Init module table
-        tblCourse.getSelectionModel().addListSelectionListener(createSafeListener(event -> onCourseSelect()));
+        tblCourse.getSelectionModel().addListSelectionListener(createSafeListSelectionListener(event -> onCourseSelect()));
 
         initModuleTable();
     }
@@ -187,8 +187,8 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
             }
         });
 
-        tblCourseModules.getSelectionModel().addListSelectionListener(createSafeListener(listener -> updateButtonsUI()));
-        tblAllModules.getSelectionModel().addListSelectionListener(createSafeListener(listener -> updateButtonsUI()));
+        tblCourseModules.getSelectionModel().addListSelectionListener(createSafeListSelectionListener(listener -> updateButtonsUI()));
+        tblAllModules.getSelectionModel().addListSelectionListener(createSafeListSelectionListener(listener -> updateButtonsUI()));
     }
 
     private void updateButtonsUI() {
@@ -835,7 +835,7 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
 
     @Override
     protected Course createDataInstance() {
-        return new Course();
+        return InstanceFactory.create(Course.class);
     }
 
     @Override

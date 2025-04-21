@@ -337,11 +337,11 @@ public class MainFrame extends AbstractFrame {
     }//GEN-LAST:event_btnModuleActionPerformed
 
     private void btnAssignmentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAssignmentsActionPerformed
-        getFrameManager().showSub(GROUP);
+        getFrameManager().showSub(ASSIGNMENT);
     }//GEN-LAST:event_btnAssignmentsActionPerformed
 
     private void btnGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGroupActionPerformed
-        getFrameManager().showSub(ASSIGNMENT);
+        getFrameManager().showSub(GROUP);
     }//GEN-LAST:event_btnGroupActionPerformed
 
 

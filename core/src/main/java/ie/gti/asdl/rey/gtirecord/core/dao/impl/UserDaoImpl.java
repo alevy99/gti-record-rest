@@ -38,9 +38,8 @@ public class UserDaoImpl implements UserDao {
             if (user == null) {
                 user = userMapper.mapRow(rs, row);
             }
-            assert user != null;
             var role = roleMapper.mapRow(rs, row);
-            if ((role != null) && role.isValid()) {
+            if (role.isValid()) {
                 user.getRoles().add(role);
             }
             row++;
@@ -111,9 +110,8 @@ public class UserDaoImpl implements UserDao {
                     user = userMapper.mapRow(rs, row);
                     userMap.put(userId, user);
                 }
-                assert user != null;
                 var role = roleMapper.mapRow(rs, row);
-                if ((role != null) && role.isValid()) {
+                if (role.isValid()) {
                     user.getRoles().add(role);
                 }
                 row++;

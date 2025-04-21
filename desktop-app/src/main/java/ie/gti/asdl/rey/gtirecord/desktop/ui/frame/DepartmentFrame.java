@@ -13,6 +13,8 @@ import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DepartmentTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedJTable;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
+import ie.gti.asdl.rey.gtirecord.model.entity.Course;
 import ie.gti.asdl.rey.gtirecord.model.entity.Department;
 import org.springframework.context.ApplicationContext;
 
@@ -337,7 +339,7 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
 
     @Override
     protected Department createDataInstance() {
-        return new Department();
+        return InstanceFactory.create(Department.class);
     }
 
     @Override

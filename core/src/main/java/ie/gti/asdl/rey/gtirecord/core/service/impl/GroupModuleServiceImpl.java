@@ -1,12 +1,14 @@
 package ie.gti.asdl.rey.gtirecord.core.service.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.GroupModuleDao;
+import ie.gti.asdl.rey.gtirecord.core.service.AssignmentService;
 import ie.gti.asdl.rey.gtirecord.core.service.GroupModuleService;
 import ie.gti.asdl.rey.gtirecord.model.entity.Group;
 import ie.gti.asdl.rey.gtirecord.model.entity.GroupModule;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -21,9 +23,12 @@ public class GroupModuleServiceImpl implements GroupModuleService {
 
     private final GroupModuleDao groupModuleDao;
 
+    private final AssignmentService assignmentService;
+
     @Autowired
-    public GroupModuleServiceImpl(GroupModuleDao groupModuleDao) {
+    public GroupModuleServiceImpl(GroupModuleDao groupModuleDao, AssignmentService assignmentService) {
         this.groupModuleDao = groupModuleDao;
+        this.assignmentService = assignmentService;
     }
 
     @Override
@@ -68,5 +73,12 @@ public class GroupModuleServiceImpl implements GroupModuleService {
     @Override
     public void delete(Integer groupId, Integer moduleId) {
         groupModuleDao.delete(groupId, moduleId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteByGroupId(Integer groupId) {
+        assignmentService.deleteByGroupId(groupId);
+        groupModuleDao.deleteByGroupId(groupId);
     }
 }

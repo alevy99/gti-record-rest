@@ -9,27 +9,23 @@ import ie.gti.asdl.rey.gtirecord.core.service.*;
 import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractTableDataFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataListCellRenderer;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataTableModel;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedDataCellRenderer;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedJTable;
+import ie.gti.asdl.rey.gtirecord.desktop.ui.component.*;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils;
-import ie.gti.asdl.rey.gtirecord.model.entity.Assignment;
-import ie.gti.asdl.rey.gtirecord.model.entity.Group;
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
+import ie.gti.asdl.rey.gtirecord.model.entity.*;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
-import ie.gti.asdl.rey.gtirecord.model.entity.StudentAssignment;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.*;
-import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeListener;
+import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeListSelectionListener;
 
 /**
  *
@@ -47,9 +43,9 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         }
     }
 
-    private final JComboBox<Group> groupCombo = new JComboBox<>();
+//    private final JComboBox<Group> groupCombo = new JComboBox<>();
 
-    private final JComboBox<Module> moduleCombo = new JComboBox<>();
+//    private final JComboBox<Module> moduleCombo = new JComboBox<>();
 
     private final ModuleService moduleService;
 
@@ -68,6 +64,12 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
     private List<Assignment> courseModules;
 
     private Integer assignmentHighlightedRow;
+
+    private Map<Group, List<Module>> groupModulesMap = new HashMap<>();
+
+    private List<GroupModule> groupModuleList = new ArrayList<>();
+
+    private List<Group> groups = new ArrayList<>();
 
     /**
      * Creates new form CourseFrame
@@ -90,22 +92,13 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         initTableModel();
         super.initFrame();
 
-        tblAssginment.setHighlightedRowSupplier(() -> assignmentHighlightedRow);
+        tblAssignment.setHighlightedRowSupplier(() -> assignmentHighlightedRow);
 
         DataListCellRenderer listCellRendered = new DataListCellRenderer();
         PaddedDataCellRenderer dataCellRenderer = new PaddedDataCellRenderer(() -> assignmentHighlightedRow);
 
         // Set Department custom JComboBox Renderer and Editor
-        TableColumn groupColumn = getTable().getColumnModel().getColumn(COLUMNS.GROUP.index);
-        groupCombo.setRenderer(listCellRendered);
-        groupColumn.setCellEditor(new DefaultCellEditor(groupCombo));
-        groupColumn.setCellRenderer(dataCellRenderer);
 
-        // Set Course Type custom JComboBox Renderer and Editor
-        TableColumn moduleColumn = getTable().getColumnModel().getColumn(COLUMNS.MODULE.index);
-        moduleCombo.setRenderer(listCellRendered);
-        moduleColumn.setCellEditor(new DefaultCellEditor(moduleCombo));
-        moduleColumn.setCellRenderer(dataCellRenderer);
 
         TableColumnModel columnModel = getTable().getColumnModel();
         columnModel.getColumn(COLUMNS.ID.index)         .setMaxWidth(35);
@@ -115,9 +108,177 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         columnModel.getColumn(COLUMNS.MODULE.index)     .setMinWidth(80);
 
         // Init module table
-        tblAssginment.getSelectionModel().addListSelectionListener(createSafeListener(event -> onAssignmentSelect()));
+        tblAssignment.getSelectionModel().addListSelectionListener(createSafeListSelectionListener(event -> onAssignmentSelect()));
 
         initModuleTable();
+
+//        addGroupComboListener();
+
+        TableColumn groupColumn = getTable().getColumnModel().getColumn(COLUMNS.GROUP.index);
+//        groupCombo.setRenderer(listCellRendered);
+//        groupColumn.setCellEditor(new DefaultCellEditor(groupCombo));
+        groupColumn.setCellRenderer(dataCellRenderer);
+        groupColumn.setCellEditor(getGroupDynamicComboBoxEditor(this::getGroupsList));
+
+
+        // Set Course Type custom JComboBox Renderer and Editor
+        TableColumn moduleColumn = getTable().getColumnModel().getColumn(COLUMNS.MODULE.index);
+//        moduleCombo.setRenderer(listCellRendered);
+//        moduleColumn.setCellEditor(new DefaultCellEditor(moduleCombo));
+        moduleColumn.setCellRenderer(dataCellRenderer);
+//        Function<Integer, List<Module>> modulesProvider = this::getModulesList;
+
+//        TableColumn moduleColumn = tblAssignment.getColumnModel().getColumn(COLUMNS.MODULE.index);
+        moduleColumn.setCellEditor(getModuleDynamicComboBoxEditor(this::getModulesList));
+
+//        moduleCombo.addActionListener(e -> {
+//            System.out.println("Module combo action performed");
+//            Arrays.stream(tblAssignment.getSelectedRows()).findFirst().ifPresent(row -> {
+//                int modelRow = tblAssignment.convertRowIndexToModel(row);
+//                Group group = (Group) tblAssignment.getValueAt(modelRow, COLUMNS.GROUP.index);
+//                fillModuleCombeForGroup(group);
+//            });
+//        });
+
+//        moduleCombo.addPopupMenuListener(new PopupMenuListener() {
+//            boolean loaded = false;
+//
+//            @Override
+//            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+//                if (!loaded) {
+//                    SwingUtilities.invokeLater(() -> {
+////                        System.out.println("Assignment highlighted row: " + assignmentHighlightedRow);
+////                        if (assignmentHighlightedRow == null) {
+////                            return;
+////                        }
+//
+//                        Arrays.stream(tblAssignment.getSelectedRows()).findFirst().ifPresent(row -> {
+//                            Group group = (Group) tblAssignment.getValueAt(row, COLUMNS.GROUP.index);
+//                            fillModuleCombeForGroup(group);
+////                moduleCombo.removeAllItems();
+////                getModulesList(group).forEach(moduleCombo::addItem);
+//                        });
+//                        loaded = true;
+//                    });
+//                }
+//            }
+//
+//            @Override public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
+//            @Override public void popupMenuCanceled(PopupMenuEvent e) {}
+//        });
+    }
+
+    private @NotNull DynamicComboBoxEditor<Group> getGroupDynamicComboBoxEditor(Function<Integer, List<Group>> groupsProvider) {
+        DynamicComboBoxEditor<Group> cbCellEditor = new DynamicComboBoxEditor<>(groupsProvider);
+        cbCellEditor.setRowAwareActionListener((e, row) -> {
+            System.out.println("Group combo action performed at row " + row + " and source is " + e.getSource());
+            JComboBox<Group> cb = (JComboBox<Group>) e.getSource();
+            Group group = (Group) cb.getSelectedItem();
+            if (group == null) return;
+            int modelRow = tblAssignment.convertRowIndexToModel(row);
+            var assignment = getTableModel().getData(modelRow);
+            GroupModule assignmentGroupModule = assignment.getGroupModule();
+            if (! group.equals(assignmentGroupModule.getGroup())) {
+
+                assignmentGroupModule.setGroup(group);
+                // Reset module, since a group was changed
+                Module module = InstanceFactory.create(Module.class);
+                assignmentGroupModule.setModule(module);
+                // Reset groupModule, because we don't know what groupModule will be linked to the assignment since the module is not chosen yet
+                assignmentGroupModule.setId(null);
+                // Update table MODULE column
+                tblAssignment.setValueAt(module, modelRow, COLUMNS.MODULE.index);
+            }
+        });
+        return cbCellEditor;
+    }
+
+    private @NotNull DynamicComboBoxEditor<Module> getModuleDynamicComboBoxEditor(Function<Integer, List<Module>> modulesProvider) {
+        DynamicComboBoxEditor<Module> cbCellEditor = new DynamicComboBoxEditor<>(modulesProvider);
+        cbCellEditor.setRowAwareActionListener((e, row) -> {
+            System.out.println("Module combo action performed at row " + row + " and source is " + e.getSource());
+
+            JComboBox<Module> cb = (JComboBox<Module>) e.getSource();
+            Module module = (Module) cb.getSelectedItem();
+            if (module == null) return;
+
+            int modelRow = tblAssignment.convertRowIndexToModel(row);
+            var assignment = getTableModel().getData(modelRow);
+            GroupModule assignmentGroupModule = assignment.getGroupModule();
+            // If the module was changed, update the groupModule
+            if (! module.equals(assignmentGroupModule.getModule())) {
+                findGroupModule(assignmentGroupModule.getGroup(), module).ifPresent(assignment::setGroupModule);
+            }
+
+//            int modelRow = tblGroupModules.convertRowIndexToModel(row);
+//            GroupModule groupModule = getGroupModulesTableModel().getData(modelRow);
+//            groupModuleService.update(groupModule.getGroup().getId(), groupModule.getModule().getId(), teacher.getPerson().getId());
+        });
+        return cbCellEditor;
+    }
+
+//    private void addGroupComboListener() {
+//        groupCombo.addItemListener(e -> {
+//            // Reset existing module
+//            System.out.println("Group combo item listener");
+//            Group group = (Group) groupCombo.getSelectedItem();
+//            System.out.println("Group selected: " + group);
+//            GroupModule groupModule = getTableModel().getData(assignmentHighlightedRow).getGroupModule();
+//            groupModule.setGroup(group);
+//            groupModule.setModule(InstanceFactory.create(Module.class));
+////            fillModuleCombeForGroup(group);
+////            resetAssignmentModuleAtRow(assignmentHighlightedRow); // Reset module combo since we changed the group
+//        });
+//    }
+
+//    private void fillModuleCombeForGroup(Group group) {
+//        moduleCombo.removeAllItems();
+//        getModulesList(group).forEach(moduleCombo::addItem);
+//    }
+
+    private void resetAssignmentModuleAtRow(Integer viewRow) {
+        if (viewRow == null) {
+            return;
+        }
+        int modelRow = tblAssignment.convertRowIndexToModel(viewRow);
+
+        System.out.println("Assignment highlighted row: " + viewRow);
+        Assignment assignment = getTableModel().getData(modelRow);
+        System.out.println("Assignment: " + assignment);
+        System.out.println("Selected assignment is the same: " + assignment.equals(selectedAssignment));
+        // Reset module
+        var module = new Module();
+        tblAssignment.setValueAt(module, modelRow, COLUMNS.MODULE.index);
+        assignment.getGroupModule().setModule(module);
+
+//            Arrays.stream(tblAssignment.getSelectedRows())
+//                    .findFirst()
+//                    .ifPresent(row -> {
+//                        Assignment assignment = AssignmentFrame.this.getTableModel().getData(tblAssignment.convertRowIndexToModel(row));
+//                        var module = new Module();
+//                        assignment.getGroupModule().setModule(module);
+//                        tblAssignment.setValueAt(module, tblAssignment.convertRowIndexToModel(row), COLUMNS.MODULE.index);
+//                        if (selectedAssignment != null) {
+//                            selectedAssignment.getGroupModule().setModule(module);
+//                        }
+//                    });
+//        }
+    }
+
+    private List<Group> getGroupsList(Integer viewRow) {
+//        int modelRow = tblAssignment.convertRowIndexToModel(viewRow);
+//        Assignment assignment = getTableModel().getData(modelRow);
+        return groups;
+    }
+
+    private List<Module> getModulesList(Integer viewRow) {
+        int modelRow = tblAssignment.convertRowIndexToModel(viewRow);
+        Assignment assignment = getTableModel().getData(modelRow);
+        return getModulesList(assignment.getGroupModule().getGroup());
+    }
+
+    private List<Module> getModulesList(Group group) {
+        return groupModulesMap.getOrDefault(group, new ArrayList<>());
     }
 
     private void onAssignmentSelect() {
@@ -129,10 +290,10 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         tblStudentResult.clear();
 
         // Show modules for the first course
-        Arrays.stream(tblAssginment.getSelectedRows()).findFirst().ifPresentOrElse(row -> {
+        Arrays.stream(tblAssignment.getSelectedRows()).findFirst().ifPresentOrElse(row -> {
             assignmentHighlightedRow = row; // Set new highlighted row
-            tblAssginment.repaint(); // Repaint after we changed highlightedRow
-            selectedAssignment = getTableModel().getData(tblAssginment.convertRowIndexToModel(row));
+            tblAssignment.repaint(); // Repaint after we changed highlightedRow
+            selectedAssignment = getTableModel().getData(tblAssignment.convertRowIndexToModel(row));
 //            courseModules = moduleService.getByCourseId(selectedAssignment.getId());
         }, () -> {
 //            if (courseModules != null) {
@@ -155,7 +316,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
                         java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class
                 };
                 boolean[] canEdit = new boolean [] {
-                        false, true, true, false, false
+                        false, true, true, true, true
                 };
 
                 public Class getColumnClass(int columnIndex) {
@@ -199,7 +360,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
         SwingUIUtils.addTableFilter(tblStudentResult, tfStudentResultFilter);
 
-        tblStudentResult.getSelectionModel().addListSelectionListener(createSafeListener(listener -> updateButtonsUI()));
+        tblStudentResult.getSelectionModel().addListSelectionListener(createSafeListSelectionListener(listener -> updateButtonsUI()));
     }
 
     private void updateButtonsUI() {
@@ -249,7 +410,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblAssginment = new PaddedJTable();
+        tblAssignment = new PaddedJTable();
         lblTitle = new javax.swing.JLabel();
         pnlStudentResults = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -276,9 +437,9 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
         jPanel1.setPreferredSize(new java.awt.Dimension(1033, 755));
 
-        tblAssginment.setAutoCreateRowSorter(true);
-        tblAssginment.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        tblAssginment.setModel(new javax.swing.table.DefaultTableModel(
+        tblAssignment.setAutoCreateRowSorter(true);
+        tblAssignment.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        tblAssignment.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -290,7 +451,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
                 java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true, true, false, false
+                false, true, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -301,7 +462,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tblAssginment);
+        jScrollPane1.setViewportView(tblAssignment);
 
         lblTitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblTitle.setForeground(new java.awt.Color(0, 51, 204));
@@ -348,10 +509,8 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
             .addGroup(pnlStudentResultsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlStudentResultsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
-                    .addGroup(pnlStudentResultsLayout.createSequentialGroup()
-                        .addComponent(lblStudentResultTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 818, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1001, Short.MAX_VALUE)
+                    .addComponent(lblStudentResultTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnlStudentResultsLayout.setVerticalGroup(
@@ -665,7 +824,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
     private javax.swing.JLabel lblTitle;
     private javax.swing.JPanel pnlControls;
     private javax.swing.JPanel pnlStudentResults;
-    private PaddedJTable tblAssginment;
+    private PaddedJTable tblAssignment;
     private PaddedJTable tblStudentResult;
     private javax.swing.JTextField tfAssignmentFilter;
     private javax.swing.JTextField tfStudentResultFilter;
@@ -673,7 +832,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
     @Override
     protected PaddedJTable getTable() {
-        return tblAssginment;
+        return tblAssignment;
     }
 
     @Override
@@ -698,15 +857,34 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
     @Override
     protected Assignment createDataInstance() {
-        return new Assignment();
+//        Assignment assignment = new Assignment();
+//        var groupModule = new GroupModule();
+//        groupModule.setGroup(new Group());
+//        groupModule.setModule(new Module());
+//        assignment.setGroupModule(groupModule);
+        return InstanceFactory.create(Assignment.class);
+    }
+
+    private Optional<GroupModule> findGroupModule(Group group, Module module) {
+        return groupModuleList.stream()
+                .filter(groupModule -> groupModule.getGroup().equals(group) && groupModule.getModule().equals(module))
+                .findFirst();
     }
 
     @Override
     protected void doReloadData() {
-        groupCombo.removeAllItems();
-        groupService.getAll().forEach(groupCombo::addItem);
+        groupModulesMap.clear();
+        groupModulesMap = groupModuleService.getAllGroupedByGroup();
 
-        moduleCombo.removeAllItems();
+        groupModuleList.clear();
+        groupModuleList = groupModuleService.getAll();
+
+//        groupCombo.removeAllItems();
+//        groupCombo.addItem(new Group());
+        groups = groupService.getAll();
+//        groupService.getAll().forEach(groupCombo::addItem);
+
+//        moduleCombo.removeAllItems();
 //        moduleCombo
 //        moduleCombo.addItem(CourseType.CourseTypeType.FULL_TIME.asCourseType());
 //        moduleCombo.addItem(CourseType.CourseTypeType.PART_TIME.asCourseType());
@@ -721,8 +899,8 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         });
 
         if (getTableModel().getDataList().contains(selectedAssignment)) {
-            int viewRow = tblAssginment.convertRowIndexToView(getTableModel().getDataList().indexOf(selectedAssignment));
-            tblAssginment.setRowSelectionInterval(viewRow, viewRow);
+            int viewRow = tblAssignment.convertRowIndexToView(getTableModel().getDataList().indexOf(selectedAssignment));
+            tblAssignment.setRowSelectionInterval(viewRow, viewRow);
         } else {
             selectedAssignment = null;
         }
@@ -757,25 +935,29 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
         assignment.setName(getTableStringValueAt(row, COLUMNS.NAME.index));
 
-        Integer weighting = (Integer) tblAssginment.getValueAt(row, COLUMNS.WEIGHTING.index);
+        Integer weighting = (Integer) tblAssignment.getValueAt(row, COLUMNS.WEIGHTING.index);
         assignment.setWeighting(weighting);
 
-        assignment.setName(getTable().getValueAt(row, COLUMNS.NAME.index).toString());
-
         Group group = (Group) getTable().getValueAt(row, COLUMNS.GROUP.index);
-        if (group != null) {
-            assignment.getGroupModule().setGroup(group);
-        }
-
         Module module = (Module) getTable().getValueAt(row, COLUMNS.MODULE.index);
-        if (module != null) {
-            assignment.getGroupModule().setModule(module);
+
+        if (assignment.getGroupModule().getId() == null) {
+            findGroupModule(group, module).ifPresent(groupModule -> {
+                assignment.getGroupModule().setId(groupModule.getId());
+            });
         }
+//        if (group != null) {
+            assignment.getGroupModule().setGroup(group);
+//        }
+
+//        if (module != null) {
+            assignment.getGroupModule().setModule(module);
+//        }
     }
 
     @Override
     protected void addEmptyRowToModel() {
-        getTableModel().addRow(createDataInstance(), new Object[]{null, "", "", null, null, null});
+        getTableModel().addRow(createDataInstance(), new Object[]{null, "", "", new Group(), new Module()});
     }
 
 }

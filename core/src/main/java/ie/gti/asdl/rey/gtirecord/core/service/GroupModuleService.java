@@ -31,4 +31,5 @@ public interface GroupModuleService {
 
     void delete(Integer groupId, Integer moduleId);
 
+    void deleteByGroupId(Integer groupId);
 }

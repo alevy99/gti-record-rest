@@ -1,11 +1,10 @@
 package ie.gti.asdl.rey.gtirecord.desktop.ui.component;
 
-import ie.gti.asdl.rey.gtirecord.model.util.Pair;
+import lombok.Setter;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.function.Function;
 
@@ -15,40 +14,37 @@ import java.util.function.Function;
 public class DynamicComboBoxEditor<R> extends AbstractCellEditor implements TableCellEditor {
     private final JComboBox<R> comboBox;
     private final Function<Integer, List<R>> itemProvider;
+    @Setter
     private RowAwareActionListener rowAwareActionListener;
     private int currentRow = -1;
+    private boolean doNotTriggerAction = false;
 
     public DynamicComboBoxEditor(Function<Integer, List<R>> itemProvider) {
         this.comboBox = new JComboBox<>();
         this.itemProvider = itemProvider;
         comboBox.setRenderer(new DataListCellRenderer());
         comboBox.addActionListener(e -> {
-            if (rowAwareActionListener != null && currentRow >= 0) {
+            if (! doNotTriggerAction && rowAwareActionListener != null && currentRow >= 0) {
                 rowAwareActionListener.actionPerformed(e, currentRow);
             }
             stopCellEditing(); // по желанию
         });
     }
 
-    public void setRowAwareActionListener(RowAwareActionListener listener) {
-        this.rowAwareActionListener = listener;
-    }
-
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value,
                                                  boolean isSelected, int row, int column) {
 
+        // Do not trigger while editing combobox items
+        doNotTriggerAction = true;
         currentRow = row;
 
         comboBox.removeAllItems();
 
-        List<R> items = itemProvider.apply(row);
-
-        for (R item : items) {
-            comboBox.addItem(item);
-        }
+        itemProvider.apply(row).forEach(comboBox::addItem);
 
         comboBox.setSelectedItem(value);
+        doNotTriggerAction = false;
         return comboBox;
     }
 

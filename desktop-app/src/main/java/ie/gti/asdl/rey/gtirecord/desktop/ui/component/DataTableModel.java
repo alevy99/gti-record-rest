@@ -30,7 +30,7 @@ public class DataTableModel<T> extends DefaultTableModel {
     }
 
     @NotNull
-    public T getData(int row) {
+    public T getData(@NotNull Integer row) {
         return dataList.get(row);
     }
 
