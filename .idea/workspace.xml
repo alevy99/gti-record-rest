@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BookmarksViewState">
+    <option name="rewriteBookmarkType" value="true" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ad40fddd-f25d-4f35-ad1a-7d595c2c4863" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/StudentAssignmentDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/StudentAssignmentDaoImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/StudentAssignmentService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/StudentAssignmentServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/annotation/InstanceFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/AssignmentDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/AssignmentDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/GroupModuleDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/GroupModuleDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/AssignmentDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/AssignmentDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/CourseDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/CourseDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/GroupDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/GroupDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/GroupModuleDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/GroupModuleDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/TeacherDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/TeacherDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/UserDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/UserDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/AssignmentRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/AssignmentRowMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/CourseRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/CourseRowMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/GroupModuleRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/GroupModuleRowMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/GroupRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/GroupRowMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/ModuleRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/ModuleRowMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/PersonRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/PersonRowMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/RoleRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/RoleRowMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/StudentRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/StudentRowMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/TeacherModuleRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/TeacherModuleRowMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/TeacherRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/TeacherRowMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/UserRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/mapper/UserRowMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/AssignmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/AssignmentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/GroupModuleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/GroupModuleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/AssignmentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/AssignmentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/GroupModuleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/GroupModuleServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/GroupServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/GroupServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/AbstractTableDataFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/AbstractTableDataFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/component/DataTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/component/DataTableModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/component/DynamicComboBoxEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/component/DynamicComboBoxEditor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/AssignmentFrame.form" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/AssignmentFrame.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/AssignmentFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/AssignmentFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/CourseFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/CourseFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/DepartmentFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/DepartmentFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/GroupFrame.form" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/GroupFrame.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/GroupFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/GroupFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/MainFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/ModuleFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/ModuleFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/StudentFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/StudentFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/TeacherFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/TeacherFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/util/SwingUIUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/util/SwingUIUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/resources/log4j2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/resources/log4j2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gti-record.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/gti-record-model.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/GroupModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/GroupModule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/Module.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/Module.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;alevy99&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/alevy99/gti-record-rest.git&quot;,
+    &quot;accountId&quot;: &quot;80779894-ba54-4436-9413-cb539acd8c94&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2w00UYDDyOhI9xyCdDwVlzYze6l" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="false" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.AssignmentFrame.executor": "Debug",
+    "Application.GroupFrame.executor": "Run",
+    "Maven.gti-record [clean].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.GtiRecordDesktopGuiApp.executor": "Run",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="ie.gti.asdl.rey.gtirecord.core.dao.impl" />
+      <recent name="ie.gti.asdl.rey.gtirecord.core.service.impl" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.AssignmentFrame">
+    <configuration name="AssignmentFrame" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ie.gti.asdl.rey.gtirecord.desktop.ui.frame.AssignmentFrame" />
+      <module name="gti-record-desktop-app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ie.gti.asdl.rey.gtirecord.desktop.ui.frame.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GroupFrame" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ie.gti.asdl.rey.gtirecord.desktop.ui.frame.GroupFrame" />
+      <module name="gti-record-desktop-app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ie.gti.asdl.rey.gtirecord.desktop.ui.frame.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="gti_record_system_rest" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="gti_record_system_rest" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <configuration name="GtiRecordDesktopGuiApp" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="gti-record-desktop-app" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ie.gti.asdl.rey.gtirecord.desktop.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GtiRecordRestServer" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="gti-record-backend" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ie.gti.asdl.rey.gtirecord.backend.GtiRecordRestServer" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.AssignmentFrame" />
+        <item itemvalue="Application.GroupFrame" />
+        <item itemvalue="Spring Boot.GtiRecordDesktopGuiApp" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="StructureViewState">
+    <option name="selectedTab" value="Logical" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ad40fddd-f25d-4f35-ad1a-7d595c2c4863" name="Changes" comment="" />
+      <created>1745163200874</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1745163200874</updated>
+      <workItem from="1745163203114" duration="99000" />
+      <workItem from="1745163311929" duration="28276000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/GroupServiceImpl.java</url>
+          <line>75</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/GroupServiceImpl.java</url>
+          <line>76</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/GroupServiceImpl.java</url>
+          <line>77</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/GroupModuleServiceImpl.java</url>
+          <line>80</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/AbstractTableDataFrame.java</url>
+          <line>108</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/AbstractTableDataFrame.java</url>
+          <line>113</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/AbstractTableDataFrame.java</url>
+          <line>79</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/AssignmentFrame.java</url>
+          <line>910</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/AssignmentFrame.java</url>
+          <line>276</line>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/AssignmentFrame.java</url>
+          <line>864</line>
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/AssignmentFrame.java</url>
+          <line>915</line>
+          <option name="timeStamp" value="38" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="assignment" language="JAVA" />
+        <watch expression="group" language="JAVA" />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>

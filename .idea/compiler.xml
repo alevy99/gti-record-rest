@@ -21,23 +21,13 @@
         <module name="gti-record-model" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="gti-record-android-app" target="21" />
-      <module name="gti-record-persistence" target="21" />
-      <module name="model" target="21" />
-      <module name="persistence" target="21" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="gti-record" options="" />
-      <module name="gti-record-android-app" options="-parameters" />
-      <module name="gti-record-backend" options="" />
-      <module name="gti-record-core" options="" />
-      <module name="gti-record-desktop-app" options="" />
+      <module name="gti-record-backend" options="-parameters" />
+      <module name="gti-record-core" options="-parameters" />
+      <module name="gti-record-desktop-app" options="-parameters" />
       <module name="gti-record-model" options="-parameters" />
-      <module name="gti-record-persistence" options="-parameters" />
-      <module name="persistence" options="-parameters" />
     </option>
   </component>
 </project>
