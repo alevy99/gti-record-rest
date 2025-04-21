@@ -14,6 +14,7 @@ import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedJTable;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PasswordCellEditor;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PasswordCellRenderer;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.Role;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import ie.gti.asdl.rey.gtirecord.model.util.UserUtils;
@@ -476,7 +477,7 @@ public class UserFrame extends AbstractTableDataFrame<User> {
 
     @Override
     protected User createDataInstance() {
-        return new User();
+        return InstanceFactory.create(User.class);
     }
 
     @Override
@@ -517,7 +518,7 @@ public class UserFrame extends AbstractTableDataFrame<User> {
 
     @Override
     protected void addEmptyRowToModel() {
-        getTableModel().addRow(new User(), new Object[]{null, "", "", false, false, false});
+        getTableModel().addRow(createDataInstance(), new Object[]{null, "", "", false, false, false});
     }
 
 }
