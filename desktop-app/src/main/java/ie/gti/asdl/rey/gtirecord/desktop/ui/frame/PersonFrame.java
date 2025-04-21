@@ -41,9 +41,6 @@ import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.addTextFieldVa
  */
 public class PersonFrame extends AbstractFrame {
 
-//    @Setter
-//    private Integer personId;
-
     @Setter
     private User user;
 

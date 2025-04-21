@@ -975,11 +975,6 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
 
     @Override
     protected Pair<Student, User> createDataInstance() {
-//        var student = new Student();
-//        student.setPerson(new Person());
-//        student.setGroup(new Group());
-//        User user = new User();
-//        user.getRoles().add(Role.RoleType.STUDENT.asRole());
         var student = InstanceFactory.create(Student.class);
         var user = InstanceFactory.create(User.class);
         user.getRoles().add(Role.RoleType.STUDENT.asRole());

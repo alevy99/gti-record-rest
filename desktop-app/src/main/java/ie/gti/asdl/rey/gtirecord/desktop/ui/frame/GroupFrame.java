@@ -1238,16 +1238,15 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
         Arrays.stream(tblGroupStudents.getSelectedRows()).forEach(row -> {
             int modelRow = tblGroupStudents.convertRowIndexToModel(row);
             Student student = getGroupStudentsTableModel().getData(modelRow);
-//            if ((student != null) && (groupModule.getModule() != null) && (groupModule.getModule().getId() != null)) {
-            student.setGroup(null);
+            // Reset group
+            student.setGroup(InstanceFactory.create(Group.class));
             studentService.update(student);
-            // Collect deleted rows, since we can't change model here,
+            // Collect deleted rows, since we can't change the model here,
             // as RowSorter use it to map viewRows to Model rows properly
             deletedModelRows.add(modelRow);
             groupStudents.remove(student);
-//            }
         });
-        // Sort in reverse order, so we will delete from the last to the first
+        // Sort in reverse order, so we will delete it from the last to the first
         deletedModelRows.sort(Comparator.reverseOrder());
         deletedModelRows.forEach(modelRow -> getGroupStudentsTableModel().removeRow(modelRow));
 
@@ -1366,8 +1365,6 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
 
     @Override
     protected Group createDataInstance() {
-//        Group group = new Group();
-//        group.setCourse(new Course());
         return InstanceFactory.create(Group.class);
     }
 

@@ -833,11 +833,6 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
 
     @Override
     protected Pair<Teacher, User> createDataInstance() {
-//        var teacher = new Teacher();
-//        teacher.setPerson(new Person());
-//        User user = new User();
-//        user.getRoles().add(Role.RoleType.TEACHER.asRole());
-//        return new Pair<>(teacher, user);
         var teacher = InstanceFactory.create(Teacher.class);
         var user = InstanceFactory.create(User.class);
         user.getRoles().add(Role.RoleType.TEACHER.asRole());

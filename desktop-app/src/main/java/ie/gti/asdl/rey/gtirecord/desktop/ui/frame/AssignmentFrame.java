@@ -754,11 +754,6 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
     @Override
     protected Assignment createDataInstance() {
-//        Assignment assignment = new Assignment();
-//        var groupModule = new GroupModule();
-//        groupModule.setGroup(new Group());
-//        groupModule.setModule(new Module());
-//        assignment.setGroupModule(groupModule);
         return InstanceFactory.create(Assignment.class);
     }
 
@@ -776,17 +771,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         groupModuleList.clear();
         groupModuleList = groupModuleService.getAll();
 
-//        groupCombo.removeAllItems();
-//        groupCombo.addItem(new Group());
         groups = groupService.getAll();
-//        groupService.getAll().forEach(groupCombo::addItem);
-
-//        moduleCombo.removeAllItems();
-//        moduleCombo
-//        moduleCombo.addItem(CourseType.CourseTypeType.FULL_TIME.asCourseType());
-//        moduleCombo.addItem(CourseType.CourseTypeType.PART_TIME.asCourseType());
-//        moduleCombo.addItem(CourseType.CourseTypeType.ONLINE.asCourseType());
-//        moduleCombo.addItem(CourseType.CourseTypeType.EVENING.asCourseType());
 
         assignmentService.getAll().forEach(assignment -> {
             getTableModel().addRow(assignment, new Object[]{
