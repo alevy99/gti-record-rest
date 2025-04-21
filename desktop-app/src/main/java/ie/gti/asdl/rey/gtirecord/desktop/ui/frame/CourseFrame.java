@@ -62,8 +62,8 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
 
     private Course selectedCourse;
 
-    private List<Module> allModules;
-    private List<Module> courseModules;
+    private List<Module> allModules = new ArrayList<>();
+    private List<Module> courseModules = new ArrayList<>();
 
     private Integer highlightedRow;
 
@@ -138,9 +138,7 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
             selectedCourse = getTableModel().getData(tblCourse.convertRowIndexToModel(row));
             courseModules = moduleService.getByCourseId(selectedCourse.getId());
         }, () -> {
-            if (courseModules != null) {
-                courseModules.clear();
-            }
+            courseModules.clear();
         });
     }
 
@@ -878,9 +876,9 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     }
 
     @Override
-    protected void doDeleteData(Integer dataId) {
-        if (dataId != null) {
-            courseService.delete(dataId);
+    protected void doDeleteData(Course course) {
+        if (course != null) {
+            courseService.delete(course.getId());
         }
     }
 

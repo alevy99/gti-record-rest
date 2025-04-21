@@ -15,8 +15,8 @@ public class StudentAssignment {
 
     private Boolean isGraded;
 
-    private Double grade;
+    private Integer grade;
 
-    private LocalDateTime submitDate;
+    private LocalDateTime submitDateTime;
     
 }

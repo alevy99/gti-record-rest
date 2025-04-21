@@ -18,12 +18,14 @@ public class StudentRowMapper implements RowMapper<Student> {
 
     @NotNull
     @Override
-    public Student mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+    public Student mapRow(@NotNull ResultSet resultSet, int rowNum) throws SQLException {
+        ResultSetHelper helper = new ResultSetHelper(resultSet);
+
         Student student = new Student();
 
-        student.setEducation(resultSet.getString("education"));
-        student.setEmergencyContacts(resultSet.getString("emergency_contacts"));
-        student.setOnErasmus(resultSet.getBoolean("is_on_erasmus"));
+        helper.setStringIfPresent("education", student::setEducation);
+        helper.setStringIfPresent("emergency_contacts", student::setEmergencyContacts);
+        helper.setBooleanIfPresent("is_on_erasmus", student::setOnErasmus);
 
         student.setPerson(personRowMapper.mapRow(resultSet, rowNum));
         student.setGroup(groupRowMapper.mapRow(resultSet, rowNum));

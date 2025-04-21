@@ -498,9 +498,9 @@ public class UserFrame extends AbstractTableDataFrame<User> {
     }
 
     @Override
-    protected void doDeleteData(Integer dataId) {
-        if (dataId != null) {
-            userService.delete(dataId);
+    protected void doDeleteData(User user) {
+        if (user != null) {
+            userService.delete(user.getId());
         }
     }
 

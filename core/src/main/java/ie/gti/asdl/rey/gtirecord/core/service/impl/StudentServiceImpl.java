@@ -18,6 +18,8 @@ import java.util.Optional;
 @Service
 public class StudentServiceImpl implements StudentService {
 
+    private final StudentAssignmentDao studentAssignmentDao;
+    private final AssignmentDao assignmentDao;
     private final StudentDao studentDao;
     private final TeacherDao teacherDao;
     private final PersonDao personDao;
@@ -26,7 +28,10 @@ public class StudentServiceImpl implements StudentService {
     private final UserService userService;
 
     @Autowired
-    public StudentServiceImpl(StudentDao studentDao, TeacherDao teacherDao, PersonDao personDao, UserDao userDao, UserRolesDao userRolesDao, UserService userService) {
+    public StudentServiceImpl(StudentAssignmentDao studentAssignmentDao, AssignmentDao assignmentDao, StudentDao studentDao, TeacherDao teacherDao,
+                              PersonDao personDao, UserDao userDao, UserRolesDao userRolesDao, UserService userService) {
+        this.studentAssignmentDao = studentAssignmentDao;
+        this.assignmentDao = assignmentDao;
         this.studentDao = studentDao;
         this.teacherDao = teacherDao;
         this.personDao = personDao;
@@ -62,6 +67,15 @@ public class StudentServiceImpl implements StudentService {
                 result.setValue(studentDao.insert(student));
             }
         });
+        // Add all the assignments to the student as StudentAssignment records
+        if (student.getGroup().getId() != null) {
+            assignmentDao.getByGroupId(student.getGroup().getId()).forEach(assignment -> {
+                StudentAssignment studentAssignment = new StudentAssignment();
+                studentAssignment.setStudent(student);
+                studentAssignment.setAssignment(assignment);
+                studentAssignmentDao.insert(studentAssignment);
+            });
+        }
         return result.getValue();
     }
 
@@ -79,13 +93,31 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     @Override
     public void update(Student student) {
-        studentDao.update(student);
         personDao.update(student.getPerson());
+        updateStudentAndAssignments(student);
     }
 
+    @Transactional
     @Override
-    public void updateStudentOnly(Student student) {
-        studentDao.update(student);
+    public void updateStudentAndAssignments(Student student) {
+        studentDao.getByPersonId(student.getPerson().getId()).ifPresent(studentDB -> {
+            studentDao.update(student);
+
+            // Update all the assignments to the student as StudentAssignment records
+            if (! studentDB.getGroup().equals(student.getGroup())) {
+                // Delete all the assignments of the group in DB
+                assignmentDao.getByGroupId(studentDB.getGroup().getId()).forEach(assignment -> {
+                    studentAssignmentDao.deleteByAssignmentId(assignment.getId());
+                });
+                // Add all the assignments to the student in a new group as StudentAssignment records
+                assignmentDao.getByGroupId(student.getGroup().getId()).forEach(assignment -> {
+                    StudentAssignment studentAssignment = new StudentAssignment();
+                    studentAssignment.setStudent(student);
+                    studentAssignment.setAssignment(assignment);
+                    studentAssignmentDao.insert(studentAssignment);
+                });
+            }
+        });
     }
 
     @Transactional
@@ -120,19 +152,25 @@ public class StudentServiceImpl implements StudentService {
 
     @Transactional
     @Override
-    public void delete(Integer personId) {
+    public void delete(Student student) {
+        Integer personId = student.getPerson().getId();
         if (personId == null) return;
+        // Delete all the assignments of the student's group in DB
+        assignmentDao.getByGroupId(student.getGroup().getId()).forEach(assignment -> {
+            studentAssignmentDao.deleteByAssignmentId(assignment.getId());
+        });
+
         studentDao.delete(personId);
         // Check if there is a teacher associated with the same person
         if (teacherDao.getByPersonId(personId).isEmpty()) {
-            // If there is no such a teacher then delete the person
+            // If there is no such a teacher, then delete the person
             personDao.delete(personId);
-            // And delete user as well if there is one
+            // And delete the user as well if there is one
             userDao.getByPersonId(personId).ifPresent(user -> {
                 userService.delete(user.getId());
             });
         } else {
-            // Get user by person id and delete student role in it
+            // Get a user by person id and delete a student role in it
             userDao.getByPersonId(personId).ifPresent(user -> {
                 userRolesDao.delete(user.getId(), Role.RoleType.STUDENT.asRole().getId());
             });

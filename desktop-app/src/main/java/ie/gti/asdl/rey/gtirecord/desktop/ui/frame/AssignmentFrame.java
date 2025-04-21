@@ -43,25 +43,24 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         }
     }
 
-//    private final JComboBox<Group> groupCombo = new JComboBox<>();
+    private enum STUDENT_RES_COLUMNS {
+        STUDENT(0), IS_SUBMITTED(1), IS_GRADED(2), GRADE(3);
 
-//    private final JComboBox<Module> moduleCombo = new JComboBox<>();
-
-    private final ModuleService moduleService;
-
-    private final StudentService studentService;
+        final int index;
+        STUDENT_RES_COLUMNS(int index) {
+            this.index = index;
+        }
+    }
 
     private final GroupModuleService groupModuleService;
-
-    private final DepartmentService departmentService;
 
     private final GroupService groupService;
 
     private final AssignmentService assignmentService;
 
-    private Assignment selectedAssignment;
+    private final StudentAssignmentService studentAssignmentService;
 
-    private List<Assignment> courseModules;
+    private Assignment selectedAssignment;
 
     private Integer assignmentHighlightedRow;
 
@@ -71,17 +70,17 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
     private List<Group> groups = new ArrayList<>();
 
+    private List<StudentAssignment> studentAssignments = new ArrayList<>();
+
     /**
      * Creates new form CourseFrame
      */
     public AssignmentFrame(FrameManager frameManager, ServiceManager serviceManager) {
         super(frameManager);
-        studentService = serviceManager.getStudentService();
-        departmentService = serviceManager.getDepartmentService();
-        moduleService = serviceManager.getModuleService();
         groupModuleService = serviceManager.getGroupModuleService();
         assignmentService = serviceManager.getAssignmentService();
         groupService = serviceManager.getGroupService();
+        studentAssignmentService = serviceManager.getStudentAssignmentService();
         initComponents();
         initFrame();
     }
@@ -106,7 +105,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         // Init module table
         tblAssignment.getSelectionModel().addListSelectionListener(createSafeListSelectionListener(event -> onAssignmentSelect()));
 
-        initModuleTable();
+        initStudentResultTable();
 
         // Set GROUP custom JComboBox Renderer and Editor
         TableColumn groupColumn = getTable().getColumnModel().getColumn(COLUMNS.GROUP.index);
@@ -117,7 +116,6 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         TableColumn moduleColumn = getTable().getColumnModel().getColumn(COLUMNS.MODULE.index);
         moduleColumn.setCellRenderer(dataCellRenderer);
         moduleColumn.setCellEditor(getModuleDynamicComboBoxEditor(this::getModulesList));
-
     }
 
     private @NotNull DynamicComboBoxEditor<Group> getGroupDynamicComboBoxEditor(Function<Integer, List<Group>> groupsProvider) {
@@ -156,7 +154,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
             int modelRow = tblAssignment.convertRowIndexToModel(row);
             var assignment = getTableModel().getData(modelRow);
             GroupModule assignmentGroupModule = assignment.getGroupModule();
-            // If the module was changed, update the groupModule
+            // If the module was changed, update the groupModule for the assignment
             if (! module.equals(assignmentGroupModule.getModule())) {
                 findGroupModule(assignmentGroupModule.getGroup(), module).ifPresent(assignment::setGroupModule);
             }
@@ -178,9 +176,15 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         return groupModulesMap.getOrDefault(group, new ArrayList<>());
     }
 
+    @Override
+    protected void onSaveDataCompleted() {
+        super.onSaveDataCompleted();
+        onAssignmentSelect();
+    }
+
     private void onAssignmentSelect() {
         reloadStudentResults();
-        updateModulesTableUI();
+        updateStudentResultTableUI();
     }
 
     private void reloadStudentResults() {
@@ -191,11 +195,10 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
             assignmentHighlightedRow = row; // Set new highlighted row
             tblAssignment.repaint(); // Repaint after we changed highlightedRow
             selectedAssignment = getTableModel().getData(tblAssignment.convertRowIndexToModel(row));
-//            courseModules = moduleService.getByCourseId(selectedAssignment.getId());
+
+            studentAssignments = studentAssignmentService.getByAssignmentId(selectedAssignment.getId());
         }, () -> {
-//            if (courseModules != null) {
-//                courseModules.clear();
-//            }
+            studentAssignments.clear();
         });
     }
 
@@ -227,21 +230,21 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         }
     }
 
-    private void initModuleTable() {
+    private void initStudentResultTable() {
         if (!(tblStudentResult.getModel() instanceof DataTableModel<?>)) {
             tblStudentResult.setModel(new DataTableModel<StudentAssignment>(
                     new Object [][] {
 
                     },
                     new String [] {
-                            "ID", "Student", "Submitted", "Graded", "Grade"
+                            "Student", "Submitted", "Graded", "Grade"
                     }
             ) {
                 Class[] types = new Class [] {
-                        java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Integer.class
+                        java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Integer.class
                 };
                 boolean[] canEdit = new boolean [] {
-                        false, false, true, true, true
+                        false, true, true, true
                 };
 
                 public Class getColumnClass(int columnIndex) {
@@ -254,10 +257,17 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
             });
         }
 
-
         SwingUIUtils.addTableFilter(tblStudentResult, tfStudentResultFilter);
 
         tblStudentResult.getSelectionModel().addListSelectionListener(createSafeListSelectionListener(listener -> updateButtonsUI()));
+
+        tblStudentResult.getColumnModel().getColumn(STUDENT_RES_COLUMNS.STUDENT.index).setMinWidth(250);
+        tblStudentResult.getColumnModel().getColumn(STUDENT_RES_COLUMNS.IS_SUBMITTED.index).setMaxWidth(200);
+        tblStudentResult.getColumnModel().getColumn(STUDENT_RES_COLUMNS.IS_GRADED.index).setMaxWidth(200);
+        tblStudentResult.getColumnModel().getColumn(STUDENT_RES_COLUMNS.GRADE.index).setMaxWidth(200);
+
+        TableColumn studentColumn = tblStudentResult.getColumnModel().getColumn(STUDENT_RES_COLUMNS.STUDENT.index);
+        studentColumn.setCellRenderer(new PaddedDataCellRenderer(null));
     }
 
     private void updateButtonsUI() {
@@ -265,36 +275,33 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 //        btnRemoveModuleFromCourse.setEnabled(tblStudentResult.getSelectedRowCount() > 0);
     }
 
-    private void updateModulesTableUI() {
-        lblStudentResultTitle.setText((selectedAssignment == null) ? "Students assignments" : selectedAssignment.getName() + " assignments");
+//    private void updateSelectedAssignment() {
+//        if (assignmentHighlightedRow != null) {
+//            int modelRow = tblAssignment.convertRowIndexToModel(assignmentHighlightedRow);
+//            selectedAssignment = getTableModel().getData(modelRow);
+//        }
+//    }
+
+    private void updateStudentResultTableUI() {
+        lblStudentResultTitle.setText((selectedAssignment == null || selectedAssignment.getName() == null)
+                ? "Students results" : selectedAssignment.getName() + " results");
 
         tblStudentResult.clear();
 
-//        if (courseModules != null) {
-//            courseModules.forEach(module -> {
-//                getStudentResultTableModel().addRow(module, new Object[] {module.getId(), module.getName(), module.getCode()});
-//            });
-//        }
-//        if (allModules != null) {
-//            List<Module> allExceptCourseModules = new ArrayList<>(allModules);
-//            if (courseModules != null) {
-//                allExceptCourseModules.removeAll(courseModules);
-//            }
-////            allExceptCourseModules.forEach(module -> {
-////                getAllModulesTableModel().addRow(module, new Object[] {module.getId(), module.getName(), module.getCode()});
-////            });
-//        }
+        studentAssignments.forEach(sa -> {
+            getStudentResultTableModel().addRow(sa, new Object[] {sa.getStudent(), sa.getIsSubmitted(), sa.getIsGraded(), sa.getGrade()});
+        });
     }
 
-    protected DataTableModel<Assignment> getStudentResultTableModel() {
-        return (DataTableModel<Assignment>) tblStudentResult.getModel();
+    protected DataTableModel<StudentAssignment> getStudentResultTableModel() {
+        return (DataTableModel<StudentAssignment>) tblStudentResult.getModel();
     }
 
     @Override
     protected void onFrameShown() {
         super.onFrameShown();
         reloadStudentResults();
-        updateModulesTableUI();
+        updateStudentResultTableUI();
     }
 
     /**
@@ -684,7 +691,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
     }//GEN-LAST:event_btnOpenModulesActionPerformed
 
     private void btnOpenStudentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenStudentsActionPerformed
-        getFrameManager().showSub(STUDENT);
+        getFrameManager().showSub(FrameManager.FrameType.STUDENT);
     }//GEN-LAST:event_btnOpenStudentsActionPerformed
 
     /**
@@ -799,8 +806,8 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
     }
 
     @Override
-    protected void doDeleteData(Integer dataId) {
-        assignmentService.delete(dataId);
+    protected void doDeleteData(Assignment data) {
+        assignmentService.delete(data.getId());
     }
 
     @Override
@@ -828,13 +835,8 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
                 assignment.getGroupModule().setId(groupModule.getId());
             });
         }
-//        if (group != null) {
-            assignment.getGroupModule().setGroup(group);
-//        }
-
-//        if (module != null) {
-            assignment.getGroupModule().setModule(module);
-//        }
+        assignment.getGroupModule().setGroup(group);
+        assignment.getGroupModule().setModule(module);
     }
 
     @Override

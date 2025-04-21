@@ -33,11 +33,13 @@ public class ServiceManager {
 
     private final AssignmentService assignmentService;
 
+    private final StudentAssignmentService studentAssignmentService;
+
     @Autowired
     public ServiceManager(UserService userService, PersonService personService, DepartmentService departmentService,
                           ModuleService moduleService, CourseService courseService, CourseModuleService courseModuleService,
                           TeacherService teacherService, StudentService studentService, TeacherModuleService teacherModuleService,
-                          GroupService groupService, GroupModuleService groupModuleService, AssignmentService assignmentService) {
+                          GroupService groupService, GroupModuleService groupModuleService, AssignmentService assignmentService, StudentAssignmentService studentAssignmentService) {
         this.userService = userService;
         this.personService = personService;
         this.departmentService = departmentService;
@@ -50,6 +52,7 @@ public class ServiceManager {
         this.groupService = groupService;
         this.groupModuleService = groupModuleService;
         this.assignmentService = assignmentService;
+        this.studentAssignmentService = studentAssignmentService;
     }
 
 }

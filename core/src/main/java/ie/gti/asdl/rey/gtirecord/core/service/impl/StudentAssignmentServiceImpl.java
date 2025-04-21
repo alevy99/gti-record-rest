@@ -2,8 +2,11 @@ package ie.gti.asdl.rey.gtirecord.core.service.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.StudentAssignmentDao;
 import ie.gti.asdl.rey.gtirecord.core.service.StudentAssignmentService;
+import ie.gti.asdl.rey.gtirecord.model.entity.StudentAssignment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author Andrei Levchenko
@@ -16,6 +19,11 @@ public class StudentAssignmentServiceImpl implements StudentAssignmentService {
     @Autowired
     public StudentAssignmentServiceImpl(StudentAssignmentDao studentAssignmentDao) {
         this.studentAssignmentDao = studentAssignmentDao;
+    }
+
+    @Override
+    public List<StudentAssignment> getByAssignmentId(Integer assignmentId) {
+        return studentAssignmentDao.getByAssignmentId(assignmentId);
     }
 
     @Override

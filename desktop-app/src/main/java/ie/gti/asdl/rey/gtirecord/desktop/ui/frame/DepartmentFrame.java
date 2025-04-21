@@ -360,9 +360,9 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
     }
 
     @Override
-    protected void doDeleteData(Integer dataId) {
-        if (dataId != null) {
-            departmentService.delete(dataId);
+    protected void doDeleteData(Department data) {
+        if (data != null) {
+            departmentService.delete(data.getId());
         }
     }
 

@@ -882,9 +882,9 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
     }
 
     @Override
-    protected void doDeleteData(Integer dataId) {
-        if (dataId != null) {
-            teacherService.delete(dataId);
+    protected void doDeleteData(Pair<Teacher, User> pair) {
+        if (pair != null) {
+            teacherService.delete(pair.getValue1().getPerson().getId());
         }
     }
 

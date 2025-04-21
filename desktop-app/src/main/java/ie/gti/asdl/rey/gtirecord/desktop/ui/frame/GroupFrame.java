@@ -320,7 +320,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
     }
 
     private void updateModuleTablesUI() {
-        lblGroupModulesTitle.setText((selectedGroup == null) ? "Group Modules" : selectedGroup.getName() + " Modules");
+        lblGroupModulesTitle.setText((selectedGroup == null || selectedGroup.getName() == null) ? "Group Modules" : selectedGroup.getName() + " Modules");
 
         tblGroupModules.clear();
         tblAllModules.clear();
@@ -342,7 +342,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
     }
 
     private void updateStudentTablesUI() {
-        lblGroupStudentsTitle.setText((selectedGroup == null) ? "Group Students" : selectedGroup.getName() + " Students");
+        lblGroupStudentsTitle.setText((selectedGroup == null || selectedGroup.getName() == null) ? "Group Students" : selectedGroup.getName() + " Students");
 
         tblGroupStudents.clear();
         tblAllStudents.clear();
@@ -1216,7 +1216,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
 //                teacher.setPerson(new Person());
 //                groupModule.setTeacher(teacher);
             student.setGroup(selectedGroup);
-            studentService.updateStudentOnly(student);
+            studentService.updateStudentAndAssignments(student);
             getGroupStudentsTableModel().addRow(student, new Object[] {student.getPerson().getId(),
                     student.getPerson().getFirstName(), student.getPerson().getLastName(), student.getGroup()});
             groupStudents.add(student);
@@ -1401,9 +1401,9 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
     }
 
     @Override
-    protected void doDeleteData(Integer dataId) {
-        if (dataId != null) {
-            groupService.delete(dataId);
+    protected void doDeleteData(Group group) {
+        if (group != null) {
+            groupService.delete(group.getId());
         }
     }
 

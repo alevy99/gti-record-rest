@@ -5,6 +5,7 @@ import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import ie.gti.asdl.rey.gtirecord.model.validation.OnUpdate;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +28,7 @@ public interface StudentService {
 
     void update(Student student);
 
-    void updateStudentOnly(Student student);
+    void updateStudentAndAssignments(Student student);
 
     void updateWithUser(Student student, User user);
 
@@ -35,5 +36,5 @@ public interface StudentService {
 
     Optional<Integer> saveWithUser(Student student, User user);
 
-    void delete(Integer personId);
+    void delete(Student student);
 }

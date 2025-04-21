@@ -14,7 +14,6 @@ import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.model.annotation.DescriptionUtil;
 import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.*;
-import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import ie.gti.asdl.rey.gtirecord.model.util.Pair;
 import org.springframework.context.ApplicationContext;
 
@@ -1060,9 +1059,9 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
     }
 
     @Override
-    protected void doDeleteData(Integer dataId) {
-        if (dataId != null) {
-            studentService.delete(dataId);
+    protected void doDeleteData(Pair<Student, User> pair) {
+        if (pair != null) {
+            studentService.delete(pair.getValue1());
         }
     }
 

@@ -371,9 +371,9 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     }
 
     @Override
-    protected void doDeleteData(Integer dataId) {
-        if (dataId != null) {
-            moduleService.delete(dataId);
+    protected void doDeleteData(Module module) {
+        if (module != null) {
+            moduleService.delete(module.getId());
         }
     }
 

@@ -57,7 +57,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     protected abstract void doReloadData();
     protected abstract Optional<Integer> doInsertData(T data);
     protected abstract void doUpdateData(T data);
-    protected abstract void doDeleteData(Integer dataId);
+    protected abstract void doDeleteData(T data);
     protected abstract boolean isDataValid(T data);
 
     protected abstract void fillDataObjectFromTable(T data, Integer row);
@@ -114,7 +114,13 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         if (!errors.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Save failed for:\n" + String.join("\n", errors), "Not valid data", JOptionPane.ERROR_MESSAGE);
         }
+        onSaveDataCompleted();
         updateUI();
+    }
+
+    protected void onSaveDataCompleted() {
+        // Do nothing by default
+        // Override if needed
     }
 
     protected void onDeleteData() {
@@ -148,15 +154,26 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
             return;
         }
 
-        dataList.stream()
-                .map(data ->  {
-                    Object keyData = data;
-                    // data could be Pair with key as value 1
-                    if (data instanceof Pair<?,?> pair) {
-                        keyData = pair.getValue1(); // Assume we have keys only in the first entity
-                    }
-                    return KeyUtil.getKey(keyData);
-                })
+//        dataList.stream()
+//                .map(data ->  {
+//                    Object keyData = data;
+//                    // data could be Pair with a key as value1
+//                    if (data instanceof Pair<?,?> pair) {
+//                        keyData = pair.getValue1(); // Assume we have keys only in the first entity
+//                    }
+//                    return KeyUtil.getKey(keyData);
+//                })
+//                .forEach(this::doDeleteData);
+
+        dataList
+//                .map(data ->  {
+////                    Object keyData = data;
+//                    // data could be Pair with a key as value1
+//                    if (data instanceof Pair<?,?> pair) {
+//                        data = pair.getValue1(); // Assume we have keys only in the first entity
+//                    }
+//                    return data;
+//                })
                 .forEach(this::doDeleteData);
 
         // Delete from the model in reverse order

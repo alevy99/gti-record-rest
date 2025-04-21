@@ -2,8 +2,11 @@ package ie.gti.asdl.rey.gtirecord.core.service.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.AssignmentDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.StudentAssignmentDao;
+import ie.gti.asdl.rey.gtirecord.core.dao.StudentDao;
 import ie.gti.asdl.rey.gtirecord.core.service.AssignmentService;
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.Assignment;
+import ie.gti.asdl.rey.gtirecord.model.entity.StudentAssignment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,10 +24,13 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     private final StudentAssignmentDao studentAssignmentDao;
 
+    private final StudentDao studentDao;
+
     @Autowired
-    public AssignmentServiceImpl(AssignmentDao assignmentDao, StudentAssignmentDao studentAssignmentDao) {
+    public AssignmentServiceImpl(AssignmentDao assignmentDao, StudentAssignmentDao studentAssignmentDao, StudentDao studentDao) {
         this.assignmentDao = assignmentDao;
         this.studentAssignmentDao = studentAssignmentDao;
+        this.studentDao = studentDao;
     }
 
     @Override
@@ -42,9 +48,19 @@ public class AssignmentServiceImpl implements AssignmentService {
         return assignmentDao.getByGroupId(groupId);
     }
 
+    @Transactional
     @Override
     public Optional<Integer> insert(Assignment assignment) {
-        return assignmentDao.insert(assignment);
+        Optional<Integer> assignmentIdOpt = assignmentDao.insert(assignment);
+        assignmentIdOpt.ifPresent(assignmentId -> {
+            studentDao.getByGroupId(assignment.getGroupModule().getGroup().getId()).forEach(student -> {
+                StudentAssignment studentAssignment = new StudentAssignment();
+                studentAssignment.setStudent(student);
+                studentAssignment.setAssignment(assignment);
+                studentAssignmentDao.insert(studentAssignment);
+            });
+        });
+        return assignmentIdOpt;
     }
 
     @Override
@@ -52,8 +68,10 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignmentDao.update(assignment);
     }
 
+    @Transactional
     @Override
     public void delete(Integer id) {
+        studentAssignmentDao.deleteByAssignmentId(id);
         assignmentDao.delete(id);
     }
 

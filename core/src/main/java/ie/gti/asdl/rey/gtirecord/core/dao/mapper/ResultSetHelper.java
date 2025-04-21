@@ -1,8 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.mapper;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -67,13 +65,43 @@ public class ResultSetHelper {
 
     public void setIntIfPresent(String label, Consumer<Integer> setter) throws SQLException {
         if (hasColumn(label)) {
-            setter.accept(resultSet.getInt(label));
+            int value = resultSet.getInt(label);
+            setter.accept(resultSet.wasNull() ? null : value);
+        }
+    }
+
+    public void setLongIfPresent(String label, Consumer<Long> setter) throws SQLException {
+        if (hasColumn(label)) {
+            long value = resultSet.getLong(label);
+            setter.accept(resultSet.wasNull() ? null : value);
         }
     }
 
     public void setStringIfPresent(String label, Consumer<String> setter) throws SQLException {
         if (hasColumn(label)) {
-            setter.accept(resultSet.getString(label));
+            String value = resultSet.getString(label);
+            setter.accept(resultSet.wasNull() ? null : value);
+        }
+    }
+
+    public void setBooleanIfPresent(String label, Consumer<Boolean> setter) throws SQLException {
+        if (hasColumn(label)) {
+            boolean value = resultSet.getBoolean(label);
+            setter.accept(resultSet.wasNull() ? null : value);
+        }
+    }
+
+    public void setDateIfPresent(String label, Consumer<Date> setter) throws SQLException {
+        if (hasColumn(label)) {
+            Date value = resultSet.getDate(label);
+            setter.accept(resultSet.wasNull() ? null : value);
+        }
+    }
+
+    public void setTimestampIfPresent(String label, Consumer<Timestamp> setter) throws SQLException {
+        if (hasColumn(label)) {
+            Timestamp value = resultSet.getTimestamp(label);
+            setter.accept(resultSet.wasNull() ? null : value);
         }
     }
 }
