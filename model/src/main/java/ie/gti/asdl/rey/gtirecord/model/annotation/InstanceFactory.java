@@ -1,6 +1,8 @@
 package ie.gti.asdl.rey.gtirecord.model.annotation;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 /**
@@ -11,6 +13,8 @@ public class InstanceFactory {
     // Типы, которые не нужно инициализировать
     private static final Set<Class<?>> SIMPLE_TYPES = Set.of(
             String.class,
+            LocalDate.class,
+            LocalDateTime.class,
             Integer.class,
             Long.class,
             Boolean.class,
