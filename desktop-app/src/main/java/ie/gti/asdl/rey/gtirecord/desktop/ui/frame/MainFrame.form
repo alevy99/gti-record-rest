@@ -210,7 +210,10 @@
                           <Component id="btnTeacher" alignment="1" min="-2" pref="151" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="116" max="-2" attributes="0"/>
-                      <Component id="btnAssignments" min="-2" pref="151" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="btnAssignments" min="-2" pref="151" max="-2" attributes="0"/>
+                          <Component id="btnGroup" min="-2" pref="151" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="btnCourse" min="-2" pref="151" max="-2" attributes="0"/>
@@ -218,13 +221,6 @@
                           <Component id="btnModule" min="-2" pref="151" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="254" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="342" max="-2" attributes="0"/>
-                          <Component id="btnGroup" min="-2" pref="151" max="-2" attributes="0"/>
-                          <EmptySpace pref="489" max="32767" attributes="0"/>
-                      </Group>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -240,21 +236,15 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btnTeacher" alignment="3" min="-2" pref="84" max="-2" attributes="0"/>
                           <Component id="btnCourse" alignment="3" min="-2" pref="84" max="-2" attributes="0"/>
-                          <Component id="btnAssignments" alignment="3" min="-2" pref="84" max="-2" attributes="0"/>
+                          <Component id="btnGroup" alignment="3" min="-2" pref="84" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btnStudent" alignment="3" min="-2" pref="84" max="-2" attributes="0"/>
                           <Component id="btnModule" alignment="3" min="-2" pref="84" max="-2" attributes="0"/>
+                          <Component id="btnAssignments" alignment="3" min="-2" pref="84" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="188" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="106" max="-2" attributes="0"/>
-                          <Component id="btnGroup" min="-2" pref="84" max="-2" attributes="0"/>
-                          <EmptySpace pref="410" max="32767" attributes="0"/>
-                      </Group>
                   </Group>
               </Group>
             </DimensionLayout>

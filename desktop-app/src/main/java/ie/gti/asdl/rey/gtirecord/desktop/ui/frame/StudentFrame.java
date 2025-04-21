@@ -63,10 +63,6 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
 
     private Department selectedDepartment;
 
-    private Course selectedCourse;
-
-    private Group selectedGroup;
-
     private Integer highlightedRow;
 
     /**
@@ -160,7 +156,7 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
                 tblGroup.clear();
             }
             case 1 -> {
-                selectedCourse = getCourseTableModel().getData(tblCourse.convertRowIndexToModel(tblCourse.getSelectedRow()));
+                Course selectedCourse = getCourseTableModel().getData(tblCourse.convertRowIndexToModel(tblCourse.getSelectedRow()));
                 tblGroup.clear();
 
                 Optional.ofNullable(groupsByCourse.get(selectedCourse))
@@ -182,6 +178,7 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
 
     private void onSelectGroup() {
         if (selectedPair == null) return;
+        Group selectedGroup;
         switch (tblGroup.getSelectedRowCount()) {
             case 0 -> {
                 selectedGroup = new Group();
@@ -355,19 +352,9 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
         }
     }
 
-//    protected DataTableModel<Module> getTeacherModulesTableModel() {
-//        return (DataTableModel<Module>) tblTeacherModules.getModel();
-//    }
-//
-//    protected DataTableModel<Module> getAllModulesTableModel() {
-//        return (DataTableModel<Module>) tblAllModules.getModel();
-//    }
-
     @Override
     protected void onFrameShown() {
         super.onFrameShown();
-//        reloadAllModules();
-//        reloadTeacherModules();
         updateGroupFilterTableUI();
     }
 

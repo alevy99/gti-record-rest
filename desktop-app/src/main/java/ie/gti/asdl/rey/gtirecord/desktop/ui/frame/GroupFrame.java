@@ -212,8 +212,6 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
 
         tblGroupStudents.getSelectionModel().addListSelectionListener(createSafeListSelectionListener(listener -> updateButtonsUI()));
         tblAllStudents.getSelectionModel().addListSelectionListener(createSafeListSelectionListener(listener -> updateButtonsUI()));
-
-//        btnOpenTeachers2.setVisible(false);
     }
 
     private void initStudentTable(PaddedJTable table) {
@@ -320,7 +318,8 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
     }
 
     private void updateModuleTablesUI() {
-        lblGroupModulesTitle.setText((selectedGroup == null || selectedGroup.getName() == null) ? "Group Modules" : selectedGroup.getName() + " Modules");
+        lblGroupModulesTitle.setText((selectedGroup == null || selectedGroup.getName() == null)
+                ? "Group Modules" : selectedGroup.getName() + " Modules");
 
         tblGroupModules.clear();
         tblAllModules.clear();
@@ -342,7 +341,8 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
     }
 
     private void updateStudentTablesUI() {
-        lblGroupStudentsTitle.setText((selectedGroup == null || selectedGroup.getName() == null) ? "Group Students" : selectedGroup.getName() + " Students");
+        lblGroupStudentsTitle.setText((selectedGroup == null || selectedGroup.getName() == null)
+                ? "Group Students" : selectedGroup.getName() + " Students");
 
         tblGroupStudents.clear();
         tblAllStudents.clear();

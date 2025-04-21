@@ -195,7 +195,8 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     }
 
     private void updateModulesTableUI() {
-        lblCourseModulesTitle.setText((selectedCourse == null) ? "Course Modules" : selectedCourse.getName() + " Modules");
+        lblCourseModulesTitle.setText((selectedCourse == null || selectedCourse.getName() == null)
+                ? "Course Modules" : selectedCourse.getName() + " Modules");
 
         tblCourseModules.clear();
         tblAllModules.clear();
