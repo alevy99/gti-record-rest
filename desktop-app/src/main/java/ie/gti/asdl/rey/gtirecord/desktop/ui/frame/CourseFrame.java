@@ -336,7 +336,6 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
 
         lblCourseModulesTitle.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblCourseModulesTitle.setForeground(new java.awt.Color(0, 51, 204));
-        lblCourseModulesTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCourseModulesTitle.setText("Course Modules");
 
         javax.swing.GroupLayout pnlCourseModulesLayout = new javax.swing.GroupLayout(pnlCourseModules);
@@ -346,7 +345,7 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
             .addGroup(pnlCourseModulesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlCourseModulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblCourseModulesTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblCourseModulesTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlCourseModulesLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)))
