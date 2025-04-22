@@ -1,6 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.UserRolesDao;
+import ie.gti.asdl.rey.gtirecord.core.service.ValidationService;
 import ie.gti.asdl.rey.gtirecord.model.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,10 +17,12 @@ import java.util.Set;
 public class UserRolesDaoImpl implements UserRolesDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final ValidationService validationService;
 
     @Autowired
-    public UserRolesDaoImpl(JdbcTemplate jdbcTemplate) {
+    public UserRolesDaoImpl(JdbcTemplate jdbcTemplate, ValidationService validationService) {
         this.jdbcTemplate = jdbcTemplate;
+        this.validationService = validationService;
     }
 
     @Override

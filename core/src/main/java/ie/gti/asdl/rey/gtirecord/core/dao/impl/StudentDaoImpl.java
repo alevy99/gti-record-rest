@@ -3,6 +3,7 @@ package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 import ie.gti.asdl.rey.gtirecord.core.dao.StudentDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.GroupRowMapper;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.StudentRowMapper;
+import ie.gti.asdl.rey.gtirecord.core.service.ValidationService;
 import ie.gti.asdl.rey.gtirecord.model.entity.Address;
 import ie.gti.asdl.rey.gtirecord.model.entity.Group;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
@@ -22,12 +23,14 @@ import java.util.*;
 public class StudentDaoImpl implements StudentDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final ValidationService validationService;
 
     private static final StudentRowMapper studentRowMapper = new StudentRowMapper();
 
     @Autowired
-    public StudentDaoImpl(JdbcTemplate jdbcTemplate) {
+    public StudentDaoImpl(JdbcTemplate jdbcTemplate, ValidationService validationService) {
         this.jdbcTemplate = jdbcTemplate;
+        this.validationService = validationService;
     }
 
     @Override

@@ -2,6 +2,7 @@ package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.StudentAssignmentDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.StudentAssignmentRowMapper;
+import ie.gti.asdl.rey.gtirecord.core.service.ValidationService;
 import ie.gti.asdl.rey.gtirecord.model.entity.StudentAssignment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,11 +20,14 @@ import java.util.Optional;
 public class StudentAssignmentDaoImpl implements StudentAssignmentDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final ValidationService validationService;
+
     private static final StudentAssignmentRowMapper studentAssignmentRowMapper = new StudentAssignmentRowMapper();
 
     @Autowired
-    public StudentAssignmentDaoImpl(JdbcTemplate jdbcTemplate) {
+    public StudentAssignmentDaoImpl(JdbcTemplate jdbcTemplate, ValidationService validationService) {
         this.jdbcTemplate = jdbcTemplate;
+        this.validationService = validationService;
     }
 
     @Override

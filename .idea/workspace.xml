@@ -10,15 +10,23 @@
     <list default="true" id="ad40fddd-f25d-4f35-ad1a-7d595c2c4863" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/UserDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/UserDaoImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/ValidationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/ValidationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/CourseFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/CourseFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/DepartmentFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/DepartmentFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/ModuleFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/ModuleFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/StudentFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/StudentFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/TeacherFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/TeacherFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/UserFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/UserFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/AddressDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/AddressDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/AssignmentDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/AssignmentDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/CourseDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/CourseDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/CourseModuleDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/CourseModuleDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/DepartmentDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/DepartmentDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/ModuleDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/ModuleDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/PersonDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/PersonDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/StudentAssignmentDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/StudentAssignmentDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/StudentDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/StudentDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/TeacherDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/TeacherDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/TeacherModuleDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/TeacherModuleDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/UserRolesDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/UserRolesDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/Assignment.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/Assignment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/Course.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/GroupModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/GroupModule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/StudentAssignment.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/StudentAssignment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/TeacherModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/TeacherModule.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -200,7 +208,7 @@
       <option name="presentableId" value="Default" />
       <updated>1745163200874</updated>
       <workItem from="1745163203114" duration="99000" />
-      <workItem from="1745163311929" duration="52435000" />
+      <workItem from="1745163311929" duration="53478000" />
     </task>
     <servers />
   </component>
@@ -237,7 +245,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/StudentDaoImpl.java</url>
-          <line>78</line>
+          <line>81</line>
           <option name="timeStamp" value="43" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -264,19 +272,6 @@
           <url>file://$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/PersonServiceImpl.java</url>
           <line>115</line>
           <option name="timeStamp" value="51" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/UserDaoImpl.java</url>
-          <line>125</line>
-          <properties>
-            <option name="lambda-ordinal" value="-1" />
-          </properties>
-          <option name="timeStamp" value="57" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/UserDaoImpl.java</url>
-          <line>127</line>
-          <option name="timeStamp" value="58" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

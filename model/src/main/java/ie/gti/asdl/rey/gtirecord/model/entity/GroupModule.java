@@ -17,13 +17,13 @@ public class GroupModule {
     private Integer id;
 
     @NotNull(message = "Group must be provided")
-    @Valid
+//    @Valid
     private Group group;
 
     @NotNull(message = "Module must be provided")
-    @Valid
+//    @Valid
     private Module module;
 
-    @Valid
+//    @Valid
     private Teacher teacher;
 }

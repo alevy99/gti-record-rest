@@ -1,6 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.CourseModuleDao;
+import ie.gti.asdl.rey.gtirecord.core.service.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -12,10 +13,12 @@ import org.springframework.stereotype.Repository;
 public class CourseModuleDaoImpl implements CourseModuleDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final ValidationService validationService;
 
     @Autowired
-    public CourseModuleDaoImpl(JdbcTemplate jdbcTemplate) {
+    public CourseModuleDaoImpl(JdbcTemplate jdbcTemplate, ValidationService validationService) {
         this.jdbcTemplate = jdbcTemplate;
+        this.validationService = validationService;
     }
 
     @Override

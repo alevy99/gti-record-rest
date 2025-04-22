@@ -1,6 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.AddressDao;
+import ie.gti.asdl.rey.gtirecord.core.service.ValidationService;
 import ie.gti.asdl.rey.gtirecord.model.entity.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.*;
@@ -15,12 +16,14 @@ import java.util.Optional;
 public class AddressDaoImpl implements AddressDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final ValidationService validationService;
 
     private final RowMapper<Address> addressRowMapper = new BeanPropertyRowMapper<>(Address.class);
 
     @Autowired
-    public AddressDaoImpl(JdbcTemplate jdbcTemplate) {
+    public AddressDaoImpl(JdbcTemplate jdbcTemplate, ValidationService validationService) {
         this.jdbcTemplate = jdbcTemplate;
+        this.validationService = validationService;
     }
 
     @Override

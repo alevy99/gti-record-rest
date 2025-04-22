@@ -2,6 +2,7 @@ package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.PersonDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.PersonRowMapper;
+import ie.gti.asdl.rey.gtirecord.core.service.ValidationService;
 import ie.gti.asdl.rey.gtirecord.model.annotation.DescriptionUtil;
 import ie.gti.asdl.rey.gtirecord.model.entity.Department;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
@@ -23,12 +24,14 @@ import java.util.Optional;
 public class PersonDaoImpl implements PersonDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final ValidationService validationService;
 
     private final PersonRowMapper personRowMapper = new PersonRowMapper();
 
     @Autowired
-    public PersonDaoImpl(JdbcTemplate jdbcTemplate) {
+    public PersonDaoImpl(JdbcTemplate jdbcTemplate, ValidationService validationService) {
         this.jdbcTemplate = jdbcTemplate;
+        this.validationService = validationService;
     }
 
     @Override

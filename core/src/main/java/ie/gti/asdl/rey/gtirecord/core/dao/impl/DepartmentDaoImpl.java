@@ -1,6 +1,7 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.DepartmentDao;
+import ie.gti.asdl.rey.gtirecord.core.service.ValidationService;
 import ie.gti.asdl.rey.gtirecord.model.entity.Address;
 import ie.gti.asdl.rey.gtirecord.model.entity.Department;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,14 @@ import java.util.Optional;
 public class DepartmentDaoImpl implements DepartmentDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final ValidationService validationService;
 
     private static final RowMapper<Department> departmentRowMapper = new BeanPropertyRowMapper<>(Department.class);
 
     @Autowired
-    public DepartmentDaoImpl(JdbcTemplate jdbcTemplate) {
+    public DepartmentDaoImpl(JdbcTemplate jdbcTemplate, ValidationService validationService) {
         this.jdbcTemplate = jdbcTemplate;
+        this.validationService = validationService;
     }
 
     @Override

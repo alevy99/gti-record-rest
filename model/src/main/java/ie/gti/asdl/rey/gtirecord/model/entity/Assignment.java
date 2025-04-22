@@ -19,7 +19,7 @@ public class Assignment {
     private Integer id;
 
     @NotNull
-    @Valid
+//    @Valid
     private GroupModule groupModule;
 
     @ShortDescriptionField

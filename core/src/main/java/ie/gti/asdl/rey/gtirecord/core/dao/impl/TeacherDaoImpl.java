@@ -2,6 +2,7 @@ package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.TeacherDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.TeacherRowMapper;
+import ie.gti.asdl.rey.gtirecord.core.service.ValidationService;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import ie.gti.asdl.rey.gtirecord.model.entity.Student;
 import ie.gti.asdl.rey.gtirecord.model.entity.Teacher;
@@ -30,14 +31,14 @@ import java.util.Optional;
 public class TeacherDaoImpl implements TeacherDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-//    private static final RowMapper<Person> personRowMapper = new BeanPropertyRowMapper<>(Person.class);
+    private final ValidationService validationService;
 
     private static final TeacherRowMapper teacherRowMapper = new TeacherRowMapper();
 
     @Autowired
-    public TeacherDaoImpl(JdbcTemplate jdbcTemplate) {
+    public TeacherDaoImpl(JdbcTemplate jdbcTemplate, ValidationService validationService) {
         this.jdbcTemplate = jdbcTemplate;
+        this.validationService = validationService;
     }
 
     @Override

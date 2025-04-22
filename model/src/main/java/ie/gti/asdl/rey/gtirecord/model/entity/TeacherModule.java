@@ -1,13 +1,16 @@
 package ie.gti.asdl.rey.gtirecord.model.entity;
 
 
+import jakarta.validation.Valid;
 import lombok.Data;
 
 @Data
 public class TeacherModule {
 
-    Teacher teacher;
+    @Valid
+    private Teacher teacher;
 
-    Module module;
+    @Valid
+    private Module module;
 
 }

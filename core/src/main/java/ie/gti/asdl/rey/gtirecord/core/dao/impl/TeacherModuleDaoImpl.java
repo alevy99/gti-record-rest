@@ -4,6 +4,7 @@ import ie.gti.asdl.rey.gtirecord.core.dao.TeacherModuleDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.ModuleRowMapper;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.TeacherModuleRowMapper;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.TeacherRowMapper;
+import ie.gti.asdl.rey.gtirecord.core.service.ValidationService;
 import ie.gti.asdl.rey.gtirecord.model.entity.Teacher;
 import ie.gti.asdl.rey.gtirecord.model.entity.TeacherModule;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,14 @@ import java.util.List;
 public class TeacherModuleDaoImpl implements TeacherModuleDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final ValidationService validationService;
 
     public static final TeacherModuleRowMapper teacherModuleRowMapper = new TeacherModuleRowMapper();
 
     @Autowired
-    public TeacherModuleDaoImpl(JdbcTemplate jdbcTemplate) {
+    public TeacherModuleDaoImpl(JdbcTemplate jdbcTemplate, ValidationService validationService) {
         this.jdbcTemplate = jdbcTemplate;
+        this.validationService = validationService;
     }
 
     @Override

@@ -2,6 +2,7 @@ package ie.gti.asdl.rey.gtirecord.core.dao.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.ModuleDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.mapper.ModuleRowMapper;
+import ie.gti.asdl.rey.gtirecord.core.service.ValidationService;
 import ie.gti.asdl.rey.gtirecord.model.entity.Course;
 import ie.gti.asdl.rey.gtirecord.model.entity.Department;
 import ie.gti.asdl.rey.gtirecord.model.entity.Group;
@@ -26,12 +27,14 @@ import java.util.*;
 public class ModuleDaoImpl implements ModuleDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final ValidationService validationService;
 
     private static final ModuleRowMapper moduleRowMapper = new ModuleRowMapper();
 
     @Autowired
-    public ModuleDaoImpl(JdbcTemplate jdbcTemplate) {
+    public ModuleDaoImpl(JdbcTemplate jdbcTemplate, ValidationService validationService) {
         this.jdbcTemplate = jdbcTemplate;
+        this.validationService = validationService;
     }
 
     @Override

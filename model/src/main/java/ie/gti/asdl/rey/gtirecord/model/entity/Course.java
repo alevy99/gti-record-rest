@@ -2,10 +2,9 @@ package ie.gti.asdl.rey.gtirecord.model.entity;
 
 import ie.gti.asdl.rey.gtirecord.model.annotation.KeyField;
 import ie.gti.asdl.rey.gtirecord.model.annotation.ShortDescriptionField;
-import jakarta.validation.Valid;
+import ie.gti.asdl.rey.gtirecord.model.validation.OnUpdate;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,7 +14,7 @@ public class Course {
 
     @KeyField
     @EqualsAndHashCode.Include
-    @NotNull
+    @NotNull(groups = OnUpdate.class)
     private Integer id;
 
     @ShortDescriptionField
@@ -25,11 +24,11 @@ public class Course {
     private String code;
 
     @NotNull(message = "Course type must be provided")
-    @Valid
+//    @Valid
     private CourseType courseType;
 
     @NotNull(message = "Department must be provided")
-    @Valid
+//    @Valid
     private Department department;
 
     @NotNull(message = "QQI Level must be provided")
