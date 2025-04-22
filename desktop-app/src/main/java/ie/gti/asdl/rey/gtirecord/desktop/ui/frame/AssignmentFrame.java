@@ -179,12 +179,11 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
     @Override
     protected void onSaveDataCompleted() {
         super.onSaveDataCompleted();
-        onAssignmentSelect();
+        reloadStudentResults();
     }
 
     private void onAssignmentSelect() {
         reloadStudentResults();
-        updateStudentResultTableUI();
     }
 
     private void reloadStudentResults() {
@@ -200,6 +199,8 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         }, () -> {
             studentAssignments.clear();
         });
+
+        updateStudentResultTableUI();
     }
 
     private void initTableModel() {
@@ -301,7 +302,6 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
     protected void onFrameShown() {
         super.onFrameShown();
         reloadStudentResults();
-        updateStudentResultTableUI();
     }
 
     /**
@@ -320,6 +320,8 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         jScrollPane2 = new javax.swing.JScrollPane();
         tblStudentResult = new PaddedJTable();
         lblStudentResultTitle = new javax.swing.JLabel();
+        btnSaveStudentResults = new javax.swing.JButton();
+        btnClose = new javax.swing.JButton();
         pnlControls = new javax.swing.JPanel();
         btnAdd = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
@@ -332,7 +334,6 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         jLabel6 = new javax.swing.JLabel();
         tfStudentResultFilter = new javax.swing.JTextField();
         btnOpenGroups = new javax.swing.JButton();
-        btnClose = new javax.swing.JButton();
         btnOpenModules = new javax.swing.JButton();
         btnOpenStudents = new javax.swing.JButton();
 
@@ -381,14 +382,14 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
             },
             new String [] {
-                "ID", "Student", "Submitted", "Graded", "Grade"
+                "Student", "Submitted", "Graded", "Grade"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Integer.class
+                java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, true, true, true
+                false, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -406,6 +407,24 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         lblStudentResultTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblStudentResultTitle.setText("Students results");
 
+        btnSaveStudentResults.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnSaveStudentResults.setForeground(new java.awt.Color(0, 51, 204));
+        btnSaveStudentResults.setText("Save student result(s)");
+        btnSaveStudentResults.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveStudentResultsActionPerformed(evt);
+            }
+        });
+
+        btnClose.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnClose.setForeground(new java.awt.Color(0, 51, 204));
+        btnClose.setText("Close");
+        btnClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCloseActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlStudentResultsLayout = new javax.swing.GroupLayout(pnlStudentResults);
         pnlStudentResults.setLayout(pnlStudentResultsLayout);
         pnlStudentResultsLayout.setHorizontalGroup(
@@ -414,7 +433,12 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
                 .addContainerGap()
                 .addGroup(pnlStudentResultsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1001, Short.MAX_VALUE)
-                    .addComponent(lblStudentResultTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblStudentResultTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlStudentResultsLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnSaveStudentResults, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(258, 258, 258)
+                        .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         pnlStudentResultsLayout.setVerticalGroup(
@@ -423,8 +447,11 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
                 .addContainerGap()
                 .addComponent(lblStudentResultTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(pnlStudentResultsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSaveStudentResults, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         pnlControls.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -573,15 +600,6 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
             }
         });
 
-        btnClose.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnClose.setForeground(new java.awt.Color(0, 51, 204));
-        btnClose.setText("Close");
-        btnClose.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCloseActionPerformed(evt);
-            }
-        });
-
         btnOpenModules.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnOpenModules.setForeground(new java.awt.Color(0, 51, 204));
         btnOpenModules.setText("Modules");
@@ -617,9 +635,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
                             .addComponent(btnOpenModules, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
                             .addComponent(btnOpenStudents, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnOpenGroups, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(btnOpenGroups)))
                 .addGap(24, 24, 24))
         );
         jPanel1Layout.setVerticalGroup(
@@ -628,7 +644,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
                 .addGap(12, 12, 12)
                 .addComponent(lblTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnlControls, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -636,13 +652,12 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnOpenGroups, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnOpenModules, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnOpenStudents, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnOpenStudents, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)))
                 .addGap(2, 2, 2)
                 .addComponent(pnlStudentResults, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -655,8 +670,8 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 818, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 774, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -694,6 +709,22 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         getFrameManager().showSub(FrameManager.FrameType.STUDENT);
     }//GEN-LAST:event_btnOpenStudentsActionPerformed
 
+    private void btnSaveStudentResultsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveStudentResultsActionPerformed
+        saveStudentResults();
+    }//GEN-LAST:event_btnSaveStudentResultsActionPerformed
+
+    private void saveStudentResults() {
+        Arrays.stream(tblStudentResult.getSelectedRows()).findFirst().ifPresent(row -> {
+            int modelRow = tblStudentResult.convertRowIndexToModel(row);
+            var studentAssignment = getStudentResultTableModel().getData(modelRow);
+            // Fill model data
+            studentAssignment.setIsSubmitted((Boolean) tblStudentResult.getValueAt(row, STUDENT_RES_COLUMNS.IS_SUBMITTED.index));
+            studentAssignment.setIsGraded((Boolean) tblStudentResult.getValueAt(row, STUDENT_RES_COLUMNS.IS_GRADED.index));
+            studentAssignment.setGrade((Integer) tblStudentResult.getValueAt(row, STUDENT_RES_COLUMNS.GRADE.index));
+            studentAssignmentService.update(studentAssignment);
+        });
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -717,6 +748,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
     private javax.swing.JButton btnOpenStudents;
     private javax.swing.JButton btnReload;
     private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnSaveStudentResults;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;

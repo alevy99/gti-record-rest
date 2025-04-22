@@ -27,6 +27,11 @@ public class StudentAssignmentServiceImpl implements StudentAssignmentService {
     }
 
     @Override
+    public void update(StudentAssignment studentAssignment) {
+        studentAssignmentDao.update(studentAssignment);
+    }
+
+    @Override
     public void deleteByAssignmentId(Integer assignmentId) {
         studentAssignmentDao.deleteByAssignmentId(assignmentId);
     }

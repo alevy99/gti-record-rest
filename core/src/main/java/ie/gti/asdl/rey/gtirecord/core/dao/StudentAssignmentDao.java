@@ -16,5 +16,7 @@ public interface StudentAssignmentDao {
 
     void insert(StudentAssignment studentAssignment);
 
+    void update(StudentAssignment studentAssignment);
+
     void deleteByAssignmentId(Integer assignmentId);
 }

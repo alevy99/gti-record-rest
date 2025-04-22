@@ -20,8 +20,10 @@ public class StudentAssignmentRowMapper  implements RowMapper<StudentAssignment>
         ResultSetHelper helper = new ResultSetHelper(rs);
 
         StudentAssignment studentAssignment = new StudentAssignment();
-        helper.setBooleanIfPresent("is_submitted", studentAssignment::setIsSubmitted);
-        helper.setBooleanIfPresent("is_graded", studentAssignment::setIsGraded);
+        studentAssignment.setIsSubmitted(rs.getBoolean("is_submitted"));
+        studentAssignment.setIsGraded(rs.getBoolean("is_graded"));
+//        helper.setBooleanIfPresent("is_submitted", studentAssignment::setIsSubmitted);
+//        helper.setBooleanIfPresent("is_graded", studentAssignment::setIsGraded);
         helper.setIntIfPresent("grade", studentAssignment::setGrade);
 
         studentAssignment.setStudent(studentRowMapper.mapRow(rs, rowNum));

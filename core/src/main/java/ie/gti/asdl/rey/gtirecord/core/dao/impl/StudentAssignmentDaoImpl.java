@@ -50,6 +50,19 @@ public class StudentAssignmentDaoImpl implements StudentAssignmentDao {
     }
 
     @Override
+    public void update(StudentAssignment studentAssignment) {
+        if (studentAssignment == null) return;
+        final String sql = """
+                UPDATE student_has_assignment SET is_submitted = ?, is_graded = ?, grade = ?
+                WHERE student_person_id = ? and assignment_id = ?""";
+        jdbcTemplate.update(sql, studentAssignment.getIsSubmitted(),
+                studentAssignment.getIsGraded(),
+                studentAssignment.getGrade(),
+                studentAssignment.getStudent().getPerson().getId(),
+                studentAssignment.getAssignment().getId());
+    }
+
+    @Override
     public void deleteByAssignmentId(Integer assignmentId) {
         if (assignmentId == null) return;
         final String sql = "DELETE FROM student_has_assignment WHERE assignment_id = ?";

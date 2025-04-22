@@ -37,7 +37,7 @@ public class BooleanCellRenderer extends JCheckBox implements TableCellRenderer 
                 && (highlightedRowSupplier.get() == row)) {
             setBackground(GuiConsts.HIGHLIGHT_ROW_COLOR);
         } else if (isSelected) {
-            setBackground(table.getSelectionBackground()); // Keep selection color
+            setBackground(table.getSelectionBackground()); // Keep the selection color
         } else {
             Color bg = (row % 2 == 0) ? GuiConsts.EVEN_ROW_COLOR : GuiConsts.ODD_ROW_COLOR; // Match Nimbus striping
             setBackground(bg);

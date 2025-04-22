@@ -5,6 +5,7 @@ import ie.gti.asdl.rey.gtirecord.core.service.PersonService;
 import ie.gti.asdl.rey.gtirecord.core.service.StudentService;
 import ie.gti.asdl.rey.gtirecord.core.service.TeacherService;
 import ie.gti.asdl.rey.gtirecord.core.service.UserService;
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,7 +101,7 @@ public class PersonServiceImpl implements PersonService {
     public Optional<Integer> saveWithUser(Person person, User user) {
         var personIdOpt = save(person);
         personIdOpt.ifPresent(personId -> {
-            // Set Person for user if he was not set previously
+            // Set Person for a user if he was not set previously
             if (user.getPersonId() == null) {
                 user.setPersonId(personId);
                 userDao.update(user);
@@ -110,14 +111,14 @@ public class PersonServiceImpl implements PersonService {
                 switch (getRoleTypeByRole(role)) {
                     case Role.RoleType.STUDENT -> {
                         if (studentService.getByPersonId(personId).isEmpty()) {
-                            Student student = new Student();
+                            Student student = InstanceFactory.create(Student.class);
                             student.setPerson(person);
                             studentService.insert(student);
                         }
                     }
                     case Role.RoleType.TEACHER -> {
                         if (teacherService.getByPersonId(personId).isEmpty()) {
-                            Teacher teacher = new Teacher();
+                            Teacher teacher = InstanceFactory.create(Teacher.class);
                             teacher.setPerson(person);
                             teacherService.insert(teacher);
                         }
@@ -127,21 +128,6 @@ public class PersonServiceImpl implements PersonService {
         });
         return personIdOpt;
     }
-
-//    @Transactional
-//    @Override
-//    public Optional<Integer> insertPersonToUser(Person person, User user) {
-//        if (user.getPersonId() != null) {
-//            return Optional.of(user.getPersonId());
-//        }
-//        Person person = new Person();
-//        Optional<Integer> newPersonIdOpt = insert(person);
-//        newPersonIdOpt.ifPresent(personId -> {
-//            user.setPersonId(personId);
-//            userDao.update(user);
-//        });
-//        return newPersonIdOpt;
-//    }
 
     @Transactional
     @Override

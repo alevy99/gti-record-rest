@@ -13,6 +13,7 @@ public interface StudentAssignmentService {
 
     List<StudentAssignment> getByAssignmentId(Integer assignmentId);
 
-    void deleteByAssignmentId(Integer assignmentId);
+    void update(StudentAssignment studentAssignment);
 
+    void deleteByAssignmentId(Integer assignmentId);
 }

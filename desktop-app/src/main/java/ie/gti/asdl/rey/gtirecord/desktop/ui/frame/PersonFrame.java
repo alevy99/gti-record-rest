@@ -7,6 +7,7 @@ package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import ie.gti.asdl.rey.gtirecord.core.ServiceManager;
+import ie.gti.asdl.rey.gtirecord.core.service.AddressService;
 import ie.gti.asdl.rey.gtirecord.core.service.PersonService;
 import ie.gti.asdl.rey.gtirecord.core.service.UserService;
 import ie.gti.asdl.rey.gtirecord.core.validation.NameValidator;
@@ -15,6 +16,7 @@ import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PhoneNumberValidator;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.Address;
 import ie.gti.asdl.rey.gtirecord.model.entity.Person;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
@@ -53,6 +55,8 @@ public class PersonFrame extends AbstractFrame {
 
     private final UserService userService;
 
+    private final AddressService addressService;
+
     /**
      * Creates new form PersonFrame
      */
@@ -61,6 +65,7 @@ public class PersonFrame extends AbstractFrame {
 
         personService = serviceManager.getPersonService();
         userService = serviceManager.getUserService();
+        addressService = serviceManager.getAddressService();
         initDOBDatePicker();
         initComponents();
         initUI();
@@ -86,22 +91,49 @@ public class PersonFrame extends AbstractFrame {
     private void loadData() {
         if (person == null) {
             if ((user != null) && (user.getPersonId() != null)) {
-                person = personService.getById(user.getPersonId()).orElseGet(Person::new);
+                person = personService.getById(user.getPersonId()).orElseGet(() -> InstanceFactory.create(Person.class));
             } else {
-                person = new Person();
+                person = InstanceFactory.create(Person.class);
             }
         }
         if (person.getId() != null) {
+            // Try to load address if not present
+            if (person.getAddress().getPersonId() == null) {
+                addressService.getByPersonId(person.getId()).ifPresent(address -> {
+                    person.setAddress(address);
+                });
+            }
             user = user != null ? user : userService.getByPersonId(person.getId())
                     .orElseGet(() -> {
-                        User user = new User();
+                        User user = InstanceFactory.create(User.class);
                         user.setUsername("");
                         return user;
                     });
         }
     }
 
+    private void resetUI() {
+        lblUsername.setText("");
+        tfFirstName.setText("");
+        lblFNValidStatus.setText("");
+        tfLastName.setText("");
+        cbGender.setSelectedItem(null);
+        dobDatePicker.setDate(null);
+        tfEmail.setText("");
+        tfPhoneNumber.setText("");
+        tfPPSN.setText("");
+        tfAddressLine1.setText("");
+        tfAddressLine2.setText("");
+        tfAddressCounty.setText("");
+        tfAddressCity.setText("");
+        tfAddressCountry.setText("");
+        tfAddressEircode.setText("");
+    }
+
     private void updateUI() {
+        // Reset UI first
+        resetUI();
+
         lblUsername.setText(user.getUsername());
         tfFirstName.setText(person.getFirstName());
         cbGender.setSelectedItem(person.getGender());
@@ -134,7 +166,7 @@ public class PersonFrame extends AbstractFrame {
         person.setPpsn(tfPPSN.getText());
         Address address = person.getAddress();
         if (address == null) {
-            address = new Address();
+            address = InstanceFactory.create(Address.class);
         }
         address.setLine1(tfAddressLine1.getText());
         address.setLine2(tfAddressLine2.getText());
@@ -143,7 +175,7 @@ public class PersonFrame extends AbstractFrame {
         address.setCountry(tfAddressCountry.getText());
         address.setEirCode(tfAddressEircode.getText());
 
-        // Do not add Address object in case address is empty
+        // Do not add an Address object in case the address is empty
         // In this way we won't add address into DB
         if (!AddressUtils.isAddressEmpty(address)) {
             person.setAddress(address);
@@ -187,7 +219,7 @@ public class PersonFrame extends AbstractFrame {
 //            private String regex = "^\\+?\\(?\\d{1,3}\\)?[-\\s]?\\d{2,3}[-\\s]?\\d{2}[-\\s]?\\d{2,3}$";
 
             private boolean isValidInput(String text) {
-                return text.matches("[0-9+()\\-\\s]*"); // Allow only valid characters
+                return text != null && text.matches("[0-9+()\\-\\s]*"); // Allow only valid characters
             }
 
             @Override
@@ -852,7 +884,7 @@ public class PersonFrame extends AbstractFrame {
                 ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, args);
                 FrameManager manager = context.getBean(FrameManager.class);
                 PersonFrame personFrame = manager.getFrame(PERSON);
-                Person person = new Person();
+                Person person = InstanceFactory.create(Person.class);
                 person.setId(6);
                 personFrame.setPerson(person);
                 manager.showSub(PERSON);
