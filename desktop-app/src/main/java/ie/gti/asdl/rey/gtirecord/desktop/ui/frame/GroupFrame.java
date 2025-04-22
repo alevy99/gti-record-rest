@@ -241,8 +241,14 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
 
         // Function, which returns list of teachers for a module from the table
         // Todo: cache teachers for module locally
-        Function<Integer, List<Teacher>> teachersProvider =
-                (row) -> teacherService.getByModuleId((Integer) tblGroupModules.getValueAt(row, GROUP_MODULE_COLUMNS.ID.index));
+        Function<Integer, List<Teacher>> teachersProvider = (row) -> {
+            List<Teacher> teachers = new ArrayList<>();
+            Teacher emptyTeacher = InstanceFactory.create(Teacher.class);
+            emptyTeacher.getPerson().setFirstName(" "); // Should be at least space, otherwise it won't be added as a comboBox item
+            teachers.add(emptyTeacher);
+            teachers.addAll(teacherService.getByModuleId((Integer) tblGroupModules.getValueAt(row, GROUP_MODULE_COLUMNS.ID.index)));
+            return teachers;
+        };
 
         // Init group module table
         TableColumn teacherColumn = tblGroupModules.getColumnModel().getColumn(GROUP_MODULE_COLUMNS.TEACHER.index);
