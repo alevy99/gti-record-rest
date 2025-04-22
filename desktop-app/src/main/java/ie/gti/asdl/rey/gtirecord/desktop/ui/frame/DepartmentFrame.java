@@ -373,7 +373,7 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
 
     @Override
     protected void fillDataObjectFromTable(Department department, Integer row) {
-        department.setName(getTable().getValueAt(row, 1).toString());
+        department.setName(getTableStringValueAt(row, 1));
     }
 
     @Override

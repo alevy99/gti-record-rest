@@ -511,8 +511,8 @@ public class UserFrame extends AbstractTableDataFrame<User> {
 
     @Override
     protected void fillDataObjectFromTable(User user, Integer row) {
-        user.setUsername(tblUsers.getValueAt(row, USER_TBL_COL.USERNAME.index).toString());
-        user.setPassword(tblUsers.getValueAt(row, USER_TBL_COL.PASSWORD.index).toString());
+        user.setUsername(getTableStringValueAt(row, USER_TBL_COL.USERNAME.index));
+        user.setPassword(getTableStringValueAt(row, USER_TBL_COL.PASSWORD.index));
         fillUserRoles(row, user);
     }
 

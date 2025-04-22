@@ -914,7 +914,7 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
 
     @Override
     protected void addEmptyRowToModel() {
-        getTableModel().addRow(createDataInstance(), new Object[]{null, "", "", "", "", "", "", null});
+        getTableModel().addRow(createDataInstance(), new Object[]{null, "", "", "", null, "", "", null});
     }
 
 }

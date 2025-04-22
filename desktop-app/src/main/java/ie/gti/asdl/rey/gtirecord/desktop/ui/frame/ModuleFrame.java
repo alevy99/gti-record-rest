@@ -388,8 +388,8 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
             module.setId(id);
         }
 
-        module.setName(getTable().getValueAt(row, 1).toString());
-        module.setCode(getTable().getValueAt(row, 2).toString());
+        module.setName(getTableStringValueAt(row, 1));
+        module.setCode(getTableStringValueAt(row, 2));
     }
 
     @Override

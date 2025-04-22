@@ -895,8 +895,8 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
             course.setId(id);
         }
 
-        course.setName(getTable().getValueAt(row, COLUMNS.NAME.index).toString());
-        course.setCode(getTable().getValueAt(row, COLUMNS.CODE.index).toString());
+        course.setName(getTableStringValueAt(row, COLUMNS.NAME.index));
+        course.setCode(getTableStringValueAt(row, COLUMNS.CODE.index));
 
         Department department = (Department) getTable().getValueAt(row, COLUMNS.DEPARTMENT.index);
         if (department != null) {

@@ -3,10 +3,13 @@ package ie.gti.asdl.rey.gtirecord.core.service.impl;
 import ie.gti.asdl.rey.gtirecord.core.service.ValidationService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import jakarta.validation.groups.Default;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,7 +29,13 @@ public class ValidationServiceImpl implements ValidationService {
 
     @Override
     public <T> boolean validate(T object, Class<?>... groups) {
-        Set<ConstraintViolation<T>> violations = validator.validate(object, groups);
+        // Объединяем переданные группы с Default.class, если его нет
+        Set<Class<?>> groupSet = new HashSet<>(Arrays.asList(groups));
+        groupSet.add(Default.class);
+
+        Class<?>[] allGroups = groupSet.toArray(new Class<?>[0]);
+
+        Set<ConstraintViolation<T>> violations = validator.validate(object, allGroups);
         boolean valid = violations.isEmpty();
         if (!valid && logger.isDebugEnabled()) {
             String message = violations.stream()
