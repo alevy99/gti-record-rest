@@ -34,8 +34,7 @@ import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeList
 public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
     private enum COLUMNS {
-        ID(0), NAME(1), WEIGHTING(2),
-        GROUP(3), MODULE(4);
+        ID(0), NAME(1), WEIGHTING(2), MAX_GRADE(3), GROUP(4), MODULE(5);
 
         final int index;
         COLUMNS(int index) {
@@ -44,7 +43,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
     }
 
     private enum STUDENT_RES_COLUMNS {
-        STUDENT(0), IS_SUBMITTED(1), IS_GRADED(2), GRADE(3);
+        STUDENT(0), IS_SUBMITTED(1), IS_GRADED(2), GRADE(3), GRADE_PERCENT(4), MAX_GRADE(5);
 
         final int index;
         STUDENT_RES_COLUMNS(int index) {
@@ -210,14 +209,14 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
                     },
                     new String [] {
-                            "ID", "Name", "Weighting", "Group", "Module"
+                            "ID", "Name", "Weighting, %", "Max grade", "Group", "Module"
                     }
             ) {
                 Class[] types = new Class [] {
-                        java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class
+                        java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class
                 };
                 boolean[] canEdit = new boolean [] {
-                        false, true, true, true, true
+                        false, true, true, true, true, true
                 };
 
                 public Class getColumnClass(int columnIndex) {
@@ -238,14 +237,14 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
                     },
                     new String [] {
-                            "Student", "Submitted", "Graded", "Grade"
+                            "Student", "Submitted", "Graded", "Grade", "Grade, %", "Max grade"
                     }
             ) {
                 Class[] types = new Class [] {
-                        java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Integer.class
+                        java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Integer.class, java.lang.Double.class, java.lang.Integer.class
                 };
                 boolean[] canEdit = new boolean [] {
-                        false, true, true, true
+                        false, true, true, true, false, false
                 };
 
                 public Class getColumnClass(int columnIndex) {
@@ -283,6 +282,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 //        }
 //    }
 
+
     private void updateStudentResultTableUI() {
         lblStudentResultTitle.setText((selectedAssignment == null || selectedAssignment.getName() == null)
                 ? "Students results" : selectedAssignment.getName() + " results");
@@ -290,8 +290,19 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         tblStudentResult.clear();
 
         studentAssignments.forEach(sa -> {
-            getStudentResultTableModel().addRow(sa, new Object[] {sa.getStudent(), sa.getIsSubmitted(), sa.getIsGraded(), sa.getGrade()});
+            Double gradePercent = calcGradePercent(sa.getGrade());
+            getStudentResultTableModel().addRow(sa, new Object[] {sa.getStudent(), sa.getIsSubmitted(), sa.getIsGraded(),
+                    sa.getGrade(), gradePercent, selectedAssignment.getMaxGrade()});
         });
+    }
+
+    private Double calcGradePercent(Integer grade) {
+        Double gradePercent = null;
+        if (selectedAssignment.getMaxGrade() != null && selectedAssignment.getMaxGrade() > 0 && grade != null) {
+            double maxGrade = selectedAssignment.getMaxGrade();
+            gradePercent = grade / maxGrade * 100.0;
+        }
+        return gradePercent;
     }
 
     protected DataTableModel<StudentAssignment> getStudentResultTableModel() {
@@ -349,14 +360,14 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
             },
             new String [] {
-                "ID", "Name", "Weighting", "Group", "Module"
+                "ID", "Name", "Weighting, %", "Max grade", "Group", "Module"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true, true, true, true
+                false, true, true, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -382,14 +393,14 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
             },
             new String [] {
-                "Student", "Submitted", "Graded", "Grade"
+                "Student", "Submitted", "Graded", "Grade", "Grade, %", "Max grade"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Integer.class
+                java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Integer.class, java.lang.Double.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true, true, true
+                false, true, true, true, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -722,6 +733,8 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
             studentAssignment.setIsGraded((Boolean) tblStudentResult.getValueAt(row, STUDENT_RES_COLUMNS.IS_GRADED.index));
             studentAssignment.setGrade((Integer) tblStudentResult.getValueAt(row, STUDENT_RES_COLUMNS.GRADE.index));
             studentAssignmentService.update(studentAssignment);
+            // Update table cell
+            tblStudentResult.setValueAt(calcGradePercent(studentAssignment.getGrade()), row, STUDENT_RES_COLUMNS.GRADE_PERCENT.index);
         });
     }
 
@@ -814,7 +827,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
         assignmentService.getAll().forEach(assignment -> {
             getTableModel().addRow(assignment, new Object[]{
-                    assignment.getId(), assignment.getName(), assignment.getWeighting(),
+                    assignment.getId(), assignment.getName(), assignment.getWeighting(), assignment.getMaxGrade(),
                     assignment.getGroupModule().getGroup(), assignment.getGroupModule().getModule()
             });
         });
@@ -856,8 +869,8 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
         assignment.setName(getTableStringValueAt(row, COLUMNS.NAME.index));
 
-        Integer weighting = (Integer) tblAssignment.getValueAt(row, COLUMNS.WEIGHTING.index);
-        assignment.setWeighting(weighting);
+        assignment.setWeighting((Integer) tblAssignment.getValueAt(row, COLUMNS.WEIGHTING.index));
+        assignment.setMaxGrade((Integer) tblAssignment.getValueAt(row, COLUMNS.MAX_GRADE.index));
 
         Group group = (Group) getTable().getValueAt(row, COLUMNS.GROUP.index);
         Module module = (Module) getTable().getValueAt(row, COLUMNS.MODULE.index);
@@ -873,7 +886,8 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
     @Override
     protected void addEmptyRowToModel() {
-        getTableModel().addRow(createDataInstance(), new Object[]{null, "", "", new Group(), new Module()});
+        getTableModel().addRow(createDataInstance(), new Object[]{null, "", null, null,
+                InstanceFactory.create(Group.class), InstanceFactory.create(Module.class)});
     }
 
 }

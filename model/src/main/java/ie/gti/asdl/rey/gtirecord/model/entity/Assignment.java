@@ -29,6 +29,8 @@ public class Assignment {
     // In %
     private Integer weighting;
 
+    private Integer maxGrade;
+
     private LocalDateTime openDate;
 
     private LocalDateTime dueDate;

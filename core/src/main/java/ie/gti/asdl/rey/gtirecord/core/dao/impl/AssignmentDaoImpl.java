@@ -38,7 +38,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
     public Optional<Assignment> getById(Integer id) {
         if (id == null) return Optional.empty();
         final String sql = """
-            SELECT a.id as assignment_id, a.name as assignment_name, a.weighting,
+            SELECT a.id as assignment_id, a.name as assignment_name, a.weighting, a.max_grade, a.group_module_id,
                    g.id as group_id, g.name as group_name, g.code as group_code,
                    m.id as module_id, m.name as module_name, m.code as module_code,
                    gm.*
@@ -51,7 +51,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
     public List<Assignment> getByGroupModule(Integer groupModuleId) {
         if (groupModuleId == null) return new ArrayList<>();
         final String sql = """
-            SELECT a.id as assignment_id, a.name as assignment_name, a.weighting,
+            SELECT a.id as assignment_id, a.name as assignment_name, a.weighting, a.max_grade, a.group_module_id,
                    g.id as group_id, g.name as group_name, g.code as group_code,
                    m.id as module_id, m.name as module_name, m.code as module_code,
                    gm.*
@@ -63,7 +63,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
     @Override
     public List<Assignment> getAll() {
         final String sql = """
-            SELECT a.id as assignment_id, a.name as assignment_name, a.weighting, a.group_module_id,
+            SELECT a.id as assignment_id, a.name as assignment_name, a.weighting, a.max_grade, a.group_module_id,
                    g.id as group_id, g.name as group_name, g.code as group_code,
                    m.id as module_id, m.name as module_name, m.code as module_code,
                    gm.*
@@ -75,7 +75,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
     @Override
     public List<Assignment> getByGroupId(Integer groupId) {
         final String sql = """
-            SELECT a.id as assignment_id, a.name as assignment_name, a.weighting,
+            SELECT a.id as assignment_id, a.name as assignment_name, a.weighting, a.max_grade, a.group_module_id,
                    gm.*, g.*, m.*
             FROM assignment a, group_has_module gm, `group` g, module m
             WHERE a.group_module_id = gm.id and gm.group_id = g.id and gm.module_id = m.id and g.id = ?""";
@@ -85,7 +85,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
     @Override
     public Optional<Integer> insert(Assignment assignment) {
         if (assignment == null) return Optional.empty();
-        final String sql = "INSERT INTO assignment (group_module_id, name, weighting) VALUES (?, ?, ?)";
+        final String sql = "INSERT INTO assignment (group_module_id, name, weighting, max_grade) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(new PreparedStatementCreator() {
@@ -99,6 +99,11 @@ public class AssignmentDaoImpl implements AssignmentDao {
                     ps.setInt(3, assignment.getWeighting());
                 } else {
                     ps.setNull(3, Types.INTEGER);
+                }
+                if (assignment.getMaxGrade() != null) {
+                    ps.setInt(4, assignment.getMaxGrade());
+                } else {
+                    ps.setNull(4, Types.INTEGER);
                 }
                 return ps;
             }
@@ -115,8 +120,9 @@ public class AssignmentDaoImpl implements AssignmentDao {
     @Override
     public void update(Assignment assignment) {
         if ((assignment == null) || (assignment.getId() == null)) return;
-        final String sql = "UPDATE assignment SET name = ?, weighting = ?, group_module_id = ? WHERE id = ?";
-        jdbcTemplate.update(sql, assignment.getName(), assignment.getWeighting(), assignment.getGroupModule().getId(), assignment.getId());
+        final String sql = "UPDATE assignment SET name = ?, weighting = ?, max_grade = ?, group_module_id = ? WHERE id = ?";
+        jdbcTemplate.update(sql, assignment.getName(), assignment.getWeighting(), assignment.getMaxGrade(),
+                assignment.getGroupModule().getId(), assignment.getId());
     }
 
     @Override

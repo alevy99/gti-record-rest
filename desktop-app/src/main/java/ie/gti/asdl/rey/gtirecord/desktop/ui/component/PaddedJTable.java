@@ -34,6 +34,7 @@ public class PaddedJTable extends JTable {
         setDefaultRenderer(Object.class, new PaddedCellRenderer(highlightedRowSupplier));
         setDefaultRenderer(String.class, new PaddedCellRenderer(highlightedRowSupplier));
         setDefaultRenderer(Integer.class, new PaddedCellRenderer(highlightedRowSupplier));
+        setDefaultRenderer(Double.class, new DecimalFormatCellRenderer(highlightedRowSupplier));
         setDefaultRenderer(Boolean.class, new BooleanCellRenderer(highlightedRowSupplier));
         setDefaultEditor(Object.class, new PaddedCellEditor());
         // Add sorter to the table

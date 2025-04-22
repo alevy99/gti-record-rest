@@ -24,6 +24,7 @@ public class AssignmentRowMapper implements RowMapper<Assignment> {
         helper.setIntIfPresent("assignment_id", assignment::setId);
         helper.setStringIfPresent("assignment_name", assignment::setName);
         helper.setIntIfPresent("weighting", assignment::setWeighting);
+        helper.setIntIfPresent("max_grade", assignment::setMaxGrade);
 
         assignment.setGroupModule(groupModuleRowMapper.mapRow(rs, rowNum));
 
