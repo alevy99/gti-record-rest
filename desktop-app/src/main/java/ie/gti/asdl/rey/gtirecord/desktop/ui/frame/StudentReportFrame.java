@@ -14,6 +14,7 @@ import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedJTable;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils;
+import ie.gti.asdl.rey.gtirecord.model.annotation.DescriptionUtil;
 import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.*;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
@@ -56,11 +57,6 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
         }
     }
 
-    //        lblTitle.setText(String.format("Student report for %s %s", student.getPerson().getFirstName(), student.getPerson().getLastName()));
-    //        tfReportFilter.setText("");
-    //        reloadTableData();
-    //        tfReportFilter.requestFocusInWindow();
-    //        tfReportFilter.selectAll();
     @Setter
     private Student student;
 
@@ -69,6 +65,8 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
     private static final JButton DUMMY_JBUTTON = new JButton();
 
     private final StudentAssignmentService studentAssignmentService;
+
+    private Integer highlightedRow;
 
     /**
      * Creates a new form StudentReportFrame
@@ -88,6 +86,8 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
     protected void initFrame() {
         ModuleFrame.initTable(getTable(), false); // Init Table Model first
         super.initFrame();
+
+        tblModule.setHighlightedRowSupplier(() -> highlightedRow);
 
         tblModule.getSelectionModel().addListSelectionListener(
                 createSafeListSelectionListener(event -> onModuleSelect()));
@@ -149,7 +149,7 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
     private void onModuleSelect() {
         tblStudentAssignment.clear();
 
-        Arrays.stream(tblModule.getSelectedRows()).findFirst().ifPresent(row -> {
+        Arrays.stream(tblModule.getSelectedRows()).findFirst().ifPresentOrElse(row -> {
 
             class SA_Stats {
                 double weightingTotalPercent = 0.0;
@@ -158,8 +158,16 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
                 int maxGradeTotal = 0;
             }
 
+            highlightedRow = row; // Set new highlighted row
+            tblModule.repaint(); // Repaint after we changed highlightedRow
+
             int modelRow = tblModule.convertRowIndexToModel(row);
             Module module = getTableModel().getData(modelRow);
+
+            lblStudentResultTitle.setText(
+                    String.format("%s's results for the '%s' module",
+                            DescriptionUtil.getShortDescription(student),
+                            DescriptionUtil.getShortDescription(module)));
 
             SA_Stats stats = new SA_Stats();
 
@@ -179,11 +187,13 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
                         stats.maxWeightingTotalPercent += assignment.getWeighting() == null ? 0 : assignment.getWeighting() ;
                     });
 
-            double averageGradePercent = 100.0 * stats.gradeTotal / stats.maxGradeTotal;
+            double averageGradePercent = stats.maxGradeTotal == 0 ? 0 : 100.0 * stats.gradeTotal / stats.maxGradeTotal;
             getStudentAssignmentTableModel().addRow(InstanceFactory.create(StudentAssignment.class), new Object[]{
                     "<html><b>STATISTICS</b></html>", false, false,
                     stats.gradeTotal, averageGradePercent, stats.maxGradeTotal,
                     stats.weightingTotalPercent, stats.maxWeightingTotalPercent });
+        }, () -> {
+            lblStudentResultTitle.setText("Students results for module");
         });
     }
 
@@ -290,7 +300,7 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
 
         btnSaveStudentResults.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnSaveStudentResults.setForeground(new java.awt.Color(0, 51, 204));
-        btnSaveStudentResults.setText("Save student result(s)");
+        btnSaveStudentResults.setText("Generate Report");
         btnSaveStudentResults.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveStudentResultsActionPerformed(evt);
@@ -318,7 +328,7 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlStudentResultsLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnSaveStudentResults, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(258, 258, 258)
+                        .addGap(420, 420, 420)
                         .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -330,11 +340,10 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnlStudentResultsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnSaveStudentResults, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(pnlStudentResultsLayout.createSequentialGroup()
-                        .addComponent(btnClose, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                        .addContainerGap())))
+                .addGroup(pnlStudentResultsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnClose, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                    .addComponent(btnSaveStudentResults, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pnlControls.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -570,6 +579,9 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
 
     @Override
     protected void doReloadData() {
+        lblReportTitle.setText(String.format("Student report for %s", DescriptionUtil.getShortDescription(student)));
+        lblStudentResultTitle.setText("Students results for module");
+
         moduleService.getByGroupId(student.getGroup().getId()).forEach(module -> {
             getTableModel().addRow(module, new Object[]{module.getId(), module.getName(), module.getCode()});
         });
