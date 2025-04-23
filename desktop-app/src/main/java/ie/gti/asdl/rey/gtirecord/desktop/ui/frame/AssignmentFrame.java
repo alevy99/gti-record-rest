@@ -25,6 +25,7 @@ import java.util.*;
 import java.util.function.Function;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.*;
+import static ie.gti.asdl.rey.gtirecord.desktop.util.AssignmentUtils.calcGradePercent;
 import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeListSelectionListener;
 
 /**
@@ -290,19 +291,10 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         tblStudentResult.clear();
 
         studentAssignments.forEach(sa -> {
-            Double gradePercent = calcGradePercent(sa.getGrade());
+            Double gradePercent = calcGradePercent(selectedAssignment, sa.getGrade());
             getStudentResultTableModel().addRow(sa, new Object[] {sa.getStudent(), sa.getIsSubmitted(), sa.getIsGraded(),
                     sa.getGrade(), gradePercent, selectedAssignment.getMaxGrade()});
         });
-    }
-
-    private Double calcGradePercent(Integer grade) {
-        Double gradePercent = null;
-        if (selectedAssignment.getMaxGrade() != null && selectedAssignment.getMaxGrade() > 0 && grade != null) {
-            double maxGrade = selectedAssignment.getMaxGrade();
-            gradePercent = grade / maxGrade * 100.0;
-        }
-        return gradePercent;
     }
 
     protected DataTableModel<StudentAssignment> getStudentResultTableModel() {
@@ -734,7 +726,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
             studentAssignment.setGrade((Integer) tblStudentResult.getValueAt(row, STUDENT_RES_COLUMNS.GRADE.index));
             studentAssignmentService.update(studentAssignment);
             // Update table cell
-            tblStudentResult.setValueAt(calcGradePercent(studentAssignment.getGrade()), row, STUDENT_RES_COLUMNS.GRADE_PERCENT.index);
+            tblStudentResult.setValueAt(calcGradePercent(selectedAssignment, studentAssignment.getGrade()), row, STUDENT_RES_COLUMNS.GRADE_PERCENT.index);
         });
     }
 

@@ -32,7 +32,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         super.initFrame();
         getTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
-        // Add selection listener
+        // Add a selection listener
         getTable().getSelectionModel().addListSelectionListener(createSafeListSelectionListener(event -> updateUI()));
 
         SwingUIUtils.addTableFilter(getTable(), getTableFilterField(), getOnRowSelect());

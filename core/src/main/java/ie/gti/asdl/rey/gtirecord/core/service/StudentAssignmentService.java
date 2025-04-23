@@ -11,6 +11,10 @@ import java.util.List;
 @Service
 public interface StudentAssignmentService {
 
+    List<StudentAssignment> getByStudentPersonId(Integer studentPersonId);
+
+    List<StudentAssignment> getByStudentPersonIdAndModuleId(Integer studentPersonId, Integer moduleId);
+
     List<StudentAssignment> getByAssignmentId(Integer assignmentId);
 
     void update(StudentAssignment studentAssignment);

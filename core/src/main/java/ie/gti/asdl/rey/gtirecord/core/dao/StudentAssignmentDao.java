@@ -14,6 +14,10 @@ public interface StudentAssignmentDao {
 
     List<StudentAssignment> getByAssignmentId(Integer assignmentId);
 
+    List<StudentAssignment> getByStudentPersonId(Integer studentPersonId);
+
+    List<StudentAssignment> getByStudentPersonIdAndModuleId(Integer studentPersonId, Integer moduleId);
+
     void insert(StudentAssignment studentAssignment);
 
     void update(StudentAssignment studentAssignment);

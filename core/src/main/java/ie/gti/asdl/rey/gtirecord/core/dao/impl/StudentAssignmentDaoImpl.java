@@ -41,6 +41,33 @@ public class StudentAssignmentDaoImpl implements StudentAssignmentDao {
     }
 
     @Override
+    public List<StudentAssignment> getByStudentPersonId(Integer studentPersonId) {
+        if (studentPersonId == null) return new ArrayList<>();
+        final String sql = """
+                SELECT sa.*, 
+                       a.id as assignment_id, a.name as assignment_name, a.weighting, a.max_grade, a.group_module_id
+                FROM student_has_assignment sa, assignment a
+                WHERE sa.assignment_id = a.id and sa.student_person_id = ?""";
+        return jdbcTemplate.query(sql, studentAssignmentRowMapper, studentPersonId);
+    }
+
+    @Override
+    public List<StudentAssignment> getByStudentPersonIdAndModuleId(Integer studentPersonId, Integer moduleId) {
+        if (studentPersonId == null || moduleId == null) return new ArrayList<>();
+        final String sql = """
+                SELECT a.id as assignment_id, a.name as assignment_name, a.weighting, a.max_grade, a.group_module_id,
+                       m.id as module_id, m.name as module_name, m.code as module_code,
+                       gm.*, sa.*
+                FROM student_has_assignment sa, assignment a, group_has_module gm, module m
+                WHERE sa.assignment_id = a.id
+                  and a.group_module_id = gm.id
+                  and gm.module_id = m.id
+                  and sa.student_person_id = ?
+                  and m.id = ?""";
+        return jdbcTemplate.query(sql, studentAssignmentRowMapper, studentPersonId, moduleId);
+    }
+
+    @Override
     public void insert(StudentAssignment studentAssignment) {
         if (studentAssignment == null) return;
         final String sql = """

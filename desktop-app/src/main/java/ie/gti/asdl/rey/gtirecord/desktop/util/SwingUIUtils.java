@@ -54,10 +54,10 @@ public class SwingUIUtils {
                             table.setRowSelectionInterval(viewRow, viewRow);
                             table.scrollRectToVisible(table.getCellRect(viewRow, 0, true));
                             int modelRow = table.convertRowIndexToModel(viewRow);
-                            onRowSelected.accept(modelRow);  // 🔔 вызов колбэка с индексом строки модели
+                            onRowSelected.accept(modelRow);  // call callback method with selected row index
                         } else {
                             table.clearSelection();
-                            onRowSelected.accept(-1); // 🔔 если строк нет
+                            onRowSelected.accept(-1); // no selected rows
                         }
                     });
                 }

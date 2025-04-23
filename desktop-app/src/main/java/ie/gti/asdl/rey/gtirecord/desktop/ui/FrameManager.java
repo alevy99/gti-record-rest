@@ -31,7 +31,8 @@ public class FrameManager {
         DEPARTMENT(DepartmentFrame.class),
         MODULE(ModuleFrame.class),
         COURSE(CourseFrame.class),
-        ASSIGNMENT(AssignmentFrame.class);
+        ASSIGNMENT(AssignmentFrame.class),
+        STUDENT_REPORT(StudentReportFrame.class);
 
         private final Class<? extends AbstractFrame> frameClass;
 

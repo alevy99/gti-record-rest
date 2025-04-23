@@ -22,6 +22,16 @@ public class StudentAssignmentServiceImpl implements StudentAssignmentService {
     }
 
     @Override
+    public List<StudentAssignment> getByStudentPersonId(Integer studentPersonId) {
+        return studentAssignmentDao.getByStudentPersonId(studentPersonId);
+    }
+
+    @Override
+    public List<StudentAssignment> getByStudentPersonIdAndModuleId(Integer studentPersonId, Integer moduleId) {
+        return studentAssignmentDao.getByStudentPersonIdAndModuleId(studentPersonId, moduleId);
+    }
+
+    @Override
     public List<StudentAssignment> getByAssignmentId(Integer assignmentId) {
         return studentAssignmentDao.getByAssignmentId(assignmentId);
     }

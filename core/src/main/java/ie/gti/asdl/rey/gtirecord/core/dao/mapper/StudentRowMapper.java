@@ -25,7 +25,7 @@ public class StudentRowMapper implements RowMapper<Student> {
 
         helper.setStringIfPresent("education", student::setEducation);
         helper.setStringIfPresent("emergency_contacts", student::setEmergencyContacts);
-        student.setOnErasmus(resultSet.getBoolean("is_on_erasmus"));
+        helper.setBooleanIfPresent("is_on_erasmus", student::setOnErasmus);
 //        helper.setBooleanIfPresent("is_on_erasmus", student::setOnErasmus);
 
         student.setPerson(personRowMapper.mapRow(resultSet, rowNum));

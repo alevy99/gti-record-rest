@@ -60,8 +60,12 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     }
 
     static void initTable(PaddedJTable table) {
+        initTable(table, true);
+    }
+
+    static void initTable(PaddedJTable table, boolean editable) {
         if (! (table.getModel() instanceof DataTableModel)) {
-            table.setModel(new ModuleTableModel());
+            table.setModel(new ModuleTableModel(editable));
         }
 
         TableColumnModel columnModel = table.getColumnModel();
