@@ -1,17 +1,35 @@
 package ie.gti.asdl.rey.gtirecord.desktop.ui;
 
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedJTable;
+import ie.gti.asdl.rey.gtirecord.desktop.util.GtiStringUtils;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils;
 import ie.gti.asdl.rey.gtirecord.model.annotation.DescriptionUtil;
 import ie.gti.asdl.rey.gtirecord.model.annotation.KeyUtil;
 import ie.gti.asdl.rey.gtirecord.model.util.Pair;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.List;
 import java.util.function.IntConsumer;
@@ -208,6 +226,111 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     protected String getTableStringValueAt(Integer row, int column) {
         if (getTable().getValueAt(row, column) == null) return "";
         return getTable().getValueAt(row, column).toString();
+    }
+
+    protected void btnSavePdfReport(String title) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save as PDF Document");
+        int result = fileChooser.showSaveDialog(this);
+
+        PaddedJTable table = getTable();
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            if (!file.getName().endsWith(".pdf")) {
+                file = new File(file.getAbsolutePath() + ".pdf");
+            }
+
+            try {
+                Document document = new Document(PageSize.A4.rotate());
+                PdfWriter.getInstance(document, new FileOutputStream(file));
+                document.open();
+                document.add(new Paragraph(title));
+                document.add(new Paragraph(" "));
+                PdfPTable pdfTable = new PdfPTable(table.getColumnCount());
+
+                // Headers
+                for (int i = 0; i < table.getColumnCount(); i++) {
+                    pdfTable.addCell(new PdfPCell(new Phrase(table.getColumnName(i))));
+                }
+
+                // Data
+                for (int i = 0; i < table.getRowCount(); i++) {
+                    for (int j = 0; j < table.getColumnCount(); j++) {
+                        Object val = table.getValueAt(i, j);
+                        if (val instanceof Double) {
+                            pdfTable.addCell(String.format("%.2f", (Double) val));
+                        } else {
+                            pdfTable.addCell(val != null ? GtiStringUtils.stripHtmlTags(val.toString()) : "");
+                        }
+                    }
+                }
+
+                document.add(pdfTable);
+                document.close();
+                JOptionPane.showMessageDialog(this, "PDF was successfully saved!");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            }
+        }
+    }
+
+    protected void saveWordReport(String title) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save as Word Document");
+        int result = fileChooser.showSaveDialog(this);
+
+        PaddedJTable table = getTable();
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            if (!file.getName().endsWith(".docx")) {
+                file = new File(file.getAbsolutePath() + ".docx");
+            }
+
+            try {
+                XWPFDocument document = new XWPFDocument();
+
+                // Page album orientation
+                CTSectPr sectPr = document.getDocument().getBody().addNewSectPr();
+                CTPageSz pageSize = sectPr.addNewPgSz();
+                pageSize.setOrient(STPageOrientation.LANDSCAPE);
+                pageSize.setW(BigInteger.valueOf(16840)); // ширина
+                pageSize.setH(BigInteger.valueOf(11900)); // высота
+
+                XWPFParagraph para = document.createParagraph();
+                XWPFRun run = para.createRun();
+
+                run.setText(title);
+
+                XWPFTable wordTable = document.createTable(table.getRowCount() + 1, table.getColumnCount());
+
+                for (int i = 0; i < table.getColumnCount(); i++) {
+                    wordTable.getRow(0).getCell(i).setText(table.getColumnName(i));
+                }
+
+                for (int i = 0; i < table.getRowCount(); i++) {
+                    for (int j = 0; j < table.getColumnCount(); j++) {
+                        Object val = table.getValueAt(i, j);
+                        if (val instanceof Double) {
+                            wordTable.getRow(i + 1).getCell(j).setText(
+                                    String.format("%.2f", (Double) val));
+                        } else {
+                            wordTable.getRow(i + 1).getCell(j).setText(
+                                    val != null ? GtiStringUtils.stripHtmlTags(val.toString()) : "");
+                        }
+                    }
+                }
+
+                FileOutputStream out = new FileOutputStream(file);
+                document.write(out);
+                out.close();
+
+                JOptionPane.showMessageDialog(this, "Word document was successfully saved!");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            }
+        }
     }
 
 }
