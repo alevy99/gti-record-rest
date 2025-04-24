@@ -19,6 +19,8 @@ public interface GroupDao {
 
     List<Group> getAll();
 
+    List<Group> getAllWithFilter(Group filter);
+
     List<Group> getByCourseId(Integer courseId);
 
     Map<Course, List<Group>> getAllGroupedByCourse();
@@ -28,5 +30,4 @@ public interface GroupDao {
     void update(Group group);
 
     void delete(Integer id);
-
 }

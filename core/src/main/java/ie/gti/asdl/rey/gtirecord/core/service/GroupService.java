@@ -19,6 +19,8 @@ public interface GroupService {
 
     List<Group> getAll();
 
+    List<Group> getAllWithFilter(Group filter);
+
     Map<Course, List<Group>> getAllGroupedByCourse();
 
     Optional<Integer> insert(Group group);

@@ -66,6 +66,19 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
+    public List<Group> getAllWithFilter(Group filter) {
+        final String sql = """
+                    SELECT g.id as group_id, g.name as group_name, g.code as group_code,
+                           c.id as course_id, c.name as course_name,
+                           c.code as course_code, c.department_id, c.course_type_id, c.qqi_level_id
+                    FROM `group` g, course c
+                    WHERE g.course_id = c.id and (g.name like ? and g.code like ?)
+                    ORDER BY g.name, g.code;
+                """;
+        return jdbcTemplate.query(sql, groupRowMapper, "%" + filter.getName() + "%", "%" + filter.getCode() + "%");
+    }
+
+    @Override
     public List<Group> getByCourseId(Integer courseId) {
         final String sql = """
                     SELECT g.id as group_id, g.name as group_name, g.code as group_code,

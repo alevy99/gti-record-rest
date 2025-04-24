@@ -1559,7 +1559,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
 
     @Override
     protected JTextField getTableFilterField() {
-        return tfCourseFilter;
+        return tfGroupTableFilter;
     }
 
     @Override
@@ -1582,7 +1582,11 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
         courseCombo.removeAllItems();
         courseService.getAll().forEach(courseCombo::addItem);
 
-        groupService.getAll().forEach(group -> {
+        Group filter = InstanceFactory.create(Group.class);
+        filter.setName(tfGroupNameFilter.getText());
+        filter.setCode(tfGroupCodeFilter.getText());
+        // Get all groups using a filter
+        groupService.getAllWithFilter(filter).forEach(group -> {
             getTableModel().addRow(group, new Object[]{
                     group.getId(), group.getName(), group.getCode(), group.getCourse()
             });

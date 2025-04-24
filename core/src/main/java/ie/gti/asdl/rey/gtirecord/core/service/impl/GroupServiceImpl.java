@@ -54,6 +54,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public List<Group> getAllWithFilter(Group filter) {
+        return groupDao.getAllWithFilter(filter);
+    }
+
+    @Override
     public Map<Course, List<Group>> getAllGroupedByCourse() {
         return groupDao.getAllGroupedByCourse();
     }
