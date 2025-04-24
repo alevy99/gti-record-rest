@@ -4,12 +4,6 @@
  */
 package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
 import ie.gti.asdl.rey.gtirecord.core.ServiceManager;
 import ie.gti.asdl.rey.gtirecord.core.service.ModuleService;
 import ie.gti.asdl.rey.gtirecord.core.service.StudentAssignmentService;
@@ -18,38 +12,24 @@ import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractTableDataFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.DataTableModel;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PaddedJTable;
-import ie.gti.asdl.rey.gtirecord.desktop.util.GtiStringUtils;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils;
 import ie.gti.asdl.rey.gtirecord.model.annotation.DescriptionUtil;
 import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.*;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
+import ie.gti.asdl.rey.gtirecord.model.entity.add.StudentAssignmentStats;
 import lombok.Setter;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
 import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
 
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.*;
-import org.apache.poi.xwpf.usermodel.*;
-
-import javax.swing.*;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Optional;
 
+import static ie.gti.asdl.rey.gtirecord.core.util.AssignmentUtils.calcGradePercent;
+import static ie.gti.asdl.rey.gtirecord.core.util.AssignmentUtils.calcWeightingTotalPercent;
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.*;
-import static ie.gti.asdl.rey.gtirecord.desktop.util.AssignmentUtils.calcGradePercent;
-import static ie.gti.asdl.rey.gtirecord.desktop.util.AssignmentUtils.calcWeightingTotalPercent;
 import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeListSelectionListener;
 
 /**
@@ -175,13 +155,6 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
 
         Arrays.stream(tblModule.getSelectedRows()).findFirst().ifPresentOrElse(row -> {
 
-            class SA_Stats {
-                double weightingTotalPercent = 0.0;
-                double maxWeightingTotalPercent = 0.0;
-                int gradeTotal = 0;
-                int maxGradeTotal = 0;
-            }
-
             highlightedRow = row; // Set new highlighted row
             tblModule.repaint(); // Repaint after we changed highlightedRow
 
@@ -190,7 +163,7 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
 
             lblStudentResultTitle.setText(getReportTitle());
 
-            SA_Stats stats = new SA_Stats();
+            StudentAssignmentStats stats = new StudentAssignmentStats();
 
             studentAssignmentService.getByStudentPersonIdAndModuleId(student.getPerson().getId(), selectedModule.getId())
                     .forEach(sa -> {
@@ -202,17 +175,17 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
                                 sa.getGrade(), gradePercent, assignment.getMaxGrade(),
                                 weighting, assignment.getWeighting() });
 
-                        stats.gradeTotal += sa.getGrade() == null ? 0 : sa.getGrade();
-                        stats.maxGradeTotal += assignment.getMaxGrade() == null ? 0 : assignment.getMaxGrade();
-                        stats.weightingTotalPercent += weighting == null ? 0 : weighting;
-                        stats.maxWeightingTotalPercent += assignment.getWeighting() == null ? 0 : assignment.getWeighting() ;
+                        stats.addGradeTotal(sa.getGrade() == null ? 0 : sa.getGrade());
+                        stats.addMaxGradeTotal(assignment.getMaxGrade() == null ? 0 : assignment.getMaxGrade());
+                        stats.addWeightingTotalPercent(weighting == null ? 0 : weighting);
+                        stats.addMaxWeightingTotalPercent(assignment.getWeighting() == null ? 0 : assignment.getWeighting());
                     });
 
-            double averageGradePercent = stats.maxGradeTotal == 0 ? 0 : 100.0 * stats.gradeTotal / stats.maxGradeTotal;
+//            double totalGradePercent = stats.getMaxGradeTotal() == 0 ? 0 : 100.0 * stats.getGradeTotal() / stats.getMaxGradeTotal();
             getStudentAssignmentTableModel().addRow(InstanceFactory.create(StudentAssignment.class), new Object[]{
                     "<html><b>STATISTICS</b></html>", false, false,
-                    stats.gradeTotal, averageGradePercent, stats.maxGradeTotal,
-                    stats.weightingTotalPercent, stats.maxWeightingTotalPercent });
+                    stats.getGradeTotal(), stats.getGradeTotalPercent(), stats.getMaxGradeTotal(),
+                    stats.getWeightingTotalPercent(), stats.getMaxWeightingTotalPercent() });
         }, () -> {
             lblStudentResultTitle.setText("Students results for module");
         });
@@ -549,7 +522,7 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
         if (student == null || selectedModule == null) {
             return;
         }
-        btnSavePdfReport(getReportTitle());
+        exportTablePdfReport(tblStudentAssignment, getReportTitle());
     }//GEN-LAST:event_btnSavePdfReportActionPerformed
 
     private void btnOpenAssignmentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenAssignmentsActionPerformed
@@ -560,7 +533,7 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
         if (student == null || selectedModule == null) {
             return;
         }
-        saveWordReport(getReportTitle());
+        exportTableWordReport(tblStudentAssignment, getReportTitle());
     }//GEN-LAST:event_btnSaveWordReportActionPerformed
 
     private String getReportTitle() {

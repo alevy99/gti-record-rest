@@ -24,8 +24,9 @@ import javax.swing.table.TableColumnModel;
 import java.util.*;
 import java.util.function.Function;
 
+import static ie.gti.asdl.rey.gtirecord.core.util.AssignmentUtils.calcGradePercent;
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.*;
-import static ie.gti.asdl.rey.gtirecord.desktop.util.AssignmentUtils.calcGradePercent;
+import static ie.gti.asdl.rey.gtirecord.desktop.util.MathUtils.ensureRange;
 import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.createSafeListSelectionListener;
 
 /**
@@ -179,6 +180,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
     @Override
     protected void onSaveDataCompleted() {
         super.onSaveDataCompleted();
+//        doReloadData();
         reloadStudentResults();
     }
 
@@ -440,7 +442,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlStudentResultsLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnSaveStudentResults, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(258, 258, 258)
+                        .addGap(257, 257, 257)
                         .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -451,10 +453,11 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
                 .addComponent(lblStudentResultTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnlStudentResultsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSaveStudentResults, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSaveStudentResults, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 12, Short.MAX_VALUE))
         );
 
         pnlControls.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -659,8 +662,8 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
                         .addComponent(btnOpenStudents, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6)))
                 .addGap(2, 2, 2)
-                .addComponent(pnlStudentResults, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addComponent(pnlStudentResults, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -672,9 +675,8 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 774, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 774, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -723,7 +725,10 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
             // Fill model data
             studentAssignment.setIsSubmitted((Boolean) tblStudentResult.getValueAt(row, STUDENT_RES_COLUMNS.IS_SUBMITTED.index));
             studentAssignment.setIsGraded((Boolean) tblStudentResult.getValueAt(row, STUDENT_RES_COLUMNS.IS_GRADED.index));
-            studentAssignment.setGrade((Integer) tblStudentResult.getValueAt(row, STUDENT_RES_COLUMNS.GRADE.index));
+            Integer grade = (Integer) tblStudentResult.getValueAt(row, STUDENT_RES_COLUMNS.GRADE.index);
+            grade = ensureRange(grade, 0, selectedAssignment.getMaxGrade());
+            tblStudentResult.setValueAt(grade, row, STUDENT_RES_COLUMNS.GRADE.index);
+            studentAssignment.setGrade(grade);
             studentAssignmentService.update(studentAssignment);
             // Update table cell
             tblStudentResult.setValueAt(calcGradePercent(selectedAssignment, studentAssignment.getGrade()), row, STUDENT_RES_COLUMNS.GRADE_PERCENT.index);
@@ -861,8 +866,15 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
         assignment.setName(getTableStringValueAt(row, COLUMNS.NAME.index));
 
-        assignment.setWeighting((Integer) tblAssignment.getValueAt(row, COLUMNS.WEIGHTING.index));
-        assignment.setMaxGrade((Integer) tblAssignment.getValueAt(row, COLUMNS.MAX_GRADE.index));
+        Integer weighting = (Integer) getTable().getValueAt(row, COLUMNS.WEIGHTING.index);
+        weighting = ensureRange(weighting, 0, 100);
+        assignment.setWeighting(weighting);
+        tblAssignment.setValueAt(weighting, row, COLUMNS.WEIGHTING.index);
+
+        Integer maxGrade = (Integer) getTable().getValueAt(row, COLUMNS.MAX_GRADE.index);
+        maxGrade = ensureRange(maxGrade, 0, 1000);
+        assignment.setMaxGrade(maxGrade);
+        tblAssignment.setValueAt(maxGrade, row, COLUMNS.MAX_GRADE.index);
 
         Group group = (Group) getTable().getValueAt(row, COLUMNS.GROUP.index);
         Module module = (Module) getTable().getValueAt(row, COLUMNS.MODULE.index);
@@ -878,7 +890,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
     @Override
     protected void addEmptyRowToModel() {
-        getTableModel().addRow(createDataInstance(), new Object[]{null, "", null, null,
+        getTableModel().addRow(createDataInstance(), new Object[]{null, "", 0, 0,
                 InstanceFactory.create(Group.class), InstanceFactory.create(Module.class)});
     }
 

@@ -1,4 +1,5 @@
-package ie.gti.asdl.rey.gtirecord.desktop.util;
+package ie.gti.asdl.rey.gtirecord.core.util;
+
 
 import ie.gti.asdl.rey.gtirecord.model.entity.Assignment;
 

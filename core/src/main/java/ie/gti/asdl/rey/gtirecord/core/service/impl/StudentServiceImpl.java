@@ -4,6 +4,7 @@ import ie.gti.asdl.rey.gtirecord.core.dao.*;
 import ie.gti.asdl.rey.gtirecord.core.service.StudentService;
 import ie.gti.asdl.rey.gtirecord.core.service.UserService;
 import ie.gti.asdl.rey.gtirecord.model.entity.*;
+import ie.gti.asdl.rey.gtirecord.model.entity.add.StudentAssignmentStats;
 import ie.gti.asdl.rey.gtirecord.model.util.ContainerOfAny;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     public StudentServiceImpl(StudentAssignmentDao studentAssignmentDao, AssignmentDao assignmentDao, StudentDao studentDao, TeacherDao teacherDao,
-                              PersonDao personDao, UserDao userDao, UserRolesDao userRolesDao, UserService userService) {
+                              PersonDao personDao, UserDao userDao, ModuleDao moduleDao, UserRolesDao userRolesDao, UserService userService) {
         this.studentAssignmentDao = studentAssignmentDao;
         this.assignmentDao = assignmentDao;
         this.studentDao = studentDao;
@@ -104,7 +105,7 @@ public class StudentServiceImpl implements StudentService {
             studentDao.update(student);
 
             // Update all the assignments to the student as StudentAssignment records
-            if (! studentDB.getGroup().equals(student.getGroup())) {
+            if (!studentDB.getGroup().equals(student.getGroup())) {
                 // Delete all the assignments of the group in DB
                 assignmentDao.getByGroupId(studentDB.getGroup().getId()).forEach(assignment -> {
                     studentAssignmentDao.deleteByAssignmentId(assignment.getId());
@@ -177,3 +178,4 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 }
+

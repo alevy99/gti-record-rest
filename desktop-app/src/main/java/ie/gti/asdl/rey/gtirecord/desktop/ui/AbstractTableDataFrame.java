@@ -228,12 +228,10 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         return getTable().getValueAt(row, column).toString();
     }
 
-    protected void btnSavePdfReport(String title) {
+    protected void exportTablePdfReport(JTable table, String title) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Save as PDF Document");
         int result = fileChooser.showSaveDialog(this);
-
-        PaddedJTable table = getTable();
 
         if (result == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
@@ -275,12 +273,10 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         }
     }
 
-    protected void saveWordReport(String title) {
+    protected void exportTableWordReport(JTable table, String title) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Save as Word Document");
         int result = fileChooser.showSaveDialog(this);
-
-        PaddedJTable table = getTable();
 
         if (result == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();

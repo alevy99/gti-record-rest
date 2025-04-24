@@ -2,6 +2,7 @@ package ie.gti.asdl.rey.gtirecord.core.service;
 
 import ie.gti.asdl.rey.gtirecord.model.entity.Student;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
+import ie.gti.asdl.rey.gtirecord.model.entity.add.StudentAssignmentStats;
 import ie.gti.asdl.rey.gtirecord.model.validation.OnUpdate;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
@@ -37,4 +38,5 @@ public interface StudentService {
     Optional<Integer> saveWithUser(Student student, User user);
 
     void delete(Student student);
+
 }

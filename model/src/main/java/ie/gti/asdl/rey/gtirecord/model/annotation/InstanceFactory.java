@@ -25,21 +25,26 @@ public class InstanceFactory {
             for (Field field : clazz.getDeclaredFields()) {
                 field.setAccessible(true);
 
-                // Пропуск финальных полей, которые уже инициализированы
+                // Skip final fields
                 if (Modifier.isFinal(field.getModifiers())) {
                     continue;
                 }
 
                 Class<?> fieldType = field.getType();
 
-                // Пропускаем примитивы и простые типы
+                Object valueToSet = null;
+
                 if (fieldType.isPrimitive() || SIMPLE_TYPES.contains(fieldType)) {
+                    // Check on DefaultIfNull annotation
+                    DefaultIfNull defaultIfNull = field.getAnnotation(DefaultIfNull.class);
+                    if (defaultIfNull != null) {
+                        valueToSet = parseValue(defaultIfNull.value(), fieldType);
+                        field.set(instance, valueToSet);
+                    }
                     continue;
                 }
 
-                Object valueToSet = null;
-
-                // Обработка Set / List
+                // Handle collections
                 if (Set.class.isAssignableFrom(fieldType)) {
                     valueToSet = new HashSet<>();
                 } else if (List.class.isAssignableFrom(fieldType)) {
@@ -47,7 +52,6 @@ public class InstanceFactory {
                 } else if (Map.class.isAssignableFrom(fieldType)) {
                     valueToSet = new HashMap<>();
                 } else {
-                    // Обычный вложенный объект
                     valueToSet = create(fieldType);
                 }
 
@@ -59,5 +63,20 @@ public class InstanceFactory {
         } catch (Exception e) {
             throw new RuntimeException("Can't create instance of " + clazz.getSimpleName(), e);
         }
+    }
+
+    private static Object parseValue(String value, Class<?> type) {
+        if (type == String.class) return value;
+        if (type == Integer.class || type == int.class) return Integer.valueOf(value);
+        if (type == Long.class || type == long.class) return Long.valueOf(value);
+        if (type == Boolean.class || type == boolean.class) return Boolean.valueOf(value);
+        if (type == Double.class || type == double.class) return Double.valueOf(value);
+        if (type == Float.class || type == float.class) return Float.valueOf(value);
+        if (type == Short.class || type == short.class) return Short.valueOf(value);
+        if (type == Byte.class || type == byte.class) return Byte.valueOf(value);
+        if (type == Character.class || type == char.class) return value.charAt(0);
+        if (type == LocalDate.class) return LocalDate.parse(value);
+        if (type == LocalDateTime.class) return LocalDateTime.parse(value);
+        throw new IllegalArgumentException("Unsupported default value type: " + type.getName());
     }
 }
