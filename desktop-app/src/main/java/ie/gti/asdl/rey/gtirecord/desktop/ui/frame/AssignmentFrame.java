@@ -255,7 +255,13 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
                 }
 
                 public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return getIsEditable() && canEdit[columnIndex];
+                    // Student can edit 'submitted' flag
+                    Integer studentPersonId = getData(rowIndex).getStudent().getPerson().getId();
+                    boolean samePerson = studentPersonId.equals(getFrameManager().getActiveUser().getPersonId());
+                    return (getIsEditable() ||
+                                (columnIndex == STUDENT_RES_COLUMNS.IS_SUBMITTED.index
+                                && samePerson))
+                            && canEdit[columnIndex];
                 }
             });
         }
@@ -277,9 +283,22 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
     protected void reloadTableData() {
         super.reloadTableData();
         btnSaveStudentResults.setEnabled(getFrameManager().isLoggedInAsAdminOrTeacher());
+        lblLoggedInUsername.setText(getFrameManager().getActiveUser().getUsername());
+    }
+
+    private boolean canSaveStudentResultAtRow(int row) {
+        int modelRow = tblStudentResult.convertRowIndexToModel(row);
+        var studentPersonId = getStudentResultTableModel().getData(modelRow).getStudent().getPerson().getId();
+        return studentPersonId.equals(getFrameManager().getActiveUser().getPersonId());
     }
 
     private void updateButtonsUI() {
+        btnSaveStudentResults.setEnabled(getFrameManager().isLoggedInAsAdminOrTeacher());
+        Arrays.stream(tblStudentResult.getSelectedRows()).forEach(row -> {
+            if (canSaveStudentResultAtRow(row)) {
+                btnSaveStudentResults.setEnabled(true);
+            }
+        });
 //        btnAddModuleToCourse.setEnabled(tblAllModules.getSelectedRowCount() > 0);
 //        btnRemoveModuleFromCourse.setEnabled(tblStudentResult.getSelectedRowCount() > 0);
     }
@@ -718,6 +737,10 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
 
     private void saveStudentResults() {
         Arrays.stream(tblStudentResult.getSelectedRows()).forEach(row -> {
+            if (! canSaveStudentResultAtRow(row)) {
+                return;
+            }
+
             int modelRow = tblStudentResult.convertRowIndexToModel(row);
             var studentAssignment = getStudentResultTableModel().getData(modelRow);
             // Fill model data
