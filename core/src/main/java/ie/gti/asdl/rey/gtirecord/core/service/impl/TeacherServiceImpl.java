@@ -122,14 +122,14 @@ public class TeacherServiceImpl implements TeacherService {
         teacherDao.delete(personId);
         // Check if there is a student associated with the same person
         if (studentDao.getByPersonId(personId).isEmpty()) {
-            // If there is no such a student then delete the person
+            // If there is no such a student, then delete the person
             personDao.delete(personId);
-            // And delete user as well if there is one
+            // And delete the user as well if there is one
             userDao.getByPersonId(personId).ifPresent(user -> {
                 userService.delete(user.getId());
             });
         } else {
-            // Get user by person id and delete teacher role in it
+            // Get a user by person id and delete a teacher role in it
             userDao.getByPersonId(personId).ifPresent(user -> {
                 userRolesDao.delete(user.getId(), Role.RoleType.TEACHER.asRole().getId());
             });
