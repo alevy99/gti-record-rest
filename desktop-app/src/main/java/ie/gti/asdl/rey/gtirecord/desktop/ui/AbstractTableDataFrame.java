@@ -147,6 +147,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     protected void onDeleteData() {
         List<Integer> modelRows = new ArrayList<>();
         List<T> dataList = new ArrayList<>();
+        List<String> errors = new ArrayList<>();
 
         Arrays.stream(getTable().getSelectedRows())
                 .map(row -> getTable().convertRowIndexToModel(row)).forEach(modelRow -> {
@@ -186,22 +187,30 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
 //                })
 //                .forEach(this::doDeleteData);
 
-        dataList
-//                .map(data ->  {
-////                    Object keyData = data;
-//                    // data could be Pair with a key as value1
-//                    if (data instanceof Pair<?,?> pair) {
-//                        data = pair.getValue1(); // Assume we have keys only in the first entity
-//                    }
-//                    return data;
-//                })
-                .forEach(this::doDeleteData);
+        dataList.forEach(data -> {
+            try {
+                doDeleteData(data);
+            } catch (Exception e) {
+                Object keyData = data;
+                if (data instanceof Pair<?,?> pair) {
+                    keyData = pair.getValue1(); // Assume we have keys only in the first entity
+                }
+                errors.add(DescriptionUtil.getShortDescription(keyData));
+                logger.error("Failed to save data: {}", data, e);
+            }
+        });
 
-        // Delete from the model in reverse order
-        modelRows.sort(Comparator.reverseOrder());
-        modelRows.forEach(modelRow -> getTableModel().removeRow(modelRow));
+        if (!errors.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Save failed for:\n" + String.join("\n", errors), "Not valid data", JOptionPane.ERROR_MESSAGE);
+            reloadTableData();
+        } else {
 
-        updateUI();
+            // Delete it from the model in reverse order
+            modelRows.sort(Comparator.reverseOrder());
+            modelRows.forEach(modelRow -> getTableModel().removeRow(modelRow));
+            updateUI();
+        }
+
     }
 
     protected DataTableModel<T> getTableModel() {
