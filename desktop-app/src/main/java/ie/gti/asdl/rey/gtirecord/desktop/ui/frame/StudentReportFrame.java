@@ -258,16 +258,13 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
             Class[] types = new Class [] {
                 java.lang.Integer.class, java.lang.String.class, java.lang.String.class
             };
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return false;
             }
         });
         jScrollPane1.setViewportView(tblModule);
@@ -286,16 +283,13 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
             Class[] types = new Class [] {
                 java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Integer.class, java.lang.Double.class, java.lang.Integer.class, java.lang.Double.class, java.lang.Double.class
             };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
-            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return false;
             }
         });
         jScrollPane2.setViewportView(tblStudentAssignment);
@@ -592,6 +586,11 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
     }
 
     @Override
+    protected JButton getAddBtn() {
+        return DUMMY_JBUTTON;
+    }
+
+    @Override
     protected JButton getDeleteBtn() {
         return DUMMY_JBUTTON;
     }
@@ -609,6 +608,11 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
     @Override
     protected int getDataDescriptionColumn() {
         return MODULE_COLUMNS.NAME.index;
+    }
+
+    @Override
+    protected boolean getIsEditable() {
+        return false;
     }
 
     @Override

@@ -60,7 +60,7 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
 
     private void initTableModel() {
         if (! (tblDepartment.getModel() instanceof DataTableModel)) {
-            tblDepartment.setModel(new DepartmentTableModel(true));
+            tblDepartment.setModel(new DepartmentTableModel(getIsEditable()));
         }
     }
 
@@ -318,6 +318,11 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
     }
 
     @Override
+    protected JButton getAddBtn() {
+        return btnAdd;
+    }
+
+    @Override
     protected JButton getDeleteBtn() {
         return btnDelete;
     }
@@ -335,6 +340,11 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
     @Override
     protected int getDataDescriptionColumn() {
         return 1;
+    }
+
+    @Override
+    protected boolean getIsEditable() {
+        return getFrameManager().isLoggedInAsAdmin();
     }
 
     @Override

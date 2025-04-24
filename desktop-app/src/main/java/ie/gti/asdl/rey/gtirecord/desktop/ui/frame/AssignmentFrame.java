@@ -227,7 +227,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
                 }
 
                 public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return canEdit [columnIndex];
+                    return getIsEditable() && canEdit[columnIndex];
                 }
             });
         }
@@ -255,7 +255,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
                 }
 
                 public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return canEdit [columnIndex];
+                    return getIsEditable() && canEdit[columnIndex];
                 }
             });
         }
@@ -273,18 +273,16 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         studentColumn.setCellRenderer(new PaddedDataCellRenderer(null));
     }
 
+    @Override
+    protected void reloadTableData() {
+        super.reloadTableData();
+        btnSaveStudentResults.setEnabled(getFrameManager().isLoggedInAsAdminOrTeacher());
+    }
+
     private void updateButtonsUI() {
 //        btnAddModuleToCourse.setEnabled(tblAllModules.getSelectedRowCount() > 0);
 //        btnRemoveModuleFromCourse.setEnabled(tblStudentResult.getSelectedRowCount() > 0);
     }
-
-//    private void updateSelectedAssignment() {
-//        if (assignmentHighlightedRow != null) {
-//            int modelRow = tblAssignment.convertRowIndexToModel(assignmentHighlightedRow);
-//            selectedAssignment = getTableModel().getData(modelRow);
-//        }
-//    }
-
 
     private void updateStudentResultTableUI() {
         lblStudentResultTitle.setText((selectedAssignment == null || selectedAssignment.getName() == null)
@@ -719,7 +717,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
     }//GEN-LAST:event_btnSaveStudentResultsActionPerformed
 
     private void saveStudentResults() {
-        Arrays.stream(tblStudentResult.getSelectedRows()).findFirst().ifPresent(row -> {
+        Arrays.stream(tblStudentResult.getSelectedRows()).forEach(row -> {
             int modelRow = tblStudentResult.convertRowIndexToModel(row);
             var studentAssignment = getStudentResultTableModel().getData(modelRow);
             // Fill model data
@@ -782,6 +780,11 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
     }
 
     @Override
+    protected JButton getAddBtn() {
+        return btnAdd;
+    }
+
+    @Override
     protected JButton getDeleteBtn() {
         return btnDelete;
     }
@@ -799,6 +802,11 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
     @Override
     protected int getDataDescriptionColumn() {
         return COLUMNS.NAME.index;
+    }
+
+    @Override
+    protected boolean getIsEditable() {
+        return getFrameManager().isLoggedInAsAdmin() || getFrameManager().isLoggedInAsTeacher();
     }
 
     @Override

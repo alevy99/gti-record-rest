@@ -146,10 +146,10 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
                             "Person ID", "First name", "Last name", "Username", "Password", "Position", "Degree", "Work Experience"
                     }
             ) {
-                Class[] types = new Class [] {
+                final Class[] types = new Class [] {
                         java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
                 };
-                boolean[] canEdit = new boolean [] {
+                final boolean[] canEdit = new boolean [] {
                         false, true, true, true, true, true, true, true
                 };
 
@@ -158,15 +158,15 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
                 }
 
                 public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return canEdit [columnIndex];
+                    return getIsEditable() && canEdit[columnIndex];
                 }
             });
         }
     }
 
     private void initModuleTable() {
-        ModuleFrame.initTable(tblTeacherModules);
-        ModuleFrame.initTable(tblAllModules);
+        ModuleFrame.initTable(tblTeacherModules, getIsEditable());
+        ModuleFrame.initTable(tblAllModules, getIsEditable());
 
         SwingUIUtils.addTableFilter(tblTeacherModules, tfModuleFilter);
         SwingUIUtils.addTableFilter(tblAllModules, tfModuleFilter);
@@ -812,6 +812,11 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
     }
 
     @Override
+    protected JButton getAddBtn() {
+        return btnAdd;
+    }
+
+    @Override
     protected JButton getDeleteBtn() {
         return btnDelete;
     }
@@ -829,6 +834,11 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
     @Override
     protected int getDataDescriptionColumn() {
         return COLUMNS.FIRST_NAME.index;
+    }
+
+    @Override
+    protected boolean getIsEditable() {
+        return getFrameManager().isLoggedInAsAdmin();
     }
 
     @Override

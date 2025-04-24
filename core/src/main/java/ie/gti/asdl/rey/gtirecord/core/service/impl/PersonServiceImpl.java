@@ -49,8 +49,8 @@ public class PersonServiceImpl implements PersonService {
     public Optional<Person> getById(Integer id) {
         Optional<Person> person = personDao.getById(id);
         person.ifPresent( p -> {
-            Optional<Address> address = addressDao.getByPersonId(id);
-            p.setAddress(address.orElse(null));
+            Optional<Address> addressOpt = addressDao.getByPersonId(id);
+            addressOpt.ifPresent(p::setAddress);
         });
         return person;
     }

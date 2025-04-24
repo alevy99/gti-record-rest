@@ -23,4 +23,6 @@ public interface StudentAssignmentDao {
     void update(StudentAssignment studentAssignment);
 
     void deleteByAssignmentId(Integer assignmentId);
+
+    void deleteByStudentPersonId(Integer studentPersonId);
 }

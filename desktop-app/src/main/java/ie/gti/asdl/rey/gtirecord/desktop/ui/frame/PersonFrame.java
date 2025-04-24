@@ -154,6 +154,23 @@ public class PersonFrame extends AbstractFrame {
             tfAddressCountry.setText(address.getCountry());
             tfAddressEircode.setText(address.getEirCode());
         }
+
+        tfFirstName.setEditable(getFrameManager().isLoggedInAsAdmin());
+        tfLastName.setEditable(getFrameManager().isLoggedInAsAdmin());
+
+        boolean editable = getFrameManager().isLoggedInAsAdmin() || getFrameManager().getActiveUser().equals(user);
+        cbGender.setEditable(editable);
+        dobDatePicker.setEnabled(editable);
+        tfEmail.setEditable(editable);
+        tfPhoneNumber.setEditable(editable);
+        tfPPSN.setEditable(editable);
+        tfAddressLine1.setEditable(editable);
+        tfAddressLine2.setEditable(editable);
+        tfAddressCity.setEditable(editable);
+        tfAddressCounty.setEditable(editable);
+        tfAddressCountry.setEditable(editable);
+        tfAddressEircode.setEditable(editable);
+
     }
 
     private void fillPersonFromUI() {

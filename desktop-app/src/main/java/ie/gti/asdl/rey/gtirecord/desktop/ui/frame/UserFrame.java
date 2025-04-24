@@ -122,7 +122,7 @@ public class UserFrame extends AbstractTableDataFrame<User> {
                         false, true, true, true, true, true
                 };
                 public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return canEdit[columnIndex];
+                    return getIsEditable() && canEdit[columnIndex];
                 }
                 public Class getColumnClass(int columnIndex) {
                     return types[columnIndex];
@@ -456,6 +456,11 @@ public class UserFrame extends AbstractTableDataFrame<User> {
     }
 
     @Override
+    protected JButton getAddBtn() {
+        return btnAdd;
+    }
+
+    @Override
     protected JButton getDeleteBtn() {
         return btnDelete;
     }
@@ -473,6 +478,11 @@ public class UserFrame extends AbstractTableDataFrame<User> {
     @Override
     protected int getDataDescriptionColumn() {
         return 1;
+    }
+
+    @Override
+    protected boolean getIsEditable() {
+        return getFrameManager().isLoggedInAsAdmin();
     }
 
     @Override

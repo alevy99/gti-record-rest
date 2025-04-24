@@ -177,11 +177,14 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
     }
 
     private void onSelectGroup() {
+        if (! getIsEditable()) {
+            return;
+        }
         if (selectedPair == null) return;
         Group selectedGroup;
         switch (tblGroup.getSelectedRowCount()) {
             case 0 -> {
-                selectedGroup = new Group();
+                selectedGroup = InstanceFactory.create(Group.class);
             }
             case 1 -> {
                 selectedGroup = getGroupTableModel().getData(tblGroup.convertRowIndexToModel(tblGroup.getSelectedRow()));
@@ -271,7 +274,7 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
                 }
 
                 public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return canEdit[columnIndex];
+                    return getIsEditable() && canEdit[columnIndex];
                 }
             });
         }
@@ -969,6 +972,11 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
     }
 
     @Override
+    protected JButton getAddBtn() {
+        return btnAdd;
+    }
+
+    @Override
     protected JButton getDeleteBtn() {
         return btnDelete;
     }
@@ -986,6 +994,11 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
     @Override
     protected int getDataDescriptionColumn() {
         return COLUMNS.FIRST_NAME.index;
+    }
+
+    @Override
+    protected boolean getIsEditable() {
+        return getFrameManager().isLoggedInAsAdminOrTeacher();
     }
 
     @Override

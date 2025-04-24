@@ -205,7 +205,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
                 }
 
                 public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return canEdit [columnIndex];
+                    return getIsEditable() && canEdit[columnIndex];
                 }
             });
         }
@@ -224,16 +224,13 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
                 Class[] types = new Class[]{
                         java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class
                 };
-                boolean[] canEdit = new boolean[]{
-                        false, false, false, false, false
-                };
 
                 public Class getColumnClass(int columnIndex) {
                     return types[columnIndex];
                 }
 
                 public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return canEdit[columnIndex];
+                    return false;
                 }
             });
         }
@@ -256,7 +253,26 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
 
     private void initAllStudentTable() {
         if (! (tblAllStudents.getModel() instanceof DataTableModel)) {
-            tblAllStudents.setModel(new StudentSimpleTableModel());
+            tblAllStudents.setModel(new DataTableModel<Group>(
+                    new Object[][]{
+
+                    },
+                    new String [] {
+                            "ID", "First name", "Last name", "Group"
+                    }
+            ) {
+                Class[] types = new Class[]{
+                        java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
+                };
+
+                public Class getColumnClass(int columnIndex) {
+                    return types[columnIndex];
+                }
+
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return false;
+                }
+            });
         }
 
         TableColumnModel columnModel = tblAllStudents.getColumnModel();
@@ -271,7 +287,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
 
     private void initModuleTables() {
         initGroupModuleTable();
-        ModuleFrame.initTable(tblAllModules);
+        ModuleFrame.initTable(tblAllModules, getIsEditable());
 
         SwingUIUtils.addTableFilter(tblGroupModules, tfModuleFilter);
         SwingUIUtils.addTableFilter(tblAllModules, tfModuleFilter);
@@ -334,7 +350,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
                 }
 
                 public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return canEdit[columnIndex];
+                    return getIsEditable() && canEdit[columnIndex];
                 }
             });
         }
@@ -352,6 +368,18 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
         if (selectedGroup == null) return;
 
         updateButtonsUI();
+    }
+
+    @Override
+    protected void reloadTableData() {
+        super.reloadTableData();
+        btnAddModuleToGroup.setEnabled(getIsEditable());
+        btnRemoveModuleFromGroup.setEnabled(getIsEditable());
+        btnGroupReportWord.setEnabled(getIsEditable());
+        btnGroupReportPdf.setEnabled(getIsEditable());
+        btnAddStudentToGroup.setEnabled(getIsEditable());
+        btnRemoveStudentFromGroup.setEnabled(getIsEditable());
+        btnOpenReport.setEnabled(tblGroupStudents.getSelectedRowCount() > 0);
     }
 
     private void updateButtonsUI() {
@@ -1473,6 +1501,11 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
     }
 
     @Override
+    protected JButton getAddBtn() {
+        return btnAdd;
+    }
+
+    @Override
     protected JButton getDeleteBtn() {
         return btnDelete;
     }
@@ -1490,6 +1523,11 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
     @Override
     protected int getDataDescriptionColumn() {
         return GROUP_COLUMNS.NAME.index;
+    }
+
+    @Override
+    protected boolean getIsEditable() {
+        return getFrameManager().isLoggedInAsAdminOrTeacher();
     }
 
     @Override

@@ -55,13 +55,13 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
 
     @Override
     protected void initFrame() {
-        initTable(getTable()); // Init Table Model first
+        initTable(getTable(), getIsEditable()); // Init Table Model first
         super.initFrame();
     }
 
-    static void initTable(PaddedJTable table) {
-        initTable(table, true);
-    }
+//    static void initTable(PaddedJTable table) {
+//        initTable(table, true);
+//    }
 
     static void initTable(PaddedJTable table, boolean editable) {
         if (! (table.getModel() instanceof DataTableModel)) {
@@ -333,6 +333,11 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     }
 
     @Override
+    protected JButton getAddBtn() {
+        return btnAdd;
+    }
+
+    @Override
     protected JButton getDeleteBtn() {
         return btnDelete;
     }
@@ -350,6 +355,11 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
     @Override
     protected int getDataDescriptionColumn() {
         return 1;
+    }
+
+    @Override
+    protected boolean getIsEditable() {
+        return getFrameManager().isLoggedInAsAdmin();
     }
 
     @Override

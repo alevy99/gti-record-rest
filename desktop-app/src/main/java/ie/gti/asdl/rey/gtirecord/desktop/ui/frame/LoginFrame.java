@@ -146,14 +146,15 @@ public class LoginFrame extends AbstractFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLoginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jLoginBtnActionPerformed
-        Optional<User> user = userService.getByUsername(jUsernameTF.getText());
+        Optional<User> userOpt = userService.getByUsername(jUsernameTF.getText());
 
-        if (user.isEmpty() || (! user.get().getPassword().equals(String.valueOf(jPasswordTF.getPassword())))) {
+        if (userOpt.isEmpty() || (! userOpt.get().getPassword().equals(String.valueOf(jPasswordTF.getPassword())))) {
             JOptionPane.showMessageDialog(this, "Invalid username or password");
         } else {
-            // user is not empty
-            MainFrame mainFrame = getFrameManager().getFrame(MAIN);
-            mainFrame.setUser(user.get());
+            getFrameManager().setActiveUser(userOpt.get());
+            // userOpt is not empty
+//            MainFrame mainFrame = getFrameManager().getFrame(MAIN);
+//            mainFrame.setUser(userOpt.get());
             getFrameManager().showSub(MAIN);
         }
 

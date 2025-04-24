@@ -4,11 +4,15 @@
  */
 package ie.gti.asdl.rey.gtirecord.desktop.ui.frame;
 
+import ie.gti.asdl.rey.gtirecord.model.entity.Role;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import ie.gti.asdl.rey.gtirecord.core.ServiceManager;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
 import ie.gti.asdl.rey.gtirecord.model.util.UserUtils;
+
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.*;
 
@@ -24,7 +28,10 @@ public class MainFrame extends AbstractFrame {
 
     private static final String ADMIN_TAB_TITLE = "Administrator";
 
-    private User user;
+    private static final Map<Role, String> roleToTabTitleMap = Map.of(
+            Role.RoleType.ADMIN.asRole(), ADMIN_TAB_TITLE,
+            Role.RoleType.TEACHER.asRole(), TEACHER_TAB_TITLE,
+            Role.RoleType.STUDENT.asRole(), STUDENT_TAB_TITLE);
 
     /**
      * Creates new form MainFrame
@@ -33,6 +40,35 @@ public class MainFrame extends AbstractFrame {
         super(frameManager);
         initComponents();
         initFrame();
+    }
+
+    @Override
+    protected void onFrameShown() {
+        super.onFrameShown();
+        updateUI();
+    }
+
+    public void updateUI() {
+        jTabbedPane.remove(jAdminTabPanel);
+        jTabbedPane.remove(jTeacherTabPanel);
+        jTabbedPane.remove(jStudentTabPanel);
+
+        User user = getFrameManager().getActiveUser();
+
+        String title = user.getRoles().stream().map(roleToTabTitleMap::get).collect(Collectors.joining(" | "));
+        jTabbedPane.add(title, jAdminTabPanel);
+
+//        if (UserUtils.isAdmin(user)) {
+//        jTabbedPane.add(title, jAdminTabPanel);
+//        }
+
+//        if (UserUtils.isTeacher(user)) {
+//            jTabbedPane.add(TEACHER_TAB_TITLE, jTeacherTabPanel);
+//        }
+//
+//        if (UserUtils.isStudent(user)) {
+//            jTabbedPane.add(STUDENT_TAB_TITLE, jStudentTabPanel);
+//        }
     }
 
     /**
@@ -45,38 +81,89 @@ public class MainFrame extends AbstractFrame {
 
         jTabbedPane = new javax.swing.JTabbedPane();
         jStudentTabPanel = new javax.swing.JPanel();
-        jButton10 = new javax.swing.JButton();
-        jButton11 = new javax.swing.JButton();
-        jButton12 = new javax.swing.JButton();
-        jButton13 = new javax.swing.JButton();
+        btnModuleStudent = new javax.swing.JButton();
+        btnUserStudent = new javax.swing.JButton();
+        btnTeacherStudent = new javax.swing.JButton();
+        btnDepartmentStudent = new javax.swing.JButton();
+        btnCourseStudent = new javax.swing.JButton();
+        btnStudentStudent = new javax.swing.JButton();
+        btnAssignmentsStudent = new javax.swing.JButton();
+        btnGroupStudent = new javax.swing.JButton();
         jTeacherTabPanel = new javax.swing.JPanel();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
+        btnModuleTeacher = new javax.swing.JButton();
+        btnUserTeacher = new javax.swing.JButton();
+        btnTeacherTeacher = new javax.swing.JButton();
+        btnDepartmentTeacher = new javax.swing.JButton();
+        btnCourseTeacher = new javax.swing.JButton();
+        btnStudentTeacher = new javax.swing.JButton();
+        btnAssignmentsTeacher = new javax.swing.JButton();
+        btnGroupTeacher = new javax.swing.JButton();
         jAdminTabPanel = new javax.swing.JPanel();
-        btnModule = new javax.swing.JButton();
-        btnUser = new javax.swing.JButton();
-        btnTeacher = new javax.swing.JButton();
-        btnDepartment = new javax.swing.JButton();
-        btnCourse = new javax.swing.JButton();
-        btnStudent = new javax.swing.JButton();
-        btnAssignments = new javax.swing.JButton();
-        btnGroup = new javax.swing.JButton();
+        btnModuleAdmin = new javax.swing.JButton();
+        btnUserAdmin = new javax.swing.JButton();
+        btnTeacherAdmin = new javax.swing.JButton();
+        btnDepartmentAdmin = new javax.swing.JButton();
+        btnCourseAdmin = new javax.swing.JButton();
+        btnStudentAdmin = new javax.swing.JButton();
+        btnAssignmentAdmin = new javax.swing.JButton();
+        btnGroupAdmin = new javax.swing.JButton();
         btnLogOut = new javax.swing.JButton();
 
         setResizable(false);
 
-        jButton10.setText("USER ST");
-
-        jButton11.setText("CLASS ST");
-
-        jButton12.setText("MODULE");
-
-        jButton13.setText("COURSE");
-        jButton13.addActionListener(new java.awt.event.ActionListener() {
+        btnModuleStudent.setText("MODULES");
+        btnModuleStudent.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton13ActionPerformed(evt);
+                btnModuleStudentActionPerformed(evt);
+            }
+        });
+
+        btnUserStudent.setText("USERS");
+        btnUserStudent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUserStudentActionPerformed(evt);
+            }
+        });
+
+        btnTeacherStudent.setText("TEACHERS");
+        btnTeacherStudent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTeacherStudentActionPerformed(evt);
+            }
+        });
+
+        btnDepartmentStudent.setText("DEPARTMENTS");
+        btnDepartmentStudent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDepartmentStudentActionPerformed(evt);
+            }
+        });
+
+        btnCourseStudent.setText("COURSES");
+        btnCourseStudent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCourseStudentActionPerformed(evt);
+            }
+        });
+
+        btnStudentStudent.setText("STUDENTS");
+        btnStudentStudent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStudentStudentActionPerformed(evt);
+            }
+        });
+
+        btnAssignmentsStudent.setText("ASSIGNMENTS");
+        btnAssignmentsStudent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAssignmentsStudentActionPerformed(evt);
+            }
+        });
+
+        btnGroupStudent.setText("GROUPS");
+        btnGroupStudent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGroupStudentActionPerformed(evt);
             }
         });
 
@@ -84,46 +171,99 @@ public class MainFrame extends AbstractFrame {
         jStudentTabPanel.setLayout(jStudentTabPanelLayout);
         jStudentTabPanelLayout.setHorizontalGroup(
             jStudentTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jStudentTabPanelLayout.createSequentialGroup()
-                .addGap(76, 76, 76)
-                .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
-                .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
-                .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
-                .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(204, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jStudentTabPanelLayout.createSequentialGroup()
+                .addContainerGap(173, Short.MAX_VALUE)
+                .addGroup(jStudentTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnStudentStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUserStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTeacherStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(116, 116, 116)
+                .addGroup(jStudentTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnAssignmentsStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGroupStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(84, 84, 84)
+                .addGroup(jStudentTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnCourseStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDepartmentStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnModuleStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(173, 173, 173))
         );
         jStudentTabPanelLayout.setVerticalGroup(
             jStudentTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jStudentTabPanelLayout.createSequentialGroup()
-                .addGap(124, 124, 124)
+                .addGap(96, 96, 96)
                 .addGroup(jStudentTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(392, Short.MAX_VALUE))
+                    .addComponent(btnUserStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDepartmentStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
+                .addGroup(jStudentTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnTeacherStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCourseStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGroupStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
+                .addGroup(jStudentTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnStudentStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnModuleStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAssignmentsStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(114, Short.MAX_VALUE))
         );
 
         jTabbedPane.addTab("Student", jStudentTabPanel);
 
-        jButton6.setText("USER TEACH");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        btnModuleTeacher.setText("MODULES");
+        btnModuleTeacher.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                btnModuleTeacherActionPerformed(evt);
             }
         });
 
-        jButton7.setText("CLASS");
-
-        jButton8.setText("MODULE");
-
-        jButton9.setText("COURSE");
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
+        btnUserTeacher.setText("USERS");
+        btnUserTeacher.setEnabled(false);
+        btnUserTeacher.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
+                btnUserTeacherActionPerformed(evt);
+            }
+        });
+
+        btnTeacherTeacher.setText("TEACHERS");
+        btnTeacherTeacher.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTeacherTeacherActionPerformed(evt);
+            }
+        });
+
+        btnDepartmentTeacher.setText("DEPARTMENTS");
+        btnDepartmentTeacher.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDepartmentTeacherActionPerformed(evt);
+            }
+        });
+
+        btnCourseTeacher.setText("COURSES");
+        btnCourseTeacher.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCourseTeacherActionPerformed(evt);
+            }
+        });
+
+        btnStudentTeacher.setText("STUDENTS");
+        btnStudentTeacher.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStudentTeacherActionPerformed(evt);
+            }
+        });
+
+        btnAssignmentsTeacher.setText("ASSIGNMENTS");
+        btnAssignmentsTeacher.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAssignmentsTeacherActionPerformed(evt);
+            }
+        });
+
+        btnGroupTeacher.setText("GROUPS");
+        btnGroupTeacher.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGroupTeacherActionPerformed(evt);
             }
         });
 
@@ -131,84 +271,98 @@ public class MainFrame extends AbstractFrame {
         jTeacherTabPanel.setLayout(jTeacherTabPanelLayout);
         jTeacherTabPanelLayout.setHorizontalGroup(
             jTeacherTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jTeacherTabPanelLayout.createSequentialGroup()
-                .addGap(76, 76, 76)
-                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
-                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
-                .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
-                .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(204, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jTeacherTabPanelLayout.createSequentialGroup()
+                .addContainerGap(173, Short.MAX_VALUE)
+                .addGroup(jTeacherTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnStudentTeacher, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUserTeacher, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTeacherTeacher, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(116, 116, 116)
+                .addGroup(jTeacherTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnAssignmentsTeacher, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGroupTeacher, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(84, 84, 84)
+                .addGroup(jTeacherTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnCourseTeacher, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDepartmentTeacher, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnModuleTeacher, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(173, 173, 173))
         );
         jTeacherTabPanelLayout.setVerticalGroup(
             jTeacherTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jTeacherTabPanelLayout.createSequentialGroup()
-                .addGap(124, 124, 124)
+                .addGap(96, 96, 96)
                 .addGroup(jTeacherTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(392, Short.MAX_VALUE))
+                    .addComponent(btnUserTeacher, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDepartmentTeacher, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
+                .addGroup(jTeacherTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnTeacherTeacher, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCourseTeacher, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGroupTeacher, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
+                .addGroup(jTeacherTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnStudentTeacher, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnModuleTeacher, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAssignmentsTeacher, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(114, Short.MAX_VALUE))
         );
 
         jTabbedPane.addTab("Teacher", jTeacherTabPanel);
 
-        btnModule.setText("MODULES");
-        btnModule.addActionListener(new java.awt.event.ActionListener() {
+        btnModuleAdmin.setText("MODULES");
+        btnModuleAdmin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnModuleActionPerformed(evt);
+                btnModuleAdminActionPerformed(evt);
             }
         });
 
-        btnUser.setText("USERS");
-        btnUser.addActionListener(new java.awt.event.ActionListener() {
+        btnUserAdmin.setText("USERS");
+        btnUserAdmin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUserActionPerformed(evt);
+                btnUserAdminActionPerformed(evt);
             }
         });
 
-        btnTeacher.setText("TEACHERS");
-        btnTeacher.addActionListener(new java.awt.event.ActionListener() {
+        btnTeacherAdmin.setText("TEACHERS");
+        btnTeacherAdmin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTeacherActionPerformed(evt);
+                btnTeacherAdminActionPerformed(evt);
             }
         });
 
-        btnDepartment.setText("DEPARTMENTS");
-        btnDepartment.addActionListener(new java.awt.event.ActionListener() {
+        btnDepartmentAdmin.setText("DEPARTMENTS");
+        btnDepartmentAdmin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDepartmentActionPerformed(evt);
+                btnDepartmentAdminActionPerformed(evt);
             }
         });
 
-        btnCourse.setText("COURSES");
-        btnCourse.addActionListener(new java.awt.event.ActionListener() {
+        btnCourseAdmin.setText("COURSES");
+        btnCourseAdmin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCourseActionPerformed(evt);
+                btnCourseAdminActionPerformed(evt);
             }
         });
 
-        btnStudent.setText("STUDENTS");
-        btnStudent.addActionListener(new java.awt.event.ActionListener() {
+        btnStudentAdmin.setText("STUDENTS");
+        btnStudentAdmin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnStudentActionPerformed(evt);
+                btnStudentAdminActionPerformed(evt);
             }
         });
 
-        btnAssignments.setText("ASSIGNMENTS");
-        btnAssignments.addActionListener(new java.awt.event.ActionListener() {
+        btnAssignmentAdmin.setText("ASSIGNMENTS");
+        btnAssignmentAdmin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAssignmentsActionPerformed(evt);
+                btnAssignmentAdminActionPerformed(evt);
             }
         });
 
-        btnGroup.setText("GROUPS");
-        btnGroup.addActionListener(new java.awt.event.ActionListener() {
+        btnGroupAdmin.setText("GROUPS");
+        btnGroupAdmin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGroupActionPerformed(evt);
+                btnGroupAdminActionPerformed(evt);
             }
         });
 
@@ -217,40 +371,40 @@ public class MainFrame extends AbstractFrame {
         jAdminTabPanelLayout.setHorizontalGroup(
             jAdminTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jAdminTabPanelLayout.createSequentialGroup()
-                .addContainerGap(75, Short.MAX_VALUE)
+                .addContainerGap(173, Short.MAX_VALUE)
                 .addGroup(jAdminTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnUser, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTeacher, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnStudentAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUserAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTeacherAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(116, 116, 116)
                 .addGroup(jAdminTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAssignments, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnGroup, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAssignmentAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGroupAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(84, 84, 84)
                 .addGroup(jAdminTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnCourse, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDepartment, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnModule, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(254, 254, 254))
+                    .addComponent(btnCourseAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDepartmentAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnModuleAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(173, 173, 173))
         );
         jAdminTabPanelLayout.setVerticalGroup(
             jAdminTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jAdminTabPanelLayout.createSequentialGroup()
                 .addGap(96, 96, 96)
                 .addGroup(jAdminTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnUser, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDepartment, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnUserAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDepartmentAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32)
                 .addGroup(jAdminTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnTeacher, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCourse, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnGroup, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnTeacherAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCourseAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGroupAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32)
                 .addGroup(jAdminTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnModule, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAssignments, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(188, Short.MAX_VALUE))
+                    .addComponent(btnStudentAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnModuleAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAssignmentAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(114, Short.MAX_VALUE))
         );
 
         jTabbedPane.addTab("Administrator", jAdminTabPanel);
@@ -268,128 +422,158 @@ public class MainFrame extends AbstractFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnLogOut)
-                .addGap(42, 42, 42))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jTabbedPane)
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(180, 180, 180))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 635, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnLogOut)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addComponent(jTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 561, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(btnLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
-        user = null;
+        getFrameManager().logout();
         getFrameManager().showParent();
     }//GEN-LAST:event_btnLogOutActionPerformed
 
-    private void btnDepartmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepartmentActionPerformed
+    private void btnDepartmentAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepartmentAdminActionPerformed
         getFrameManager().showSub(DEPARTMENT);
-    }//GEN-LAST:event_btnDepartmentActionPerformed
+    }//GEN-LAST:event_btnDepartmentAdminActionPerformed
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton9ActionPerformed
-
-    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton13ActionPerformed
-
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
-
-    private void btnTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTeacherActionPerformed
+    private void btnTeacherAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTeacherAdminActionPerformed
         getFrameManager().showSub(TEACHER);
-    }//GEN-LAST:event_btnTeacherActionPerformed
+    }//GEN-LAST:event_btnTeacherAdminActionPerformed
 
-    private void btnUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserActionPerformed
+    private void btnUserAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserAdminActionPerformed
         getFrameManager().showSub(USER);
-    }//GEN-LAST:event_btnUserActionPerformed
+    }//GEN-LAST:event_btnUserAdminActionPerformed
 
-    private void btnCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCourseActionPerformed
+    private void btnCourseAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCourseAdminActionPerformed
         getFrameManager().showSub(COURSE);
-    }//GEN-LAST:event_btnCourseActionPerformed
+    }//GEN-LAST:event_btnCourseAdminActionPerformed
 
-    private void btnStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStudentActionPerformed
+    private void btnStudentAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStudentAdminActionPerformed
         getFrameManager().showSub(STUDENT);
-    }//GEN-LAST:event_btnStudentActionPerformed
+    }//GEN-LAST:event_btnStudentAdminActionPerformed
 
-    private void btnModuleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModuleActionPerformed
+    private void btnModuleAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModuleAdminActionPerformed
         getFrameManager().showSub(MODULE);
-    }//GEN-LAST:event_btnModuleActionPerformed
+    }//GEN-LAST:event_btnModuleAdminActionPerformed
 
-    private void btnAssignmentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAssignmentsActionPerformed
+    private void btnAssignmentAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAssignmentAdminActionPerformed
         getFrameManager().showSub(ASSIGNMENT);
-    }//GEN-LAST:event_btnAssignmentsActionPerformed
+    }//GEN-LAST:event_btnAssignmentAdminActionPerformed
 
-    private void btnGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGroupActionPerformed
+    private void btnGroupAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGroupAdminActionPerformed
         getFrameManager().showSub(GROUP);
-    }//GEN-LAST:event_btnGroupActionPerformed
+    }//GEN-LAST:event_btnGroupAdminActionPerformed
+
+    private void btnModuleTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModuleTeacherActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnModuleTeacherActionPerformed
+
+    private void btnUserTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserTeacherActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnUserTeacherActionPerformed
+
+    private void btnTeacherTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTeacherTeacherActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnTeacherTeacherActionPerformed
+
+    private void btnDepartmentTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepartmentTeacherActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnDepartmentTeacherActionPerformed
+
+    private void btnCourseTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCourseTeacherActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCourseTeacherActionPerformed
+
+    private void btnStudentTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStudentTeacherActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnStudentTeacherActionPerformed
+
+    private void btnAssignmentsTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAssignmentsTeacherActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAssignmentsTeacherActionPerformed
+
+    private void btnGroupTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGroupTeacherActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnGroupTeacherActionPerformed
+
+    private void btnModuleStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModuleStudentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnModuleStudentActionPerformed
+
+    private void btnUserStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserStudentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnUserStudentActionPerformed
+
+    private void btnTeacherStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTeacherStudentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnTeacherStudentActionPerformed
+
+    private void btnDepartmentStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepartmentStudentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnDepartmentStudentActionPerformed
+
+    private void btnCourseStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCourseStudentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCourseStudentActionPerformed
+
+    private void btnStudentStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStudentStudentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnStudentStudentActionPerformed
+
+    private void btnAssignmentsStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAssignmentsStudentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAssignmentsStudentActionPerformed
+
+    private void btnGroupStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGroupStudentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnGroupStudentActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAssignments;
-    private javax.swing.JButton btnCourse;
-    private javax.swing.JButton btnDepartment;
-    private javax.swing.JButton btnGroup;
+    private javax.swing.JButton btnAssignmentAdmin;
+    private javax.swing.JButton btnAssignmentsStudent;
+    private javax.swing.JButton btnAssignmentsTeacher;
+    private javax.swing.JButton btnCourseAdmin;
+    private javax.swing.JButton btnCourseStudent;
+    private javax.swing.JButton btnCourseTeacher;
+    private javax.swing.JButton btnDepartmentAdmin;
+    private javax.swing.JButton btnDepartmentStudent;
+    private javax.swing.JButton btnDepartmentTeacher;
+    private javax.swing.JButton btnGroupAdmin;
+    private javax.swing.JButton btnGroupStudent;
+    private javax.swing.JButton btnGroupTeacher;
     private javax.swing.JButton btnLogOut;
-    private javax.swing.JButton btnModule;
-    private javax.swing.JButton btnStudent;
-    private javax.swing.JButton btnTeacher;
-    private javax.swing.JButton btnUser;
+    private javax.swing.JButton btnModuleAdmin;
+    private javax.swing.JButton btnModuleStudent;
+    private javax.swing.JButton btnModuleTeacher;
+    private javax.swing.JButton btnStudentAdmin;
+    private javax.swing.JButton btnStudentStudent;
+    private javax.swing.JButton btnStudentTeacher;
+    private javax.swing.JButton btnTeacherAdmin;
+    private javax.swing.JButton btnTeacherStudent;
+    private javax.swing.JButton btnTeacherTeacher;
+    private javax.swing.JButton btnUserAdmin;
+    private javax.swing.JButton btnUserStudent;
+    private javax.swing.JButton btnUserTeacher;
     private javax.swing.JPanel jAdminTabPanel;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JPanel jStudentTabPanel;
     private javax.swing.JTabbedPane jTabbedPane;
     private javax.swing.JPanel jTeacherTabPanel;
     // End of variables declaration//GEN-END:variables
 
-
-    public void refreshUI() {
-        jTabbedPane.remove(jAdminTabPanel);
-        jTabbedPane.remove(jTeacherTabPanel);
-        jTabbedPane.remove(jStudentTabPanel);
-
-        if (UserUtils.isAdmin(user)) {
-            jTabbedPane.add(ADMIN_TAB_TITLE, jAdminTabPanel);
-        }
-
-        if (UserUtils.isTeacher(user)) {
-            jTabbedPane.add(TEACHER_TAB_TITLE, jTeacherTabPanel);
-        }
-
-        if (UserUtils.isStudent(user)) {
-            jTabbedPane.add(STUDENT_TAB_TITLE, jStudentTabPanel);
-        }
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        if (user == null) {
-            throw new RuntimeException("user is null");
-        }
-        this.user = user;
-        refreshUI();
-    }
 }

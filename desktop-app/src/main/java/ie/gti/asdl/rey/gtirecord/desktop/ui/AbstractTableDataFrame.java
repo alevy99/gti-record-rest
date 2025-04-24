@@ -58,14 +58,17 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
 
     protected abstract PaddedJTable getTable();
 
+    protected abstract JButton getAddBtn();
     protected abstract JButton getDeleteBtn();
     protected abstract JButton getSaveBtn();
     protected abstract JTextField getTableFilterField();
     protected abstract int getDataDescriptionColumn();
 
-    protected int getDataIDColumn() {
-        return 0;
-    }
+    protected abstract boolean getIsEditable();
+
+//    protected int getDataIDColumn() {
+//        return 0;
+//    }
 
     protected IntConsumer getOnRowSelect() {
         return (val) -> {};
@@ -209,7 +212,6 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     protected void onFrameShown() {
         super.onFrameShown();
         reloadTableData();
-        updateUI();
     }
 
     protected void reloadTableData() {
@@ -219,8 +221,13 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
     }
 
     protected void updateUI() {
-        getSaveBtn().setEnabled(getTable().getSelectedRowCount() > 0);
-        getDeleteBtn().setEnabled(getTable().getSelectedRowCount() > 0);
+        getAddBtn().setEnabled(getIsEditable());
+        getSaveBtn().setEnabled(getIsEditable() && getTable().getSelectedRowCount() > 0);
+        getDeleteBtn().setEnabled(getIsEditable() && getTable().getSelectedRowCount() > 0);
+
+//        getAddBtn().setVisible(getIsEditable());
+//        getSaveBtn().setVisible(getIsEditable() && getTable().getSelectedRowCount() > 0);
+//        getDeleteBtn().setVisible(getIsEditable() && getTable().getSelectedRowCount() > 0);
     }
 
     protected String getTableStringValueAt(Integer row, int column) {

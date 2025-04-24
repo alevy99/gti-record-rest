@@ -8,25 +8,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ad40fddd-f25d-4f35-ad1a-7d595c2c4863" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/util/AssignmentUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/util/MathUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/annotation/DefaultIfNull.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/add/StudentAssignmentStats.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/StudentAssignmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/StudentAssignmentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/StudentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/StudentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/StudentAssignmentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/StudentAssignmentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/StudentAssignmentDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/StudentAssignmentDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/StudentAssignmentDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/StudentAssignmentDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/PersonServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/PersonServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/StudentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/StudentServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/AbstractTableDataFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/AbstractTableDataFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/AssignmentFrame.form" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/AssignmentFrame.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/FrameManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/FrameManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/component/StudentSimpleTableModel.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/AssignmentFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/AssignmentFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/GroupFrame.form" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/GroupFrame.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/CourseFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/CourseFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/DepartmentFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/DepartmentFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/GroupFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/GroupFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/LoginFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/LoginFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/MainFrame.form" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/MainFrame.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/MainFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/ModuleFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/ModuleFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/PersonFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/PersonFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/StudentFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/StudentFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/StudentReportFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/StudentReportFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/util/AssignmentUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/annotation/InstanceFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/annotation/InstanceFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/Assignment.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/Assignment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/TeacherFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/TeacherFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/UserFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/UserFrame.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,7 +115,7 @@
       <recent name="ie.gti.asdl.rey.gtirecord.core.service.impl" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.GroupFrame">
+  <component name="RunManager" selected="Spring Boot.GtiRecordDesktopGuiApp">
     <configuration name="AssignmentFrame" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ie.gti.asdl.rey.gtirecord.desktop.ui.frame.AssignmentFrame" />
       <module name="gti-record-desktop-app" />
@@ -198,9 +201,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Spring Boot.GtiRecordDesktopGuiApp" />
         <item itemvalue="Application.GroupFrame" />
         <item itemvalue="Application.StudentFrame" />
-        <item itemvalue="Spring Boot.GtiRecordDesktopGuiApp" />
         <item itemvalue="Application.AssignmentFrame" />
         <item itemvalue="Application.CourseFrame" />
       </list>
@@ -225,7 +228,7 @@
       <option name="presentableId" value="Default" />
       <updated>1745163200874</updated>
       <workItem from="1745163203114" duration="99000" />
-      <workItem from="1745163311929" duration="78396000" />
+      <workItem from="1745163311929" duration="84403000" />
     </task>
     <servers />
   </component>
@@ -254,11 +257,6 @@
           <url>file://$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/GroupModuleServiceImpl.java</url>
           <line>80</line>
           <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/StudentServiceImpl.java</url>
-          <line>107</line>
-          <option name="timeStamp" value="42" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/dao/impl/StudentDaoImpl.java</url>
@@ -305,6 +303,29 @@
             <option name="lambda-ordinal" value="-1" />
           </properties>
           <option name="timeStamp" value="62" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/PersonFrame.java</url>
+          <line>91</line>
+          <option name="timeStamp" value="64" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/PersonFrame.java</url>
+          <line>98</line>
+          <option name="timeStamp" value="66" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/PersonFrame.java</url>
+          <line>93</line>
+          <properties>
+            <option name="lambda-ordinal" value="-1" />
+          </properties>
+          <option name="timeStamp" value="67" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/PersonServiceImpl.java</url>
+          <line>49</line>
+          <option name="timeStamp" value="68" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

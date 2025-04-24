@@ -106,10 +106,8 @@ public class StudentServiceImpl implements StudentService {
 
             // Update all the assignments to the student as StudentAssignment records
             if (!studentDB.getGroup().equals(student.getGroup())) {
-                // Delete all the assignments of the group in DB
-                assignmentDao.getByGroupId(studentDB.getGroup().getId()).forEach(assignment -> {
-                    studentAssignmentDao.deleteByAssignmentId(assignment.getId());
-                });
+                // Delete all the student assignments of the student in DB
+                studentAssignmentDao.deleteByStudentPersonId(student.getPerson().getId());
                 // Add all the assignments to the student in a new group as StudentAssignment records
                 assignmentDao.getByGroupId(student.getGroup().getId()).forEach(assignment -> {
                     StudentAssignment studentAssignment = new StudentAssignment();

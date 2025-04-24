@@ -99,4 +99,11 @@ public class StudentAssignmentDaoImpl implements StudentAssignmentDao {
         final String sql = "DELETE FROM student_has_assignment WHERE assignment_id = ?";
         jdbcTemplate.update(sql, assignmentId);
     }
+
+    @Override
+    public void deleteByStudentPersonId(Integer studentPersonId) {
+        if (studentPersonId == null) return;
+        final String sql = "DELETE FROM student_has_assignment WHERE student_person_id = ?";
+        jdbcTemplate.update(sql, studentPersonId);
+    }
 }

@@ -2,6 +2,10 @@ package ie.gti.asdl.rey.gtirecord.desktop.ui;
 
 import ie.gti.asdl.rey.gtirecord.desktop.ui.frame.*;
 import ie.gti.asdl.rey.gtirecord.core.ServiceManager;
+import ie.gti.asdl.rey.gtirecord.model.entity.Role;
+import ie.gti.asdl.rey.gtirecord.model.entity.User;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +16,10 @@ import java.util.Stack;
 
 @Component
 public class FrameManager {
+
+    @Setter
+    @Getter
+    private User activeUser;
 
     private final ServiceManager serviceManager;
 
@@ -98,5 +106,31 @@ public class FrameManager {
     private void showFrame(FrameType frameType) {
         getFrame(frameType).showFrame();
         activeFrameType = frameType;
+    }
+
+    public boolean isLoggedIn() {
+        return activeUser != null;
+    }
+
+    public void logout() {
+        activeUser = null;
+    }
+
+    public boolean isLoggedInAsAdmin() {
+        return isLoggedIn() && activeUser.getRoles().contains(Role.RoleType.ADMIN.asRole());
+    }
+
+    public boolean isLoggedInAsTeacher() {
+        return isLoggedIn() && activeUser.getRoles().contains(Role.RoleType.TEACHER.asRole());
+    }
+
+    public boolean isLoggedInAsStudent() {
+        return isLoggedIn() && activeUser.getRoles().contains(Role.RoleType.STUDENT.asRole());
+    }
+
+    public boolean isLoggedInAsAdminOrTeacher() {
+        return isLoggedIn()
+                && (activeUser.getRoles().contains(Role.RoleType.ADMIN.asRole())
+                    || activeUser.getRoles().contains(Role.RoleType.TEACHER.asRole()));
     }
 }

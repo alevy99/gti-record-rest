@@ -164,7 +164,7 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
                         false, true, true, true, true, true
                 };
                 public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return canEdit[columnIndex];
+                    return getIsEditable() && canEdit[columnIndex];
                 }
                 public Class getColumnClass(int columnIndex) {
                     return types[columnIndex];
@@ -175,8 +175,8 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     }
 
     private void initModuleTable() {
-        ModuleFrame.initTable(tblCourseModules);
-        ModuleFrame.initTable(tblAllModules);
+        ModuleFrame.initTable(tblCourseModules, getIsEditable());
+        ModuleFrame.initTable(tblAllModules, getIsEditable());
 
         SwingUIUtils.addTableFilter(tblCourseModules, tfModuleFilter);
         SwingUIUtils.addTableFilter(tblAllModules, tfModuleFilter, (modelRow) ->  {
@@ -189,9 +189,17 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
         tblAllModules.getSelectionModel().addListSelectionListener(createSafeListSelectionListener(listener -> updateButtonsUI()));
     }
 
+    @Override
+    protected void reloadTableData() {
+        super.reloadTableData();
+        chkAutoAddModule.setEnabled(getIsEditable());
+        btnAddModuleToCourse.setEnabled(getIsEditable());
+        btnRemoveModuleFromCourse.setEnabled(getIsEditable());
+    }
+
     private void updateButtonsUI() {
-        btnAddModuleToCourse.setEnabled(tblAllModules.getSelectedRowCount() > 0);
-        btnRemoveModuleFromCourse.setEnabled(tblCourseModules.getSelectedRowCount() > 0);
+        btnAddModuleToCourse.setEnabled(getIsEditable() && tblAllModules.getSelectedRowCount() > 0);
+        btnRemoveModuleFromCourse.setEnabled(getIsEditable() && tblCourseModules.getSelectedRowCount() > 0);
     }
 
     private void updateModulesTableUI() {
@@ -812,6 +820,11 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     }
 
     @Override
+    protected JButton getAddBtn() {
+        return btnAdd;
+    }
+
+    @Override
     protected JButton getDeleteBtn() {
         return btnDelete;
     }
@@ -829,6 +842,11 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
     @Override
     protected int getDataDescriptionColumn() {
         return COLUMNS.NAME.index;
+    }
+
+    @Override
+    protected boolean getIsEditable() {
+        return getFrameManager().isLoggedInAsAdmin();
     }
 
     @Override
