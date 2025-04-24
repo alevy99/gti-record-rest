@@ -289,7 +289,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
     private boolean canSaveStudentResultAtRow(int row) {
         int modelRow = tblStudentResult.convertRowIndexToModel(row);
         var studentPersonId = getStudentResultTableModel().getData(modelRow).getStudent().getPerson().getId();
-        return studentPersonId.equals(getFrameManager().getActiveUser().getPersonId());
+        return getIsEditable() || studentPersonId.equals(getFrameManager().getActiveUser().getPersonId());
     }
 
     private void updateButtonsUI() {
@@ -782,11 +782,25 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
             int modelRow = tblStudentResult.convertRowIndexToModel(row);
             var studentAssignment = getStudentResultTableModel().getData(modelRow);
             // Fill model data
-            studentAssignment.setIsSubmitted((Boolean) tblStudentResult.getValueAt(row, STUDENT_RES_COLUMNS.IS_SUBMITTED.index));
-            studentAssignment.setIsGraded((Boolean) tblStudentResult.getValueAt(row, STUDENT_RES_COLUMNS.IS_GRADED.index));
             Integer grade = (Integer) tblStudentResult.getValueAt(row, STUDENT_RES_COLUMNS.GRADE.index);
             grade = ensureRange(grade, 0, selectedAssignment.getMaxGrade());
             tblStudentResult.setValueAt(grade, row, STUDENT_RES_COLUMNS.GRADE.index);
+
+            boolean isSubmitted = (Boolean) tblStudentResult.getValueAt(row, STUDENT_RES_COLUMNS.IS_SUBMITTED.index);
+            boolean isGraded = (Boolean) tblStudentResult.getValueAt(row, STUDENT_RES_COLUMNS.IS_GRADED.index);
+            if (grade > 0) {
+                isSubmitted = true; // grade > 0 could be made only if work was submitted
+                isGraded = true;
+            } else if (grade == 0) {
+                isSubmitted = false;
+                isGraded = true;
+            }
+            studentAssignment.setIsSubmitted(isSubmitted);
+            studentAssignment.setIsGraded(isGraded);
+
+            tblStudentResult.setValueAt(isSubmitted, row, STUDENT_RES_COLUMNS.IS_SUBMITTED.index);
+            tblStudentResult.setValueAt(isGraded, row, STUDENT_RES_COLUMNS.IS_GRADED.index);
+
             studentAssignment.setGrade(grade);
             studentAssignmentService.update(studentAssignment);
             // Update table cell
