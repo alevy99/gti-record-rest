@@ -281,8 +281,8 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
         columnModel.getColumn(ALL_STUDENT_COLUMNS.LAST_NAME.index).setMinWidth(70);
         columnModel.getColumn(ALL_STUDENT_COLUMNS.GROUP.index).setMinWidth(70);
 
-//        TableColumn groupColumn = table.getColumnModel().getColumn(STUDENT_COLUMNS.GROUP.index);
-//        groupColumn.setCellRenderer(new PaddedDataCellRenderer());
+        TableColumn groupColumn = tblAllStudents.getColumnModel().getColumn(ALL_STUDENT_COLUMNS.GROUP.index);
+        groupColumn.setCellRenderer(new PaddedDataCellRenderer());
     }
 
     private void initModuleTables() {
@@ -380,14 +380,16 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
         btnAddStudentToGroup.setEnabled(getIsEditable());
         btnRemoveStudentFromGroup.setEnabled(getIsEditable());
         btnOpenReport.setEnabled(tblGroupStudents.getSelectedRowCount() > 0);
+
+        lblLoggedInUsername.setText(getFrameManager().getActiveUser().getUsername());
     }
 
     private void updateButtonsUI() {
         btnAddModuleToGroup.setEnabled(false);
         btnRemoveModuleFromGroup.setEnabled(false);
 
-        btnAddStudentToGroup.setEnabled(tblAllStudents.getSelectedRowCount() > 0);
-        btnRemoveStudentFromGroup.setEnabled(tblGroupStudents.getSelectedRowCount() > 0);
+        btnAddStudentToGroup.setEnabled(getIsEditable() && tblAllStudents.getSelectedRowCount() > 0);
+        btnRemoveStudentFromGroup.setEnabled(getIsEditable() && tblGroupStudents.getSelectedRowCount() > 0);
 
         btnOpenReport.setEnabled(tblGroupStudents.getSelectedRowCount() > 0);
 
@@ -532,6 +534,9 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
         jLabel4 = new javax.swing.JLabel();
         btnOpenModules = new javax.swing.JButton();
         btnClose = new javax.swing.JButton();
+        pnlLoggedInAs4 = new javax.swing.JPanel();
+        lblLoggedInUsername = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -1174,11 +1179,37 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
             }
         });
 
+        lblLoggedInUsername.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblLoggedInUsername.setForeground(new java.awt.Color(255, 0, 0));
+        lblLoggedInUsername.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblLoggedInUsername.setText("logged in as ");
+
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/profile.png"))); // NOI18N
+
+        javax.swing.GroupLayout pnlLoggedInAs4Layout = new javax.swing.GroupLayout(pnlLoggedInAs4);
+        pnlLoggedInAs4.setLayout(pnlLoggedInAs4Layout);
+        pnlLoggedInAs4Layout.setHorizontalGroup(
+            pnlLoggedInAs4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlLoggedInAs4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblLoggedInUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        pnlLoggedInAs4Layout.setVerticalGroup(
+            pnlLoggedInAs4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
+            .addGroup(pnlLoggedInAs4Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(lblLoggedInUsername)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -1187,18 +1218,25 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 18, Short.MAX_VALUE)
+                        .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 1167, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(pnlLoggedInAs4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1355, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1355, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addGap(15, 15, 15))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(jTitle)
-                .addGap(12, 12, 12)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jTitle))
+                    .addComponent(pnlLoggedInAs4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1436,6 +1474,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
             public void run() {
                 ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, args);
                 FrameManager manager = context.getBean(FrameManager.class);
+                manager.setActiveUser(context.getBean(UserService.class).getByUsername("johnm").orElse(null));
                 manager.showSub(FrameManager.FrameType.GROUP);
             }
         });
@@ -1458,6 +1497,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
     private javax.swing.JButton btnRemoveModuleFromGroup;
     private javax.swing.JButton btnRemoveStudentFromGroup;
     private javax.swing.JButton btnSave;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
@@ -1473,6 +1513,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
     private javax.swing.JLabel jTitle;
     private javax.swing.JLabel lblGroupModulesTitle;
     private javax.swing.JLabel lblGroupStudentsTitle;
+    private javax.swing.JLabel lblLoggedInUsername;
     private javax.swing.JPanel pnlAddRemoveModules;
     private javax.swing.JPanel pnlAddRemoveStudents;
     private javax.swing.JPanel pnlAllModules;
@@ -1481,6 +1522,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
     private javax.swing.JPanel pnlGroupFilter;
     private javax.swing.JPanel pnlGroupModules;
     private javax.swing.JPanel pnlGroupStudents;
+    private javax.swing.JPanel pnlLoggedInAs4;
     private javax.swing.JPanel pnlModuleFilter;
     private javax.swing.JPanel pnlModules;
     private javax.swing.JPanel pnlStudentFilter;

@@ -122,7 +122,9 @@ public class UserFrame extends AbstractTableDataFrame<User> {
                         false, true, true, true, true, true
                 };
                 public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return getIsEditable() && canEdit[columnIndex];
+                    // Always allow users to edit their own password, but not others
+                    boolean sameUser = getData(rowIndex).equals(getFrameManager().getActiveUser());
+                    return ( getIsEditable() || (sameUser && columnIndex == USER_TBL_COL.PASSWORD.index)) && canEdit[columnIndex];
                 }
                 public Class getColumnClass(int columnIndex) {
                     return types[columnIndex];
@@ -135,6 +137,13 @@ public class UserFrame extends AbstractTableDataFrame<User> {
     protected void updateUI() {
         super.updateUI();
         btnPersonInfo.setEnabled((selectedUser != null) && (selectedUser.getId() != null));
+    }
+
+    @Override
+    protected void reloadTableData() {
+        super.reloadTableData();
+
+        lblLoggedInUsername.setText(getFrameManager().getActiveUser().getUsername());
     }
 
     /**
@@ -160,6 +169,9 @@ public class UserFrame extends AbstractTableDataFrame<User> {
         jLabel2 = new javax.swing.JLabel();
         tfTableFilter = new javax.swing.JTextField();
         btnPersonInfo = new javax.swing.JButton();
+        pnlLoggedInAs = new javax.swing.JPanel();
+        lblLoggedInUsername = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -331,32 +343,68 @@ public class UserFrame extends AbstractTableDataFrame<User> {
             }
         });
 
+        lblLoggedInUsername.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblLoggedInUsername.setForeground(new java.awt.Color(255, 0, 0));
+        lblLoggedInUsername.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblLoggedInUsername.setText("logged in as ");
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/profile.png"))); // NOI18N
+
+        javax.swing.GroupLayout pnlLoggedInAsLayout = new javax.swing.GroupLayout(pnlLoggedInAs);
+        pnlLoggedInAs.setLayout(pnlLoggedInAsLayout);
+        pnlLoggedInAsLayout.setHorizontalGroup(
+            pnlLoggedInAsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlLoggedInAsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblLoggedInUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        pnlLoggedInAsLayout.setVerticalGroup(
+            pnlLoggedInAsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
+            .addGroup(pnlLoggedInAsLayout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(lblLoggedInUsername)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(pnlControls, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(pnlControls, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(btnPersonInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnPersonInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(20, Short.MAX_VALUE))
+                        .addComponent(pnlLoggedInAs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(jLabel1)
-                .addGap(19, 19, 19)
-                .addComponent(jScrollPane1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel1))
+                    .addComponent(pnlLoggedInAs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -428,6 +476,7 @@ public class UserFrame extends AbstractTableDataFrame<User> {
         java.awt.EventQueue.invokeLater(() -> {
             ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, args);
             FrameManager manager = context.getBean(FrameManager.class);
+            manager.setActiveUser(context.getBean(UserService.class).getByUsername("johnm").orElse(null));
             manager.showSub(USER);
         });
     }
@@ -441,11 +490,14 @@ public class UserFrame extends AbstractTableDataFrame<User> {
     private javax.swing.JButton btnSave;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel jUpdatePanel;
+    private javax.swing.JLabel lblLoggedInUsername;
     private javax.swing.JPanel pnlControls;
+    private javax.swing.JPanel pnlLoggedInAs;
     private PaddedJTable tblUsers;
     private javax.swing.JTextField tfTableFilter;
     // End of variables declaration//GEN-END:variables

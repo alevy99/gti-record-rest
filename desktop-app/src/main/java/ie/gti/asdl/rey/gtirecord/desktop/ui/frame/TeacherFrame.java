@@ -175,6 +175,13 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
         tblAllModules.getSelectionModel().addListSelectionListener(createSafeListSelectionListener(listener -> updateButtonsUI()));
     }
 
+    @Override
+    protected void reloadTableData() {
+        super.reloadTableData();
+        btnAddModuleToTeacher.setEnabled(getIsEditable());
+        btnRemoveModuleFromTeacher.setEnabled(getIsEditable());
+        lblLoggedInUsername.setText(getFrameManager().getActiveUser().getUsername());
+    }
     private void updateButtonsUI() {
         btnAddModuleToTeacher.setEnabled(tblAllModules.getSelectedRowCount() > 0);
         btnRemoveModuleFromTeacher.setEnabled(tblTeacherModules.getSelectedRowCount() > 0);
@@ -256,6 +263,9 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
         tfModuleFilter = new javax.swing.JTextField();
         btnClose = new javax.swing.JButton();
         btnPersonInfo = new javax.swing.JButton();
+        pnlLoggedInAs4 = new javax.swing.JPanel();
+        lblLoggedInUsername = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -605,11 +615,37 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
             }
         });
 
+        lblLoggedInUsername.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblLoggedInUsername.setForeground(new java.awt.Color(255, 0, 0));
+        lblLoggedInUsername.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblLoggedInUsername.setText("logged in as ");
+
+        jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/profile.png"))); // NOI18N
+
+        javax.swing.GroupLayout pnlLoggedInAs4Layout = new javax.swing.GroupLayout(pnlLoggedInAs4);
+        pnlLoggedInAs4.setLayout(pnlLoggedInAs4Layout);
+        pnlLoggedInAs4Layout.setHorizontalGroup(
+            pnlLoggedInAs4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlLoggedInAs4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblLoggedInUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        pnlLoggedInAs4Layout.setVerticalGroup(
+            pnlLoggedInAs4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
+            .addGroup(pnlLoggedInAs4Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(lblLoggedInUsername)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -620,6 +656,9 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
                         .addContainerGap(15, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(pnlLoggedInAs4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(pnlControls, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -628,13 +667,19 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
                                     .addComponent(btnPersonInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btnClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addGap(24, 24, 24))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 826, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(9, 9, 9)
-                .addComponent(jTitle)
-                .addGap(12, 12, 12)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addComponent(jTitle))
+                    .addComponent(pnlLoggedInAs4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -769,6 +814,7 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
             public void run() {
                 ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, args);
                 FrameManager manager = context.getBean(FrameManager.class);
+                manager.setActiveUser(context.getBean(UserService.class).getByUsername("johnm").orElse(null));
                 manager.showSub(TEACHER);
             }
         });
@@ -784,6 +830,7 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
     private javax.swing.JButton btnReload;
     private javax.swing.JButton btnRemoveModuleFromTeacher;
     private javax.swing.JButton btnSave;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
@@ -794,10 +841,12 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
     private javax.swing.JLabel jTitle;
     private javax.swing.JPanel jUpdatePanel;
     private javax.swing.JPanel jUpdatePanel2;
+    private javax.swing.JLabel lblLoggedInUsername;
     private javax.swing.JLabel lblTeacherModulesTitle;
     private javax.swing.JPanel pnlAddRemoveModules;
     private javax.swing.JPanel pnlAllModules;
     private javax.swing.JPanel pnlControls;
+    private javax.swing.JPanel pnlLoggedInAs4;
     private javax.swing.JPanel pnlTeacherModules;
     private PaddedJTable tblAllModules;
     private PaddedJTable tblTeacher;

@@ -152,9 +152,6 @@ public class LoginFrame extends AbstractFrame {
             JOptionPane.showMessageDialog(this, "Invalid username or password");
         } else {
             getFrameManager().setActiveUser(userOpt.get());
-            // userOpt is not empty
-//            MainFrame mainFrame = getFrameManager().getFrame(MAIN);
-//            mainFrame.setUser(userOpt.get());
             getFrameManager().showSub(MAIN);
         }
 
