@@ -41,7 +41,7 @@ public class TeacherModuleServiceImpl implements TeacherModuleService {
     @Transactional
     @Override
     public void delete(Integer teacherPersonId, Integer moduleId) {
-        groupModuleDao.updateTeacherByModuleId(teacherPersonId, moduleId);
+        groupModuleDao.updateTeacherByModuleId(null, moduleId);
         teacherModuleDao.delete(teacherPersonId, moduleId);
     }
 }
