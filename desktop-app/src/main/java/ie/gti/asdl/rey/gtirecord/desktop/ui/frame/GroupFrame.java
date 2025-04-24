@@ -801,7 +801,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
             }
         });
 
-        btnGroupReportPdf.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnGroupReportPdf.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnGroupReportPdf.setForeground(new java.awt.Color(0, 0, 204));
         btnGroupReportPdf.setText("<html><center>Export<br>PDF<br>Report</center></html>");
         btnGroupReportPdf.addActionListener(new java.awt.event.ActionListener() {
@@ -810,7 +810,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
             }
         });
 
-        btnGroupReportWord.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnGroupReportWord.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnGroupReportWord.setForeground(new java.awt.Color(0, 0, 204));
         btnGroupReportWord.setText("<html><center>Export<br>Word<br>Report</center></html>");
         btnGroupReportWord.addActionListener(new java.awt.event.ActionListener() {
@@ -842,11 +842,11 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
                 .addComponent(btnRemoveStudentFromGroup)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnAddStudentToGroup)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnGroupReportPdf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(btnGroupReportPdf, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnGroupReportWord, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pnlAllStudents.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -1259,8 +1259,8 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 781, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 793, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();

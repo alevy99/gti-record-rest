@@ -12,8 +12,8 @@ public interface CourseModuleService {
 
     void delete(Integer courseId, Integer moduleId);
 
-    void deleteByCourseId(Integer courseId);
-
-    void deleteByModuleId(Integer moduleId);
+//    void deleteByCourseId(Integer courseId);
+//
+//    void deleteByModuleId(Integer moduleId);
 
 }

@@ -71,8 +71,8 @@ public class GroupModuleServiceImpl implements GroupModuleService {
     }
 
     @Override
-    public void delete(Integer groupId, Integer moduleId) {
-        groupModuleDao.delete(groupId, moduleId);
+    public void deleteByGroupIdAndModuleId(Integer groupId, Integer moduleId) {
+        groupModuleDao.deleteByGroupIdAndModuleId(groupId, moduleId);
     }
 
     @Transactional

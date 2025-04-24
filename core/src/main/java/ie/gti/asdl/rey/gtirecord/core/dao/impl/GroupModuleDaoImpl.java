@@ -141,6 +141,13 @@ public class GroupModuleDaoImpl implements GroupModuleDao {
     }
 
     @Override
+    public void updateTeacherByModuleId(Integer teacherPersonId, Integer moduleId) {
+        if (moduleId == null) return;
+        final String sql = "UPDATE group_has_module SET teacher_person_id = ? WHERE module_id = ?";
+        jdbcTemplate.update(sql, teacherPersonId, moduleId);
+    }
+
+    @Override
     public void delete(Integer id) {
         if (id == null) return;
         final String sql = "DELETE FROM group_has_module WHERE id = ?";
@@ -148,10 +155,17 @@ public class GroupModuleDaoImpl implements GroupModuleDao {
     }
 
     @Override
-    public void delete(Integer groupId, Integer moduleId) {
+    public void deleteByGroupIdAndModuleId(Integer groupId, Integer moduleId) {
         if ((groupId == null) || (moduleId == null)) return;
         final String sql = "DELETE FROM group_has_module WHERE group_id = ? and module_id = ?";
         jdbcTemplate.update(sql, groupId, moduleId);
+    }
+
+    @Override
+    public void deleteByModuleIdAndTeacherPersonId(Integer moduleId, Integer teacherPersonId) {
+        if ((moduleId == null) || (teacherPersonId == null)) return;
+        final String sql = "DELETE FROM group_has_module WHERE module_id = ? and teacher_person_id = ?";
+        jdbcTemplate.update(sql, moduleId, teacherPersonId);
     }
 
     @Override

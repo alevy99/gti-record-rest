@@ -29,7 +29,7 @@ public interface GroupModuleService {
 
     void delete(Integer id);
 
-    void delete(Integer groupId, Integer moduleId);
+    void deleteByGroupIdAndModuleId(Integer groupId, Integer moduleId);
 
     void deleteByGroupId(Integer groupId);
 }

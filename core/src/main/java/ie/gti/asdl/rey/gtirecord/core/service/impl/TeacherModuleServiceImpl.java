@@ -1,10 +1,13 @@
 package ie.gti.asdl.rey.gtirecord.core.service.impl;
 
+import ie.gti.asdl.rey.gtirecord.core.dao.GroupModuleDao;
 import ie.gti.asdl.rey.gtirecord.core.dao.TeacherModuleDao;
+import ie.gti.asdl.rey.gtirecord.core.service.GroupModuleService;
 import ie.gti.asdl.rey.gtirecord.core.service.TeacherModuleService;
 import ie.gti.asdl.rey.gtirecord.model.entity.TeacherModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,9 +19,12 @@ public class TeacherModuleServiceImpl implements TeacherModuleService {
 
     private final TeacherModuleDao teacherModuleDao;
 
+    private final GroupModuleDao groupModuleDao;
+
     @Autowired
-    public TeacherModuleServiceImpl(TeacherModuleDao teacherModuleDao) {
+    public TeacherModuleServiceImpl(TeacherModuleDao teacherModuleDao, GroupModuleDao groupModuleDao) {
         this.teacherModuleDao = teacherModuleDao;
+        this.groupModuleDao = groupModuleDao;
     }
 
 
@@ -32,8 +38,10 @@ public class TeacherModuleServiceImpl implements TeacherModuleService {
         teacherModuleDao.insert(teacherPersonId, moduleId);
     }
 
+    @Transactional
     @Override
     public void delete(Integer teacherPersonId, Integer moduleId) {
+        groupModuleDao.updateTeacherByModuleId(teacherPersonId, moduleId);
         teacherModuleDao.delete(teacherPersonId, moduleId);
     }
 }

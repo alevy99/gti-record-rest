@@ -22,9 +22,13 @@ public interface GroupModuleDao {
 
     void update(Integer groupId, Integer moduleId, Integer teacherPersonId);
 
+    void updateTeacherByModuleId(Integer teacherPersonId, Integer moduleId);
+
     void delete(Integer id);
 
-    void delete(Integer groupId, Integer moduleId);
+    void deleteByGroupIdAndModuleId(Integer groupId, Integer moduleId);
+
+    void deleteByModuleIdAndTeacherPersonId(Integer moduleId, Integer teacherPersonId);
 
     void deleteByGroupId(Integer groupId);
 

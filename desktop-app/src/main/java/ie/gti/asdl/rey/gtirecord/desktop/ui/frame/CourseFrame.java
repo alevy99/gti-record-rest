@@ -768,13 +768,13 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
             Module module = getCourseModulesTableModel().getData(modelRow);
             if ((module != null) && (module.getId() != null)) {
                 courseModuleService.delete(selectedCourse.getId(), module.getId());
-                // Collect deleted rows, since we can't change model here,
+                // Collect deleted rows, since we can't change the model here,
                 // as RowSorter use it to map viewRows to Model rows properly
                 deletedModelRows.add(modelRow);
                 courseModules.remove(module);
             }
         });
-        // Sort in reverse order, so we will delete from the last to the first
+        // Sort in reverse order, so we will delete it from the last to the first
         deletedModelRows.sort(Comparator.reverseOrder());
         deletedModelRows.forEach(modelRow -> getCourseModulesTableModel().removeRow(modelRow));
 

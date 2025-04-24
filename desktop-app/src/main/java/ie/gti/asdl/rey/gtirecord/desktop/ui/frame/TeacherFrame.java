@@ -715,6 +715,10 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddModuleToTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddModuleToTeacherActionPerformed
+        addModuleToTeacher();
+    }//GEN-LAST:event_btnAddModuleToTeacherActionPerformed
+
+    private void addModuleToTeacher() {
         if ((selectedPair == null)
                 || (selectedPair.getValue1() == null)
                 || (selectedPair.getValue1().getPerson() == null)
@@ -734,9 +738,13 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
             }
         });
         updateModulesTableUI();
-    }//GEN-LAST:event_btnAddModuleToTeacherActionPerformed
+    }
 
     private void btnRemoveModuleFromTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveModuleFromTeacherActionPerformed
+        removeModuleFromTeacher();
+    }//GEN-LAST:event_btnRemoveModuleFromTeacherActionPerformed
+
+    private void removeModuleFromTeacher() {
         if ((selectedPair == null)
                 || (selectedPair.getValue1() == null)
                 || (selectedPair.getValue1().getPerson() == null)
@@ -753,19 +761,18 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
             Module module = getTeacherModulesTableModel().getData(modelRow);
             if ((module != null) && (module.getId() != null)) {
                 teacherModuleService.delete(selectedPair.getValue1().getPerson().getId(), module.getId());
-                // Collect deleted rows, since we can't change model here,
+                // Collect deleted rows, since we can't change the model here,
                 // as RowSorter use it to map viewRows to Model rows properly
                 deletedModelRows.add(modelRow);
                 teacherModules.remove(module);
             }
         });
-        // Sort in reverse order, so we will delete from the last to the first
+        // Sort in reverse order, so we will delete it from the last to the first
         deletedModelRows.sort(Comparator.reverseOrder());
         deletedModelRows.forEach(modelRow -> getTeacherModulesTableModel().removeRow(modelRow));
 
         updateModulesTableUI();
-
-    }//GEN-LAST:event_btnRemoveModuleFromTeacherActionPerformed
+    }
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         onAddLine();

@@ -19,6 +19,8 @@ public interface GroupDao {
 
     List<Group> getAll();
 
+    List<Group> getByCourseId(Integer courseId);
+
     Map<Course, List<Group>> getAllGroupedByCourse();
 
     Optional<Integer> insert(Group group);
