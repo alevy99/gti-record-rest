@@ -138,7 +138,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
         courseColumn.setCellRenderer(dataCellRenderer);
 
         TableColumnModel columnModel = getTable().getColumnModel();
-        columnModel.getColumn(GROUP_COLUMNS.ID.index)     .setMaxWidth(35);
+        columnModel.getColumn(GROUP_COLUMNS.ID.index)     .setMaxWidth(45);
         columnModel.getColumn(GROUP_COLUMNS.NAME.index)   .setMinWidth(100);
         columnModel.getColumn(GROUP_COLUMNS.CODE.index)   .setMinWidth(70);
         columnModel.getColumn(GROUP_COLUMNS.COURSE.index) .setMinWidth(120);
@@ -236,7 +236,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
         }
 
         TableColumnModel columnModel = tblGroupStudents.getColumnModel();
-        columnModel.getColumn(GROUP_STUDENT_COLUMNS.ID.index).setMaxWidth(35);
+        columnModel.getColumn(GROUP_STUDENT_COLUMNS.ID.index).setMaxWidth(45);
         columnModel.getColumn(GROUP_STUDENT_COLUMNS.FIRST_NAME.index).setMinWidth(70);
         columnModel.getColumn(GROUP_STUDENT_COLUMNS.LAST_NAME.index).setMinWidth(70);
         columnModel.getColumn(GROUP_STUDENT_COLUMNS.GRADE_PERCENT.index).setMinWidth(70);
@@ -276,7 +276,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
         }
 
         TableColumnModel columnModel = tblAllStudents.getColumnModel();
-        columnModel.getColumn(ALL_STUDENT_COLUMNS.ID.index).setMaxWidth(35);
+        columnModel.getColumn(ALL_STUDENT_COLUMNS.ID.index).setMaxWidth(45);
         columnModel.getColumn(ALL_STUDENT_COLUMNS.FIRST_NAME.index).setMinWidth(70);
         columnModel.getColumn(ALL_STUDENT_COLUMNS.LAST_NAME.index).setMinWidth(70);
         columnModel.getColumn(ALL_STUDENT_COLUMNS.GROUP.index).setMinWidth(70);
@@ -355,7 +355,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
             });
         }
         TableColumnModel columnModel = tblGroupModules.getColumnModel();
-        columnModel.getColumn(GROUP_MODULE_COLUMNS.ID.index).setMaxWidth(35);
+        columnModel.getColumn(GROUP_MODULE_COLUMNS.ID.index).setMaxWidth(45);
         columnModel.getColumn(GROUP_MODULE_COLUMNS.NAME.index).setMinWidth(80);
         columnModel.getColumn(GROUP_MODULE_COLUMNS.CODE.index).setMinWidth(60);
         columnModel.getColumn(GROUP_MODULE_COLUMNS.TEACHER.index).setMinWidth(150);

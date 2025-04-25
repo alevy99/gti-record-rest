@@ -97,7 +97,7 @@ public class AssignmentFrame extends AbstractTableDataFrame<Assignment> {
         PaddedDataCellRenderer dataCellRenderer = new PaddedDataCellRenderer(() -> assignmentHighlightedRow);
 
         TableColumnModel columnModel = getTable().getColumnModel();
-        columnModel.getColumn(COLUMNS.ID.index)         .setMaxWidth(35);
+        columnModel.getColumn(COLUMNS.ID.index)         .setMaxWidth(45);
         columnModel.getColumn(COLUMNS.NAME.index)       .setMinWidth(100);
         columnModel.getColumn(COLUMNS.WEIGHTING.index)  .setMinWidth(50);
         columnModel.getColumn(COLUMNS.GROUP.index)      .setMinWidth(80);

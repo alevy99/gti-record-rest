@@ -70,7 +70,7 @@ public class ModuleFrame extends AbstractTableDataFrame<Module> {
         }
 
         TableColumnModel columnModel = table.getColumnModel();
-        columnModel.getColumn(COLUMNS.ID.index).setMaxWidth(35);
+        columnModel.getColumn(COLUMNS.ID.index).setMaxWidth(45);
         columnModel.getColumn(COLUMNS.NAME.index).setMinWidth(140);
         columnModel.getColumn(COLUMNS.CODE.index).setMaxWidth(70);
 

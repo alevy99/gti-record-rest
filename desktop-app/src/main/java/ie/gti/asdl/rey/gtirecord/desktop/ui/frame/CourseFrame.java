@@ -107,7 +107,7 @@ public class CourseFrame extends AbstractTableDataFrame<Course> {
         qqiLevelColumn.setCellRenderer(dataCellRenderer);
 
         TableColumnModel columnModel = getTable().getColumnModel();
-        columnModel.getColumn(COLUMNS.ID.index)         .setMaxWidth(35);
+        columnModel.getColumn(COLUMNS.ID.index)         .setMaxWidth(45);
         columnModel.getColumn(COLUMNS.NAME.index)       .setMinWidth(160);
         columnModel.getColumn(COLUMNS.CODE.index)       .setMaxWidth(70);
         columnModel.getColumn(COLUMNS.DEPARTMENT.index) .setMinWidth(120);

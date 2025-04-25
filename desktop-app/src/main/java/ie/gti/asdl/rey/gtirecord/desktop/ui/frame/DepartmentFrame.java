@@ -52,7 +52,7 @@ public class DepartmentFrame extends AbstractTableDataFrame<Department> {
         tblDepartment.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         TableColumnModel columnModel = tblDepartment.getColumnModel();
-        columnModel.getColumn(0).setMaxWidth(35);
+        columnModel.getColumn(0).setMaxWidth(45);
         columnModel.getColumn(1).setMinWidth(120);
 
         // Add selection listener

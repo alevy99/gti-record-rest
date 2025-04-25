@@ -74,7 +74,7 @@ public class UserFrame extends AbstractTableDataFrame<User> {
         tblUsers.setHighlightedRowSupplier(() -> highlightedRow);
 
         TableColumnModel columnModel = tblUsers.getColumnModel();
-        columnModel.getColumn(USER_TBL_COL.ID.index).setMaxWidth(35);
+        columnModel.getColumn(USER_TBL_COL.ID.index).setMaxWidth(45);
         columnModel.getColumn(USER_TBL_COL.USERNAME.index).setMinWidth(60);
         columnModel.getColumn(USER_TBL_COL.PASSWORD.index).setMinWidth(60);
         columnModel.getColumn(USER_TBL_COL.IS_STUDENT.index).setMaxWidth(70);
