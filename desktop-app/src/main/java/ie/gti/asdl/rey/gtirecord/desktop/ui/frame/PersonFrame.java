@@ -164,37 +164,37 @@ public class PersonFrame extends AbstractFrame {
 
         lblUsername.setText(user.getUsername());
         tfFirstName.setText(person.getFirstName());
-        addTextFieldValidation(tfFirstName, lblFNValidStatus, new NameValidator(), this::updateValidationStatus, true);
+        addTextFieldValidation(tfFirstName, lblFNValidStatus, new NameValidator(), this::updateValidationStatus);
 
         tfLastName.setText(person.getLastName());
-        addTextFieldValidation(tfLastName, lblLNValidStatus, new NameValidator(), this::updateValidationStatus, true);
+        addTextFieldValidation(tfLastName, lblLNValidStatus, new NameValidator(), this::updateValidationStatus);
 
         cbGender.setSelectedItem(person.getGender());
         dobDatePicker.setDate(person.getDateOfBirth());
 
         tfEmail.setText(person.getEmail());
-        addTextFieldValidation(tfEmail, lblEmailValidStatus, new OptionalValidator<>(new EmailValidator()), this::updateValidationStatus, true);
+        addTextFieldValidation(tfEmail, lblEmailValidStatus, new OptionalValidator<>(new EmailValidator()), this::updateValidationStatus);
 
         tfPhoneNumber.setText(person.getPhoneNum());
-        addTextFieldValidation(tfPhoneNumber, lblPhoneValidStatus, new OptionalValidator<>(new PhoneNumberValidator()), this::updateValidationStatus, true);
+        addTextFieldValidation(tfPhoneNumber, lblPhoneValidStatus, new OptionalValidator<>(new PhoneNumberValidator()), this::updateValidationStatus);
 
         tfPPSN.setText(person.getPpsn());
-        addTextFieldValidation(tfPPSN, lblPpsnValidStatus, new OptionalValidator<>(new PpsnValidator()), this::updateValidationStatus, true);
+        addTextFieldValidation(tfPPSN, lblPpsnValidStatus, new OptionalValidator<>(new PpsnValidator()), this::updateValidationStatus);
 
         Address address = person.getAddress();
         if (address != null) {
             tfAddressLine1.setText(address.getLine1());
-            addTextFieldValidation(tfAddressLine1, lblAddrLine1ValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus, true);
+            addTextFieldValidation(tfAddressLine1, lblAddrLine1ValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus);
             tfAddressLine2.setText(address.getLine2());
-            addTextFieldValidation(tfAddressLine2, lblAddrLine2ValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus, true);
+            addTextFieldValidation(tfAddressLine2, lblAddrLine2ValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus);
             tfAddressCity.setText(address.getCity());
-            addTextFieldValidation(tfAddressCity, lblCityValidStatus, new OptionalValidator<>(new LengthValidator(0, 45)), this::updateValidationStatus, true);
+            addTextFieldValidation(tfAddressCity, lblCityValidStatus, new OptionalValidator<>(new LengthValidator(0, 45)), this::updateValidationStatus);
             tfAddressCounty.setText(address.getCounty());
-            addTextFieldValidation(tfAddressCounty, lblCountyValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus, true);
+            addTextFieldValidation(tfAddressCounty, lblCountyValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus);
             tfAddressCountry.setText(address.getCountry());
-            addTextFieldValidation(tfAddressCountry, lblCountryValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus, true);
+            addTextFieldValidation(tfAddressCountry, lblCountryValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus);
             tfAddressEircode.setText(address.getEirCode());
-            addTextFieldValidation(tfAddressEircode, lblEircodeValidStatus, new OptionalValidator<>(new EircodeValidator()), this::updateValidationStatus, true);
+            addTextFieldValidation(tfAddressEircode, lblEircodeValidStatus, new OptionalValidator<>(new EircodeValidator()), this::updateValidationStatus);
         }
 
         tfFirstName.setEditable(getFrameManager().isLoggedInAsAdmin());

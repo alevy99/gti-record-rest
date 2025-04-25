@@ -103,13 +103,15 @@ public class SwingUIUtils {
         };
     }
 
-    private static final Pattern EMAIL_PATTERN =
-            Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+
+    public static void addTextFieldValidation(JTextField textField, JLabel lblValidationStatus,
+                                              Validator<String> validator, BiConsumer<JTextField, Boolean> validationCallback) {
+        addTextFieldValidation(textField, lblValidationStatus, validator, validationCallback, true);
+    }
 
     public static void addTextFieldValidation(JTextField textField, JLabel lblValidationStatus,
                                               Validator<String> validator, BiConsumer<JTextField, Boolean> validationCallback,
-                                              boolean validateImmediately
-    ) {
+                                              boolean validateImmediately) {
         DocumentListener listener = new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
