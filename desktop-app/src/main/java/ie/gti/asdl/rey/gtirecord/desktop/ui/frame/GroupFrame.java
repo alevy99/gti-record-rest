@@ -492,9 +492,14 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
         btnSave = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
         btnReload = new javax.swing.JButton();
-        pnlGroupFilter = new javax.swing.JPanel();
+        pnlGroupFilter1 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        tfGroupNameFilter = new javax.swing.JTextField();
+        tfGroupCodeFilter = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        tfCourseFilter = new javax.swing.JTextField();
+        pnlGroupFilter = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        tfGroupTableFilter = new javax.swing.JTextField();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         pnlStudents = new javax.swing.JPanel();
         pnlGroupStudents = new javax.swing.JPanel();
@@ -613,15 +618,60 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
             }
         });
 
-        pnlGroupFilter.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        pnlGroupFilter1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 3, 15)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 51, 204));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel3.setText("Filter: name like");
+
+        tfGroupNameFilter.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        tfGroupNameFilter.setForeground(new java.awt.Color(0, 51, 204));
+
+        tfGroupCodeFilter.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        tfGroupCodeFilter.setForeground(new java.awt.Color(0, 51, 204));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 3, 15)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 51, 204));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel2.setText("Group filter:");
+        jLabel2.setText("and code like");
 
-        tfCourseFilter.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        tfCourseFilter.setForeground(new java.awt.Color(0, 51, 204));
+        javax.swing.GroupLayout pnlGroupFilter1Layout = new javax.swing.GroupLayout(pnlGroupFilter1);
+        pnlGroupFilter1.setLayout(pnlGroupFilter1Layout);
+        pnlGroupFilter1Layout.setHorizontalGroup(
+            pnlGroupFilter1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlGroupFilter1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(tfGroupNameFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfGroupCodeFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        pnlGroupFilter1Layout.setVerticalGroup(
+            pnlGroupFilter1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlGroupFilter1Layout.createSequentialGroup()
+                .addGroup(pnlGroupFilter1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlGroupFilter1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(tfGroupCodeFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlGroupFilter1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tfGroupNameFilter)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        pnlGroupFilter.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 3, 15)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(0, 51, 204));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel5.setText("Table filter:");
+
+        tfGroupTableFilter.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        tfGroupTableFilter.setForeground(new java.awt.Color(0, 51, 204));
 
         javax.swing.GroupLayout pnlGroupFilterLayout = new javax.swing.GroupLayout(pnlGroupFilter);
         pnlGroupFilter.setLayout(pnlGroupFilterLayout);
@@ -629,17 +679,18 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
             pnlGroupFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlGroupFilterLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfCourseFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(tfGroupTableFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                .addContainerGap())
         );
         pnlGroupFilterLayout.setVerticalGroup(
             pnlGroupFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlGroupFilterLayout.createSequentialGroup()
-                .addComponent(jLabel2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(tfCourseFilter)
+                .addGroup(pnlGroupFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfGroupTableFilter))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout pnlControlsLayout = new javax.swing.GroupLayout(pnlControls);
@@ -656,15 +707,18 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlGroupFilter1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlGroupFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(185, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlControlsLayout.setVerticalGroup(
             pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlControlsLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlGroupFilter, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlGroupFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pnlGroupFilter1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1214,9 +1268,9 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(pnlControls, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(pnlControls, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1239,9 +1293,9 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pnlControls, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(48, 48, 48))
@@ -1499,7 +1553,9 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
     private javax.swing.JButton btnSave;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -1520,6 +1576,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
     private javax.swing.JPanel pnlAllStudents;
     private javax.swing.JPanel pnlControls;
     private javax.swing.JPanel pnlGroupFilter;
+    private javax.swing.JPanel pnlGroupFilter1;
     private javax.swing.JPanel pnlGroupModules;
     private javax.swing.JPanel pnlGroupStudents;
     private javax.swing.JPanel pnlLoggedInAs4;
@@ -1532,7 +1589,9 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
     private PaddedJTable tblGroup;
     private PaddedJTable tblGroupModules;
     private PaddedJTable tblGroupStudents;
-    private javax.swing.JTextField tfCourseFilter;
+    private javax.swing.JTextField tfGroupCodeFilter;
+    private javax.swing.JTextField tfGroupNameFilter;
+    private javax.swing.JTextField tfGroupTableFilter;
     private javax.swing.JTextField tfModuleFilter;
     private javax.swing.JTextField tfStudentFilter;
     // End of variables declaration//GEN-END:variables
