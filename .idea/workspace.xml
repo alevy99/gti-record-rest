@@ -8,19 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ad40fddd-f25d-4f35-ad1a-7d595c2c4863" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/validation/EircodeValidator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/validation/LengthValidator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/validation/OptionalValidator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/validation/PhoneNumberValidator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/validation/PpsnValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/validation/ValidationBinding.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/validation/ValidationManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/StudentAssignmentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/StudentAssignmentServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/PersonFrame.form" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/PersonFrame.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/PersonFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/PersonFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/StudentReportFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/StudentReportFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/util/SwingUIUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/util/SwingUIUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/add/StudentAssignmentStats.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/add/StudentAssignmentStats.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -220,7 +213,7 @@
       <option name="presentableId" value="Default" />
       <updated>1745163200874</updated>
       <workItem from="1745163203114" duration="99000" />
-      <workItem from="1745163311929" duration="108005000" />
+      <workItem from="1745163311929" duration="110483000" />
     </task>
     <servers />
   </component>

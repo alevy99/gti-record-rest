@@ -85,8 +85,8 @@ public class SwingUIUtils {
                 JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION;
     }
 
-    // Checks if event is a part of multiple firing events, like f.e. ListSelectionListener
-    // returns ListSelectionListener which fires only once
+    // Checks if an event is a part of multiple firing events, like f.e. ListSelectionListener
+    // returns ListSelectionListener, which fires only once
     public static ListSelectionListener createSafeListSelectionListener(Consumer<ListSelectionEvent> consumer) {
         return event -> {
             if (!event.getValueIsAdjusting()) {
@@ -95,62 +95,61 @@ public class SwingUIUtils {
         };
     }
 
-    public static ItemListener createSafeItemListener(Consumer<ItemListener> consumer) {
-        return event -> {
-//            if (!event.getValueIsAdjusting()) {
-//                consumer.accept(event);
+//    public static ItemListener createSafeItemListener(Consumer<ItemListener> consumer) {
+//        return event -> {
+////            if (!event.getValueIsAdjusting()) {
+////                consumer.accept(event);
+////            }
+//        };
+//    }
+
+//    public static void addTextFieldValidation(JTextField textField, JLabel lblValidationStatus,
+//                                              Validator<String> validator, BiConsumer<JTextField, Boolean> validationCallback) {
+//        addTextFieldValidation(textField, lblValidationStatus, validator, validationCallback, true);
+//    }
+//
+//    public static void addTextFieldValidation(JTextField textField, JLabel lblValidationStatus,
+//                                              Validator<String> validator, BiConsumer<JTextField, Boolean> validationCallback,
+//                                              boolean validateImmediately) {
+//        DocumentListener listener = new DocumentListener() {
+//            @Override
+//            public void insertUpdate(DocumentEvent e) {
+//                validate();
 //            }
-        };
-    }
-
-
-    public static void addTextFieldValidation(JTextField textField, JLabel lblValidationStatus,
-                                              Validator<String> validator, BiConsumer<JTextField, Boolean> validationCallback) {
-        addTextFieldValidation(textField, lblValidationStatus, validator, validationCallback, true);
-    }
-
-    public static void addTextFieldValidation(JTextField textField, JLabel lblValidationStatus,
-                                              Validator<String> validator, BiConsumer<JTextField, Boolean> validationCallback,
-                                              boolean validateImmediately) {
-        DocumentListener listener = new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                validate();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                validate();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                validate();
-            }
-
-            private void validate() {
-                String text = textField.getText();
-                boolean isBlank = text == null || text.trim().isEmpty();
-                boolean isValid = validator.isValid(text);
-
-                if (isBlank && validator instanceof OptionalValidator) {
-                    // Don't show any validation sign in UI
-                    lblValidationStatus.setText("");
-                    validationCallback.accept(textField, true); // considered valid
-                } else {
-                    lblValidationStatus.setText(isValid ? "✔" : "✘");
-                    lblValidationStatus.setForeground(isValid ? Color.GREEN : Color.RED);
-                    validationCallback.accept(textField, isValid);
-                }
-            }
-        };
-
-        textField.getDocument().addDocumentListener(listener);
-
-        if (validateImmediately) {
-            // Программно валидируем текущее значение
-            listener.changedUpdate(null);  // safe null, просто вызывает validate()
-        }
-    }
+//
+//            @Override
+//            public void removeUpdate(DocumentEvent e) {
+//                validate();
+//            }
+//
+//            @Override
+//            public void changedUpdate(DocumentEvent e) {
+//                validate();
+//            }
+//
+//            private void validate() {
+//                String text = textField.getText();
+//                boolean isBlank = text == null || text.trim().isEmpty();
+//                boolean isValid = validator.isValid(text);
+//
+//                if (isBlank && validator instanceof OptionalValidator) {
+//                    // Don't show any validation sign in UI
+//                    lblValidationStatus.setText("");
+//                    validationCallback.accept(textField, true); // considered valid
+//                } else {
+//                    lblValidationStatus.setText(isValid ? "✔" : "✘");
+//                    lblValidationStatus.setForeground(isValid ? Color.GREEN : Color.RED);
+//                    validationCallback.accept(textField, isValid);
+//                }
+//            }
+//        };
+//
+//        textField.getDocument().addDocumentListener(listener);
+//
+//        if (validateImmediately) {
+//            // Программно валидируем текущее значение
+//            listener.changedUpdate(null);  // safe null, просто вызывает validate()
+//        }
+//    }
 
 }

@@ -24,19 +24,12 @@ import lombok.Setter;
 import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.PERSON;
 import static ie.gti.asdl.rey.gtirecord.desktop.util.ImageUtils.resizeIcon;
-import static ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils.addTextFieldValidation;
 
 /**
  * @author Andrei
@@ -57,7 +50,11 @@ public class PersonFrame extends AbstractFrame {
 
     private final AddressService addressService;
 
-    private final Map<JTextField, Boolean> validationStatusMap = new HashMap<>();
+    private ValidationManager validationManager;
+
+//    private final Map<JTextField, Boolean> validationStatusMap = new HashMap<>();
+//
+//    private final List<ValidationBinding> validationBindings = new ArrayList<>();
 
     /**
      * Creates new form PersonFrame
@@ -70,13 +67,15 @@ public class PersonFrame extends AbstractFrame {
         addressService = serviceManager.getAddressService();
         initDOBDatePicker();
         initComponents();
-        initUI();
+        initCustomComponentsUI();
+        initFrame();
     }
 
     @Override
     protected void initFrame() {
         super.initFrame();
-        reInitForm();
+        initValidators();
+//        reInitForm();
     }
 
     @Override
@@ -86,17 +85,16 @@ public class PersonFrame extends AbstractFrame {
     }
 
     private void reInitForm() {
-        resetValidation();
+        validationManager.resetValidation();
         loadData();
         updateUI();
         lblLoggedInUsername.setText(getFrameManager().getActiveUser().getUsername());
-
     }
 
-    private void resetValidation() {
-        updateValidationStatus(tfFirstName, false);
-        updateValidationStatus(tfLastName, false);
-    }
+//    private void resetValidation() {
+//        updateValidationStatus(tfFirstName, false);
+//        updateValidationStatus(tfLastName, false);
+//    }
 
     private void loadData() {
         if (person == null) {
@@ -143,19 +141,48 @@ public class PersonFrame extends AbstractFrame {
         lblLNValidStatus.setText("");
     }
 
-    private void updateValidationStatus(JTextField field, Boolean isValid) {
-        validationStatusMap.put(field, isValid);
-        updateSaveButtonState();
-    }
-
-    private void updateSaveButtonState() {
-        boolean allValid = validationStatusMap.values().stream().allMatch(Boolean::booleanValue);
-        boolean enabled = isEditable() && allValid;
-        btnSave.setEnabled(enabled);
-    }
+//    private void updateValidationStatus(JTextField field, Boolean isValid) {
+//        validationStatusMap.put(field, isValid);
+//        updateSaveButtonState();
+//    }
+//
+//    private void updateSaveButtonState() {
+//        boolean allValid = validationStatusMap.values().stream().allMatch(Boolean::booleanValue);
+//        boolean enabled = isEditable() && allValid;
+//        btnSave.setEnabled(enabled);
+//    }
 
     private boolean isEditable() {
         return getFrameManager().isLoggedInAsAdmin() || getFrameManager().getActiveUser().equals(user);
+    }
+
+    private void initValidators() {
+        validationManager = new ValidationManager(btnSave);
+
+        validationManager.addField(tfFirstName, lblFNValidStatus, new NameValidator());
+        validationManager.addField(tfLastName, lblLNValidStatus, new NameValidator());
+        validationManager.addField(tfEmail, lblEmailValidStatus, new OptionalValidator<>(new EmailValidator()));
+        validationManager.addField(tfPhoneNumber, lblPhoneValidStatus, new OptionalValidator<>(new PhoneNumberValidator()));
+        validationManager.addField(tfPPSN, lblPpsnValidStatus, new OptionalValidator<>(new PpsnValidator()));
+        validationManager.addField(tfAddressLine1, lblAddrLine1ValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)));
+        validationManager.addField(tfAddressLine2, lblAddrLine2ValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)));
+        validationManager.addField(tfAddressCity, lblCityValidStatus, new OptionalValidator<>(new LengthValidator(0, 45)));
+        validationManager.addField(tfAddressCounty, lblCountyValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)));
+        validationManager.addField(tfAddressCountry, lblCountryValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)));
+        validationManager.addField(tfAddressEircode, lblEircodeValidStatus, new OptionalValidator<>(new EircodeValidator()));
+
+
+//        addTextFieldValidation(tfFirstName, lblFNValidStatus, new NameValidator(), this::updateValidationStatus);
+//        addTextFieldValidation(tfLastName, lblLNValidStatus, new NameValidator(), this::updateValidationStatus);
+//        addTextFieldValidation(tfEmail, lblEmailValidStatus, new OptionalValidator<>(new EmailValidator()), this::updateValidationStatus);
+//        addTextFieldValidation(tfPhoneNumber, lblPhoneValidStatus, new OptionalValidator<>(new PhoneNumberValidator()), this::updateValidationStatus);
+//        addTextFieldValidation(tfPPSN, lblPpsnValidStatus, new OptionalValidator<>(new PpsnValidator()), this::updateValidationStatus);
+//        addTextFieldValidation(tfAddressLine1, lblAddrLine1ValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus);
+//        addTextFieldValidation(tfAddressLine2, lblAddrLine2ValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus);
+//        addTextFieldValidation(tfAddressCity, lblCityValidStatus, new OptionalValidator<>(new LengthValidator(0, 45)), this::updateValidationStatus);
+//        addTextFieldValidation(tfAddressCounty, lblCountyValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus);
+//        addTextFieldValidation(tfAddressCountry, lblCountryValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus);
+//        addTextFieldValidation(tfAddressEircode, lblEircodeValidStatus, new OptionalValidator<>(new EircodeValidator()), this::updateValidationStatus);
     }
 
     private void updateUI() {
@@ -164,44 +191,45 @@ public class PersonFrame extends AbstractFrame {
 
         lblUsername.setText(user.getUsername());
         tfFirstName.setText(person.getFirstName());
-        addTextFieldValidation(tfFirstName, lblFNValidStatus, new NameValidator(), this::updateValidationStatus);
+//        addTextFieldValidation(tfFirstName, lblFNValidStatus, new NameValidator(), this::updateValidationStatus);
 
         tfLastName.setText(person.getLastName());
-        addTextFieldValidation(tfLastName, lblLNValidStatus, new NameValidator(), this::updateValidationStatus);
+//        addTextFieldValidation(tfLastName, lblLNValidStatus, new NameValidator(), this::updateValidationStatus);
 
         cbGender.setSelectedItem(person.getGender());
         dobDatePicker.setDate(person.getDateOfBirth());
 
         tfEmail.setText(person.getEmail());
-        addTextFieldValidation(tfEmail, lblEmailValidStatus, new OptionalValidator<>(new EmailValidator()), this::updateValidationStatus);
+//        addTextFieldValidation(tfEmail, lblEmailValidStatus, new OptionalValidator<>(new EmailValidator()), this::updateValidationStatus);
 
         tfPhoneNumber.setText(person.getPhoneNum());
-        addTextFieldValidation(tfPhoneNumber, lblPhoneValidStatus, new OptionalValidator<>(new PhoneNumberValidator()), this::updateValidationStatus);
+//        addTextFieldValidation(tfPhoneNumber, lblPhoneValidStatus, new OptionalValidator<>(new PhoneNumberValidator()), this::updateValidationStatus);
 
         tfPPSN.setText(person.getPpsn());
-        addTextFieldValidation(tfPPSN, lblPpsnValidStatus, new OptionalValidator<>(new PpsnValidator()), this::updateValidationStatus);
+//        addTextFieldValidation(tfPPSN, lblPpsnValidStatus, new OptionalValidator<>(new PpsnValidator()), this::updateValidationStatus);
 
         Address address = person.getAddress();
         if (address != null) {
             tfAddressLine1.setText(address.getLine1());
-            addTextFieldValidation(tfAddressLine1, lblAddrLine1ValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus);
+//            addTextFieldValidation(tfAddressLine1, lblAddrLine1ValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus);
             tfAddressLine2.setText(address.getLine2());
-            addTextFieldValidation(tfAddressLine2, lblAddrLine2ValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus);
+//            addTextFieldValidation(tfAddressLine2, lblAddrLine2ValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus);
             tfAddressCity.setText(address.getCity());
-            addTextFieldValidation(tfAddressCity, lblCityValidStatus, new OptionalValidator<>(new LengthValidator(0, 45)), this::updateValidationStatus);
+//            addTextFieldValidation(tfAddressCity, lblCityValidStatus, new OptionalValidator<>(new LengthValidator(0, 45)), this::updateValidationStatus);
             tfAddressCounty.setText(address.getCounty());
-            addTextFieldValidation(tfAddressCounty, lblCountyValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus);
+//            addTextFieldValidation(tfAddressCounty, lblCountyValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus);
             tfAddressCountry.setText(address.getCountry());
-            addTextFieldValidation(tfAddressCountry, lblCountryValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus);
+//            addTextFieldValidation(tfAddressCountry, lblCountryValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus);
             tfAddressEircode.setText(address.getEirCode());
-            addTextFieldValidation(tfAddressEircode, lblEircodeValidStatus, new OptionalValidator<>(new EircodeValidator()), this::updateValidationStatus);
+//            addTextFieldValidation(tfAddressEircode, lblEircodeValidStatus, new OptionalValidator<>(new EircodeValidator()), this::updateValidationStatus);
         }
 
         tfFirstName.setEditable(getFrameManager().isLoggedInAsAdmin());
         tfLastName.setEditable(getFrameManager().isLoggedInAsAdmin());
 
         boolean editable = isEditable();
-        cbGender.setEditable(editable);
+        cbGender.setEditable(false);
+        cbGender.setEnabled(editable);
         dobDatePicker.setEnabled(editable);
         tfEmail.setEditable(editable);
         tfPhoneNumber.setEditable(editable);
@@ -213,7 +241,8 @@ public class PersonFrame extends AbstractFrame {
         tfAddressCountry.setEditable(editable);
         tfAddressEircode.setEditable(editable);
 
-        updateSaveButtonState();
+        validationManager.validateAll();
+//        updateSaveButtonState();
     }
 
     private void fillPersonFromUI() {
@@ -249,7 +278,7 @@ public class PersonFrame extends AbstractFrame {
         person = null;
     }
 
-    private void initUI() {
+    private void initCustomComponentsUI() {
         tfDOB.setVisible(false);
 
         javax.swing.GroupLayout pnlDOBLayout = new javax.swing.GroupLayout(pnlDOB);
@@ -1030,7 +1059,7 @@ public class PersonFrame extends AbstractFrame {
             public void run() {
                 ApplicationContext context = SpringGuiRunner.run(GtiRecordDesktopGuiApp.class, args);
                 FrameManager manager = context.getBean(FrameManager.class);
-                manager.setActiveUser(context.getBean(UserService.class).getByUsername("johnm").orElse(null));
+                manager.setActiveUser(context.getBean(UserService.class).getByUsername("rey").orElse(null));
                 PersonFrame personFrame = manager.getFrame(PERSON);
 
                 context.getBean(PersonService.class).getById(6).ifPresent(personFrame::setPerson);
