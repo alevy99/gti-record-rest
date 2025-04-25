@@ -32,7 +32,7 @@ import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.USER;
 /**
  * @author Andrei
  */
-/// Do not apply SpringBootApp, if we use 'web' profile
+/// Do not apply SpringBootApp if we use 'web' profile
 //@Profile("!web")
 public class UserFrame extends AbstractTableDataFrame<User> {
 
