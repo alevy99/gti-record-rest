@@ -1,5 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.mapper;
 
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import ie.gti.asdl.rey.gtirecord.model.entity.Teacher;
 import ie.gti.asdl.rey.gtirecord.model.entity.TeacherModule;
@@ -20,7 +21,7 @@ import java.sql.SQLException;
     @NotNull
     @Override
     public TeacherModule mapRow(@NonNull ResultSet resultSet, int rowNum) throws SQLException {
-        TeacherModule teacherModule = new TeacherModule();
+        TeacherModule teacherModule = InstanceFactory.create(TeacherModule.class);
         teacherModule.setTeacher(teacherRowMapper.mapRow(resultSet, rowNum));
         teacherModule.setModule(moduleRowMapper.mapRow(resultSet, rowNum));
 

@@ -1,5 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.mapper;
 
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.Assignment;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,7 +21,7 @@ public class AssignmentRowMapper implements RowMapper<Assignment> {
     public Assignment mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
         ResultSetHelper helper = new ResultSetHelper(rs);
 
-        Assignment assignment = new Assignment();
+        Assignment assignment = InstanceFactory.create(Assignment.class);
         helper.setIntIfPresent("assignment_id", assignment::setId);
         helper.setStringIfPresent("assignment_name", assignment::setName);
         helper.setIntIfPresent("weighting", assignment::setWeighting);

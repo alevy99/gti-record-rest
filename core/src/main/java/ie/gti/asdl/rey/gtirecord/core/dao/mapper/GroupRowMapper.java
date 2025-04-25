@@ -1,5 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.mapper;
 
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,7 +21,7 @@ public class GroupRowMapper implements RowMapper<Group> {
     public Group mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
         ResultSetHelper helper = new ResultSetHelper(rs);
 
-        Group group = new Group();
+        Group group = InstanceFactory.create(Group.class);
         helper.setIntIfPresent("group_id", group::setId);
         helper.setStringIfPresent("group_name", group::setName);
         helper.setStringIfPresent("group_code", group::setCode);

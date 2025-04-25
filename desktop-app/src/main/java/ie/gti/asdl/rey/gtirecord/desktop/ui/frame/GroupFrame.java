@@ -1365,12 +1365,9 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
             Module module = getAllModulesTableModel().getData(modelRow);
             if ((module != null) && (module.getId() != null)) {
                 // Insert without the teacher. Teacher could be set later on
-                GroupModule groupModule = new GroupModule();
+                GroupModule groupModule = InstanceFactory.create(GroupModule.class);
                 groupModule.setGroup(selectedGroup);
                 groupModule.setModule(module);
-                Teacher teacher = new Teacher();
-                teacher.setPerson(new Person());
-                groupModule.setTeacher(teacher);
                 groupModuleService.insert(groupModule);
                 getGroupModulesTableModel().addRow(groupModule, new Object[] {module.getId(), module.getName(), module.getCode(), null});
                 groupModules.add(groupModule);

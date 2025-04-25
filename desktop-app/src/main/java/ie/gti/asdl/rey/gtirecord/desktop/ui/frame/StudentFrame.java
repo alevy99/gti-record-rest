@@ -239,7 +239,7 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
             selectedPair = getTableModel().getData(tblStudent.convertRowIndexToModel(row));
 
             Student student = selectedPair.getValue1();
-            selectedDepartment = departmentsByGroup.getOrDefault(student.getGroup(), new Department());
+            selectedDepartment = departmentsByGroup.getOrDefault(student.getGroup(), InstanceFactory.create(Department.class));
             getDeparmentTableModel().getDataRow(selectedDepartment).ifPresentOrElse(modelRow -> {
                 int viewRow = tblDepartment.convertRowIndexToView(modelRow);
                 tblDepartment.setRowSelectionInterval(viewRow, viewRow);
@@ -1066,7 +1066,7 @@ public class StudentFrame extends AbstractTableDataFrame<Pair<Student, User>> {
                 user.setPersonId(student.getPerson().getId());
                 pair.setValue2(user);
             }, () -> {
-                User user = new User();
+                User user = InstanceFactory.create(User.class);
                 user.setPersonId(student.getPerson().getId());
                 user.getRoles().add(Role.RoleType.STUDENT.asRole());
                 pair.setValue2(user);

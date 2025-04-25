@@ -1,5 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.mapper;
 
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,7 +14,7 @@ public class UserRowMapper implements RowMapper<User> {
     @NotNull
     @Override
     public User mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        User user = new User();
+        User user = InstanceFactory.create(User.class);
         user.setId(resultSet.getInt("user_id"));
         Integer personId = resultSet.getInt("person_id");
         if (resultSet.wasNull()) {

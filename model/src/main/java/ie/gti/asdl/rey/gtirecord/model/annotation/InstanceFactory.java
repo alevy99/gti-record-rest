@@ -1,5 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.model.annotation;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.time.LocalDate;
@@ -20,7 +21,10 @@ public class InstanceFactory {
 
     public static <T> T create(Class<T> clazz) {
         try {
-            T instance = clazz.getDeclaredConstructor().newInstance();
+            Constructor<T> ctor = clazz.getDeclaredConstructor();
+            ctor.setAccessible(true);   // открыть private-конструктор
+            T instance = ctor.newInstance();
+//            T instance = clazz.getDeclaredConstructor().newInstance();
 
             for (Field field : clazz.getDeclaredFields()) {
                 field.setAccessible(true);

@@ -913,7 +913,7 @@ public class TeacherFrame extends AbstractTableDataFrame<Pair<Teacher, User>> {
                 user.setPersonId(teacher.getPerson().getId());
                 pair.setValue2(user);
             }, () -> {
-                User user = new User();
+                User user = InstanceFactory.create(User.class);
                 user.setPersonId(teacher.getPerson().getId());
                 user.getRoles().add(Role.RoleType.TEACHER.asRole());
                 pair.setValue2(user);

@@ -3,6 +3,7 @@ package ie.gti.asdl.rey.gtirecord.core.service.impl;
 import ie.gti.asdl.rey.gtirecord.core.dao.*;
 import ie.gti.asdl.rey.gtirecord.core.service.StudentService;
 import ie.gti.asdl.rey.gtirecord.core.service.UserService;
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.*;
 import ie.gti.asdl.rey.gtirecord.model.entity.add.StudentAssignmentStats;
 import ie.gti.asdl.rey.gtirecord.model.util.ContainerOfAny;
@@ -71,7 +72,7 @@ public class StudentServiceImpl implements StudentService {
         // Add all the assignments to the student as StudentAssignment records
         if (student.getGroup().getId() != null) {
             assignmentDao.getByGroupId(student.getGroup().getId()).forEach(assignment -> {
-                StudentAssignment studentAssignment = new StudentAssignment();
+                StudentAssignment studentAssignment = InstanceFactory.create(StudentAssignment.class);
                 studentAssignment.setStudent(student);
                 studentAssignment.setAssignment(assignment);
                 studentAssignmentDao.insert(studentAssignment);
@@ -110,7 +111,7 @@ public class StudentServiceImpl implements StudentService {
                 studentAssignmentDao.deleteByStudentPersonId(student.getPerson().getId());
                 // Add all the assignments to the student in a new group as StudentAssignment records
                 assignmentDao.getByGroupId(student.getGroup().getId()).forEach(assignment -> {
-                    StudentAssignment studentAssignment = new StudentAssignment();
+                    StudentAssignment studentAssignment = InstanceFactory.create(StudentAssignment.class);
                     studentAssignment.setStudent(student);
                     studentAssignment.setAssignment(assignment);
                     studentAssignmentDao.insert(studentAssignment);

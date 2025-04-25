@@ -1,5 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.mapper;
 
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.Teacher;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,7 +21,7 @@ public class TeacherRowMapper implements RowMapper<Teacher> {
     public Teacher mapRow(@NonNull ResultSet resultSet, int rowNum) throws SQLException {
         ResultSetHelper helper = new ResultSetHelper(resultSet);
 
-        Teacher teacher = new Teacher();
+        Teacher teacher = InstanceFactory.create(Teacher.class);
         helper.setStringIfPresent("position", teacher::setPosition);
         helper.setStringIfPresent("degree", teacher::setDegree);
         helper.setIntIfPresent("work_experience", teacher::setWorkExperience);

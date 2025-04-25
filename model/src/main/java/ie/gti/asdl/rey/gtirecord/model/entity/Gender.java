@@ -2,11 +2,13 @@ package ie.gti.asdl.rey.gtirecord.model.entity;
 
 import ie.gti.asdl.rey.gtirecord.model.annotation.KeyField;
 import ie.gti.asdl.rey.gtirecord.model.annotation.ShortDescriptionField;
-import lombok.Data;
+import lombok.*;
 
 /**
  * @author Andrei Levchenko
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @Data
 public class Gender {
 

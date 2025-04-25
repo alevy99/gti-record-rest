@@ -1,5 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.mapper;
 
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.Role;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,7 +13,7 @@ public class RoleRowMapper implements RowMapper<Role> {
     @NotNull
     @Override
     public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Role role = new Role();
+        Role role = InstanceFactory.create(Role.class);
         role.setId(rs.getInt("role_id"));
         Integer roleId = rs.getInt("role_id");
         if (rs.wasNull()) {

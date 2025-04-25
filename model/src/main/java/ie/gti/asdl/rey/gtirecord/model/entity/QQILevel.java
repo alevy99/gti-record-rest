@@ -5,8 +5,13 @@ import ie.gti.asdl.rey.gtirecord.model.annotation.ShortDescriptionField;
 import ie.gti.asdl.rey.gtirecord.model.validation.OnUpdate;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @Data
 public class QQILevel {
 

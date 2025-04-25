@@ -2,6 +2,7 @@ package ie.gti.asdl.rey.gtirecord.core.service.impl;
 
 import ie.gti.asdl.rey.gtirecord.core.dao.*;
 import ie.gti.asdl.rey.gtirecord.core.service.UserService;
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,11 +61,13 @@ public class UserServiceImpl implements UserService {
 
             insertMissingRoles(user, currentRoles);
 
-            // Delete roles we don't have anymore
-            // We might want to delete associated records in student or teacher tables,
-            // but in that case we would delete some data of the student or teacher
-            // It is better to delete it when working directly with students or teachers,
-            // rather than with a user
+            /*
+             Delete roles we don't have anymore
+             We might want to delete associated records in student or teacher tables,
+             but in that case we would delete some data of the student or teacher
+             It is better to delete it when working directly with students or teachers,
+             rather than with a user
+            */
             Set<Role> rolesToDelete = new HashSet<>(currentRoles);
             rolesToDelete.removeAll(user.getRoles());
             logRoles("Roles to delete: {}", rolesToDelete);
@@ -80,7 +83,7 @@ public class UserServiceImpl implements UserService {
         logRoles("Roles to insert: {}", rolesToInsert);
         userRolesDao.insert(user.getId(), rolesToInsert);
 
-        // Now if we have a person already, associated with a user
+        // Now if we have a person already associated with a user
         // And if it has Student or Teacher roles,
         // then we have to make sure there is a record in student or teacher tables
         if (user.getPersonId() != null) {
@@ -92,14 +95,14 @@ public class UserServiceImpl implements UserService {
                                  case Role.RoleType.STUDENT -> {
                                      // Add student record if there is no record in DB
                                      studentDao.getByPersonId(person.getId()).ifPresentOrElse(student -> {}, () -> {
-                                         Student student = new Student();
+                                         Student student = InstanceFactory.create(Student.class);
                                          student.setPerson(person);
                                          studentDao.insert(student);
                                      });
                                  }
                                  case Role.RoleType.TEACHER -> {
                                      teacherDao.getByPersonId(person.getId()).ifPresentOrElse(teacher -> {}, () -> {
-                                         Teacher teacher = new Teacher();
+                                         Teacher teacher = InstanceFactory.create(Teacher.class);
                                          teacher.setPerson(person);
                                          teacherDao.insert(teacher);
                                      });

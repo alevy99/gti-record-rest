@@ -54,7 +54,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         Optional<Integer> assignmentIdOpt = assignmentDao.insert(assignment);
         assignmentIdOpt.ifPresent(assignmentId -> {
             studentDao.getByGroupId(assignment.getGroupModule().getGroup().getId()).forEach(student -> {
-                StudentAssignment studentAssignment = new StudentAssignment();
+                StudentAssignment studentAssignment = InstanceFactory.create(StudentAssignment.class);
                 studentAssignment.setStudent(student);
                 studentAssignment.setAssignment(assignment);
                 studentAssignmentDao.insert(studentAssignment);

@@ -1,5 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.mapper;
 
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.GroupModule;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +24,7 @@ public class GroupModuleRowMapper implements RowMapper<GroupModule> {
     public GroupModule mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
         ResultSetHelper helper = new ResultSetHelper(rs);
 
-        GroupModule groupModule = new GroupModule();
+        GroupModule groupModule = InstanceFactory.create(GroupModule.class);
         helper.setIntIfPresent("group_module_id", groupModule::setId);
 
         groupModule.setModule(moduleRowMapper.mapRow(rs, rowNum));

@@ -1,5 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.core.dao.mapper;
 
+import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.Student;
 import ie.gti.asdl.rey.gtirecord.model.entity.User;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +22,7 @@ public class StudentRowMapper implements RowMapper<Student> {
     public Student mapRow(@NotNull ResultSet resultSet, int rowNum) throws SQLException {
         ResultSetHelper helper = new ResultSetHelper(resultSet);
 
-        Student student = new Student();
+        Student student = InstanceFactory.create(Student.class);
 
         helper.setStringIfPresent("education", student::setEducation);
         helper.setStringIfPresent("emergency_contacts", student::setEmergencyContacts);
