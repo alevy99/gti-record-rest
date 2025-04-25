@@ -8,14 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ad40fddd-f25d-4f35-ad1a-7d595c2c4863" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/add/Reward.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/AssignmentFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/AssignmentFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/CourseFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/CourseFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/DepartmentFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/DepartmentFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/GroupFrame.form" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/GroupFrame.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/GroupFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/GroupFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/ModuleFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/ModuleFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/UserFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/UserFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/add/StudentAssignmentStats.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/add/StudentAssignmentStats.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +27,7 @@
         <option value="AnnotationType" />
         <option value="package-info" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -47,6 +46,10 @@
     &quot;accountId&quot;: &quot;80779894-ba54-4436-9413-cb539acd8c94&quot;
   }
 }</component>
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 4
@@ -69,6 +72,7 @@
     "Application.StudentFrame.executor": "Run",
     "Application.UserFrame.executor": "Run",
     "Maven.gti-record [clean].executor": "Run",
+    "Maven.gti-record [install].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
@@ -78,6 +82,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.GtiRecordDesktopGuiApp.executor": "Run",
+    "Spring Boot.GtiRecordRestServer.executor": "Run",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "node.js.detected.package.eslint": "true",
@@ -216,39 +221,68 @@
       <option name="presentableId" value="Default" />
       <updated>1745163200874</updated>
       <workItem from="1745163203114" duration="99000" />
-      <workItem from="1745163311929" duration="110808000" />
+      <workItem from="1745163311929" duration="121010000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/GroupModuleServiceImpl.java</url>
           <line>80</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/CourseFrame.java</url>
           <line>739</line>
           <option name="timeStamp" value="69" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/CourseFrame.java</url>
           <line>740</line>
           <option name="timeStamp" value="70" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/CourseFrame.java</url>
           <line>743</line>
           <option name="timeStamp" value="71" />
         </line-breakpoint>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/backend/src/main/java/ie/gti/asdl/rey/gtirecord/backend/controller/TeacherController.java</url>
+          <line>29</line>
+          <option name="timeStamp" value="85" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/StudentAssignmentServiceImpl.java</url>
+          <line>68</line>
+          <option name="timeStamp" value="91" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
+      <configuration name="SpringBootApplicationConfigurationType">
+        <watch expression="module.getId()" language="JAVA" />
+        <watch expression="studentId" language="JAVA" />
+        <watch expression="assignment.getId()" language="JAVA" />
+        <watch expression="sa.getGrade()" language="JAVA" />
+        <watch expression="assignment.getMaxGrade()" language="JAVA" />
+        <watch expression="stats.getGradeTotalPercent()" language="JAVA" />
+      </configuration>
       <configuration name="Application">
         <watch expression="assignment" language="JAVA" />
         <watch expression="group" language="JAVA" />

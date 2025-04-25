@@ -498,7 +498,7 @@
                                 <Column editable="false" title="First name" type="java.lang.String"/>
                                 <Column editable="false" title="Last name" type="java.lang.String"/>
                                 <Column editable="false" title="Grade, %" type="java.lang.Double"/>
-                                <Column editable="false" title="Weighting, %" type="java.lang.Double"/>
+                                <Column editable="false" title="Reward" type="java.lang.String"/>
                               </Table>
                             </Property>
                           </Properties>

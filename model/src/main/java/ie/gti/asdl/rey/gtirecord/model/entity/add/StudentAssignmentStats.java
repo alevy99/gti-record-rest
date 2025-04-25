@@ -37,4 +37,8 @@ public class StudentAssignmentStats {
         return maxWeightingTotal == 0 ? 0 : 100 * (double) weightingTotal / maxWeightingTotal;
     }
 
+    public Reward getReward() {
+        return Reward.getReward((int) getGradeTotalPercent());
+    }
+
 }

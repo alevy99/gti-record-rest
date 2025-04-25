@@ -63,7 +63,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
 //    }
 
     private enum GROUP_STUDENT_COLUMNS {
-        ID(0), FIRST_NAME(1), LAST_NAME(2), GRADE_PERCENT(3), WEIGHTING_PERCENT(4);
+        ID(0), FIRST_NAME(1), LAST_NAME(2), GRADE_PERCENT(3), REWARD(4);
         final int index;
         GROUP_STUDENT_COLUMNS(int index) {
             this.index = index;
@@ -240,7 +240,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
         columnModel.getColumn(GROUP_STUDENT_COLUMNS.FIRST_NAME.index).setMinWidth(70);
         columnModel.getColumn(GROUP_STUDENT_COLUMNS.LAST_NAME.index).setMinWidth(70);
         columnModel.getColumn(GROUP_STUDENT_COLUMNS.GRADE_PERCENT.index).setMinWidth(70);
-        columnModel.getColumn(GROUP_STUDENT_COLUMNS.WEIGHTING_PERCENT.index).setMinWidth(70);
+        columnModel.getColumn(GROUP_STUDENT_COLUMNS.REWARD.index).setMinWidth(70);
 
         initAllStudentTable();
 
@@ -441,7 +441,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
                             groupModules.stream().map(GroupModule::getModule).collect(Collectors.toList()));
                     getGroupStudentsTableModel().addRow(student, new Object[] {student.getPerson().getId(),
                             student.getPerson().getFirstName(), student.getPerson().getLastName(),
-                            stats.getGradeTotalPercent(), stats.getWeightingTotalPercent()});
+                            stats.getGradeTotalPercent(), stats.getReward().getName()});
                 });
             }
             allExceptGroupStudents.forEach(student -> {
@@ -736,11 +736,11 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
 
             },
             new String [] {
-                "ID", "First name", "Last name", "Grade, %", "Weighting, %"
+                "ID", "First name", "Last name", "Grade, %", "Reward"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false
@@ -1430,7 +1430,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
                     groupModules.stream().map(GroupModule::getModule).collect(Collectors.toList()));
             getGroupStudentsTableModel().addRow(student, new Object[] {student.getPerson().getId(),
                     student.getPerson().getFirstName(), student.getPerson().getLastName(),
-                    stats.getGradeTotalPercent(), stats.getWeightingTotalPercent()});
+                    stats.getGradeTotalPercent(), stats.getReward().getName()});
             groupStudents.add(student);
         });
         updateStudentTablesUI();
