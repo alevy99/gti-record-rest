@@ -8,21 +8,21 @@ import lombok.Data;
 @Data
 public class StudentAssignmentStats {
 
-    private double weightingTotalPercent = 0.0;
-    private int maxWeightingTotalPercent = 0;
+    private double weightingTotal = 0.0;
+    private int maxWeightingTotal = 0;
     private int gradeTotal = 0;
     private int maxGradeTotal = 0;
 
-    public void addWeightingTotalPercent(double weightingTotalPercent) {
-        this.weightingTotalPercent += weightingTotalPercent;
+    public void addWeightingTotal(double weightingTotalPercent) {
+        this.weightingTotal += weightingTotalPercent;
     }
 
     public void addGradeTotal(int gradeTotal) {
         this.gradeTotal += gradeTotal;
     }
 
-    public void addMaxWeightingTotalPercent(int maxWeightingTotalPercent) {
-        this.maxWeightingTotalPercent += maxWeightingTotalPercent;
+    public void addMaxWeightingTotal(int maxWeightingTotalPercent) {
+        this.maxWeightingTotal += maxWeightingTotalPercent;
     }
 
     public void addMaxGradeTotal(int maxGradeTotal) {
@@ -31,6 +31,10 @@ public class StudentAssignmentStats {
 
     public double getGradeTotalPercent() {
         return maxGradeTotal == 0 ? 0 : 100 * (double) gradeTotal / maxGradeTotal;
+    }
+
+    public double getWeightingTotalPercent() {
+        return maxWeightingTotal == 0 ? 0 : 100 * (double) weightingTotal / maxWeightingTotal;
     }
 
 }

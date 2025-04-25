@@ -1,5 +1,6 @@
 package ie.gti.asdl.rey.gtirecord.desktop.util;
 
+import ie.gti.asdl.rey.gtirecord.core.validation.OptionalValidator;
 import ie.gti.asdl.rey.gtirecord.core.validation.Validator;
 
 import javax.swing.*;
@@ -11,6 +12,7 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ItemListener;
 import java.util.Arrays;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -104,35 +106,49 @@ public class SwingUIUtils {
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
 
-    public static void addTextFieldValidation(JTextField textField, JLabel lblValidationStatus, Validator<String> validator) {
-        textField.getDocument().addDocumentListener(new DocumentListener() {
+    public static void addTextFieldValidation(JTextField textField, JLabel lblValidationStatus,
+                                              Validator<String> validator, BiConsumer<JTextField, Boolean> validationCallback,
+                                              boolean validateImmediately
+    ) {
+        DocumentListener listener = new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                validateEmail();
+                validate();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                validateEmail();
+                validate();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                validateEmail();
+                validate();
             }
 
-            private void validateEmail() {
+            private void validate() {
                 String text = textField.getText();
-                if (validator.isValid(text)) {
-                    lblValidationStatus.setText("✔");
-                    lblValidationStatus.setForeground(Color.GREEN);
+                boolean isBlank = text == null || text.trim().isEmpty();
+                boolean isValid = validator.isValid(text);
+
+                if (isBlank && validator instanceof OptionalValidator) {
+                    // Don't show any validation sign in UI
+                    lblValidationStatus.setText("");
+                    validationCallback.accept(textField, true); // considered valid
                 } else {
-                    lblValidationStatus.setText("✘");
-                    lblValidationStatus.setForeground(Color.RED);
+                    lblValidationStatus.setText(isValid ? "✔" : "✘");
+                    lblValidationStatus.setForeground(isValid ? Color.GREEN : Color.RED);
+                    validationCallback.accept(textField, isValid);
                 }
             }
-        });
+        };
 
+        textField.getDocument().addDocumentListener(listener);
+
+        if (validateImmediately) {
+            // Программно валидируем текущее значение
+            listener.changedUpdate(null);  // safe null, просто вызывает validate()
+        }
     }
 
 }

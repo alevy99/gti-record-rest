@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static ie.gti.asdl.rey.gtirecord.core.util.AssignmentUtils.calcGradePercent;
 import static ie.gti.asdl.rey.gtirecord.core.util.AssignmentUtils.calcWeightingTotalPercent;
 
 /**
@@ -71,8 +70,8 @@ public class StudentAssignmentServiceImpl implements StudentAssignmentService {
                         Double weighting = calcWeightingTotalPercent(assignment, sa.getGrade());
                         stats.addGradeTotal(sa.getGrade() == null ? 0 : sa.getGrade());
                         stats.addMaxGradeTotal(assignment.getMaxGrade() == null ? 0 : assignment.getMaxGrade());
-                        stats.addWeightingTotalPercent(weighting == null ? 0 : weighting);
-                        stats.addMaxWeightingTotalPercent(assignment.getWeighting() == null ? 0 : assignment.getWeighting());
+                        stats.addWeightingTotal(weighting == null ? 0 : weighting);
+                        stats.addMaxWeightingTotal(assignment.getWeighting() == null ? 0 : assignment.getWeighting());
                     });
         });
         return stats;

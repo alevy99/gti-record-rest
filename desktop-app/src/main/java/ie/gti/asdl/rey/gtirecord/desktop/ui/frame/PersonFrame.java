@@ -10,11 +10,10 @@ import ie.gti.asdl.rey.gtirecord.core.ServiceManager;
 import ie.gti.asdl.rey.gtirecord.core.service.AddressService;
 import ie.gti.asdl.rey.gtirecord.core.service.PersonService;
 import ie.gti.asdl.rey.gtirecord.core.service.UserService;
-import ie.gti.asdl.rey.gtirecord.core.validation.NameValidator;
+import ie.gti.asdl.rey.gtirecord.core.validation.*;
 import ie.gti.asdl.rey.gtirecord.desktop.GtiRecordDesktopGuiApp;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.AbstractFrame;
 import ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager;
-import ie.gti.asdl.rey.gtirecord.desktop.ui.component.PhoneNumberValidator;
 import ie.gti.asdl.rey.gtirecord.desktop.util.SpringGuiRunner;
 import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.Address;
@@ -32,7 +31,8 @@ import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.function.Supplier;
+import java.util.HashMap;
+import java.util.Map;
 
 import static ie.gti.asdl.rey.gtirecord.desktop.ui.FrameManager.FrameType.PERSON;
 import static ie.gti.asdl.rey.gtirecord.desktop.util.ImageUtils.resizeIcon;
@@ -56,6 +56,8 @@ public class PersonFrame extends AbstractFrame {
     private final UserService userService;
 
     private final AddressService addressService;
+
+    private final Map<JTextField, Boolean> validationStatusMap = new HashMap<>();
 
     /**
      * Creates new form PersonFrame
@@ -84,9 +86,16 @@ public class PersonFrame extends AbstractFrame {
     }
 
     private void reInitForm() {
+        resetValidation();
         loadData();
         updateUI();
         lblLoggedInUsername.setText(getFrameManager().getActiveUser().getUsername());
+
+    }
+
+    private void resetValidation() {
+        updateValidationStatus(tfFirstName, false);
+        updateValidationStatus(tfLastName, false);
     }
 
     private void loadData() {
@@ -129,6 +138,24 @@ public class PersonFrame extends AbstractFrame {
         tfAddressCity.setText("");
         tfAddressCountry.setText("");
         tfAddressEircode.setText("");
+
+        lblFNValidStatus.setText("");
+        lblLNValidStatus.setText("");
+    }
+
+    private void updateValidationStatus(JTextField field, Boolean isValid) {
+        validationStatusMap.put(field, isValid);
+        updateSaveButtonState();
+    }
+
+    private void updateSaveButtonState() {
+        boolean allValid = validationStatusMap.values().stream().allMatch(Boolean::booleanValue);
+        boolean enabled = isEditable() && allValid;
+        btnSave.setEnabled(enabled);
+    }
+
+    private boolean isEditable() {
+        return getFrameManager().isLoggedInAsAdmin() || getFrameManager().getActiveUser().equals(user);
     }
 
     private void updateUI() {
@@ -137,29 +164,43 @@ public class PersonFrame extends AbstractFrame {
 
         lblUsername.setText(user.getUsername());
         tfFirstName.setText(person.getFirstName());
-        cbGender.setSelectedItem(person.getGender());
-        lblFNValidStatus.setText("");
-        addTextFieldValidation(tfFirstName, lblFNValidStatus, new NameValidator());
+        addTextFieldValidation(tfFirstName, lblFNValidStatus, new NameValidator(), this::updateValidationStatus, true);
+
         tfLastName.setText(person.getLastName());
+        addTextFieldValidation(tfLastName, lblLNValidStatus, new NameValidator(), this::updateValidationStatus, true);
+
+        cbGender.setSelectedItem(person.getGender());
         dobDatePicker.setDate(person.getDateOfBirth());
+
         tfEmail.setText(person.getEmail());
+        addTextFieldValidation(tfEmail, lblEmailValidStatus, new OptionalValidator<>(new EmailValidator()), this::updateValidationStatus, true);
+
         tfPhoneNumber.setText(person.getPhoneNum());
+        addTextFieldValidation(tfPhoneNumber, lblPhoneValidStatus, new OptionalValidator<>(new PhoneNumberValidator()), this::updateValidationStatus, true);
+
         tfPPSN.setText(person.getPpsn());
+        addTextFieldValidation(tfPPSN, lblPpsnValidStatus, new OptionalValidator<>(new PpsnValidator()), this::updateValidationStatus, true);
 
         Address address = person.getAddress();
         if (address != null) {
             tfAddressLine1.setText(address.getLine1());
+            addTextFieldValidation(tfAddressLine1, lblAddrLine1ValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus, true);
             tfAddressLine2.setText(address.getLine2());
-            tfAddressCounty.setText(address.getCounty());
+            addTextFieldValidation(tfAddressLine2, lblAddrLine2ValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus, true);
             tfAddressCity.setText(address.getCity());
+            addTextFieldValidation(tfAddressCity, lblCityValidStatus, new OptionalValidator<>(new LengthValidator(0, 45)), this::updateValidationStatus, true);
+            tfAddressCounty.setText(address.getCounty());
+            addTextFieldValidation(tfAddressCounty, lblCountyValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus, true);
             tfAddressCountry.setText(address.getCountry());
+            addTextFieldValidation(tfAddressCountry, lblCountryValidStatus, new OptionalValidator<>(new LengthValidator(0, 100)), this::updateValidationStatus, true);
             tfAddressEircode.setText(address.getEirCode());
+            addTextFieldValidation(tfAddressEircode, lblEircodeValidStatus, new OptionalValidator<>(new EircodeValidator()), this::updateValidationStatus, true);
         }
 
         tfFirstName.setEditable(getFrameManager().isLoggedInAsAdmin());
         tfLastName.setEditable(getFrameManager().isLoggedInAsAdmin());
 
-        boolean editable = getFrameManager().isLoggedInAsAdmin() || getFrameManager().getActiveUser().equals(user);
+        boolean editable = isEditable();
         cbGender.setEditable(editable);
         dobDatePicker.setEnabled(editable);
         tfEmail.setEditable(editable);
@@ -172,7 +213,7 @@ public class PersonFrame extends AbstractFrame {
         tfAddressCountry.setEditable(editable);
         tfAddressEircode.setEditable(editable);
 
-        btnSave.setEnabled(editable);
+        updateSaveButtonState();
     }
 
     private void fillPersonFromUI() {
@@ -232,31 +273,30 @@ public class PersonFrame extends AbstractFrame {
 //        ((AbstractDocument) tfFirstName.getDocument()).setDocumentFilter(new AutoFormatFilter(tfFirstName));
 
 //        tfFirstName.addFocusListener(new PhoneNumberValidator(tfFirstName, lblError));
-        tfPhoneNumber.getDocument().addDocumentListener(new PhoneNumberValidator(tfPhoneNumber, lblFNValidStatus));
-
-        ((AbstractDocument) tfPhoneNumber.getDocument()).setDocumentFilter(new DocumentFilter() {
-//            private String regex = "^\\+?\\(?\\d{1,3}\\)?[-\\s]?\\d{2,3}[-\\s]?\\d{2}[-\\s]?\\d{2,3}$";
-
-            private boolean isValidInput(String text) {
-                return text != null && text.matches("[0-9+()\\-\\s]*"); // Allow only valid characters
-            }
-
-            @Override
-            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
-                    throws BadLocationException {
-                if (isValidInput(string)) {
-                    super.insertString(fb, offset, string, attr);
-                }
-            }
-
-            @Override
-            public void replace(FilterBypass fb, int offset, int length, String string, AttributeSet attr)
-                    throws BadLocationException {
-                if (isValidInput(string)) {
-                    super.replace(fb, offset, length, string, attr);
-                }
-            }
-        });
+//        tfPhoneNumber.getDocument().addDocumentListener(new PhoneNumberValidator(tfPhoneNumber, lblPhoneValidStatus));
+//
+//        ((AbstractDocument) tfPhoneNumber.getDocument()).setDocumentFilter(new DocumentFilter() {
+//
+//            private boolean isValidInput(String text) {
+//                return text != null && text.matches("[0-9+()\\-\\s]*"); // Allow only valid characters
+//            }
+//
+//            @Override
+//            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+//                    throws BadLocationException {
+//                if (isValidInput(string)) {
+//                    super.insertString(fb, offset, string, attr);
+//                }
+//            }
+//
+//            @Override
+//            public void replace(FilterBypass fb, int offset, int length, String string, AttributeSet attr)
+//                    throws BadLocationException {
+//                if (isValidInput(string)) {
+//                    super.replace(fb, offset, length, string, attr);
+//                }
+//            }
+//        });
 
     }
 
@@ -298,6 +338,7 @@ public class PersonFrame extends AbstractFrame {
         pnlLastName = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         tfLastName = new javax.swing.JTextField();
+        lblLNValidStatus = new javax.swing.JLabel();
         pnlGender = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         cbGender = new javax.swing.JComboBox<>();
@@ -307,32 +348,41 @@ public class PersonFrame extends AbstractFrame {
         pnlPhoneNumber = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         tfPhoneNumber = new javax.swing.JTextField();
+        lblPhoneValidStatus = new javax.swing.JLabel();
         pnlEmail = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         tfEmail = new javax.swing.JTextField();
+        lblEmailValidStatus = new javax.swing.JLabel();
         pnlPpsn = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         tfPPSN = new javax.swing.JTextField();
+        lblPpsnValidStatus = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
         jLabel3 = new javax.swing.JLabel();
         pnlAddressLine1 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         tfAddressLine1 = new javax.swing.JTextField();
+        lblAddrLine1ValidStatus = new javax.swing.JLabel();
         pnlAddressLine2 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         tfAddressLine2 = new javax.swing.JTextField();
+        lblAddrLine2ValidStatus = new javax.swing.JLabel();
         pnlAddressCity = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         tfAddressCity = new javax.swing.JTextField();
+        lblCityValidStatus = new javax.swing.JLabel();
         pnlAddressCounty = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
         tfAddressCounty = new javax.swing.JTextField();
+        lblCountyValidStatus = new javax.swing.JLabel();
         pnlAddressCountry = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         tfAddressCountry = new javax.swing.JTextField();
-        jSeparator1 = new javax.swing.JSeparator();
+        lblCountryValidStatus = new javax.swing.JLabel();
         pnlAddressEircode = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
         tfAddressEircode = new javax.swing.JTextField();
+        lblEircodeValidStatus = new javax.swing.JLabel();
         jCloseBtn = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
         pnlLoggedInAs4 = new javax.swing.JPanel();
@@ -419,13 +469,19 @@ public class PersonFrame extends AbstractFrame {
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(tfLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblLNValidStatus)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlLastNameLayout.setVerticalGroup(
             pnlLastNameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlLastNameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jLabel6)
-                .addComponent(tfLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlLastNameLayout.createSequentialGroup()
+                .addGroup(pnlLastNameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblLNValidStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnlLastNameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel6)
+                        .addComponent(tfLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLabel16.setText("Gender");
@@ -493,6 +549,8 @@ public class PersonFrame extends AbstractFrame {
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(tfPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblPhoneValidStatus)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlPhoneNumberLayout.setVerticalGroup(
@@ -500,6 +558,7 @@ public class PersonFrame extends AbstractFrame {
             .addGroup(pnlPhoneNumberLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel8)
                 .addComponent(tfPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(lblPhoneValidStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         jLabel9.setText("Email");
@@ -519,6 +578,8 @@ public class PersonFrame extends AbstractFrame {
                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(tfEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblEmailValidStatus)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlEmailLayout.setVerticalGroup(
@@ -526,6 +587,7 @@ public class PersonFrame extends AbstractFrame {
             .addGroup(pnlEmailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel9)
                 .addComponent(tfEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(lblEmailValidStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jLabel10.setText("PPSN");
@@ -545,6 +607,8 @@ public class PersonFrame extends AbstractFrame {
                 .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(tfPPSN, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblPpsnValidStatus)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlPpsnLayout.setVerticalGroup(
@@ -552,6 +616,7 @@ public class PersonFrame extends AbstractFrame {
             .addGroup(pnlPpsnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel10)
                 .addComponent(tfPPSN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(lblPpsnValidStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jLabel3.setText("Address:");
@@ -573,6 +638,8 @@ public class PersonFrame extends AbstractFrame {
                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(tfAddressLine1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblAddrLine1ValidStatus)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlAddressLine1Layout.setVerticalGroup(
@@ -580,6 +647,7 @@ public class PersonFrame extends AbstractFrame {
             .addGroup(pnlAddressLine1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel11)
                 .addComponent(tfAddressLine1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(lblAddrLine1ValidStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jLabel12.setText("Line 2");
@@ -599,13 +667,20 @@ public class PersonFrame extends AbstractFrame {
                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(tfAddressLine2, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(49, Short.MAX_VALUE))
+            .addGroup(pnlAddressLine2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlAddressLine2Layout.createSequentialGroup()
+                    .addGap(298, 298, 298)
+                    .addComponent(lblAddrLine2ValidStatus)
+                    .addContainerGap(41, Short.MAX_VALUE)))
         );
         pnlAddressLine2Layout.setVerticalGroup(
             pnlAddressLine2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlAddressLine2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel12)
                 .addComponent(tfAddressLine2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlAddressLine2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(lblAddrLine2ValidStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE))
         );
 
         jLabel13.setText("City");
@@ -625,6 +700,8 @@ public class PersonFrame extends AbstractFrame {
                 .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(tfAddressCity, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblCityValidStatus)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlAddressCityLayout.setVerticalGroup(
@@ -632,6 +709,7 @@ public class PersonFrame extends AbstractFrame {
             .addGroup(pnlAddressCityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel13)
                 .addComponent(tfAddressCity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(lblCityValidStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jLabel14.setText("County");
@@ -651,14 +729,19 @@ public class PersonFrame extends AbstractFrame {
                 .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(tfAddressCounty, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblCountyValidStatus)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlAddressCountyLayout.setVerticalGroup(
             pnlAddressCountyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlAddressCountyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel14)
                 .addComponent(tfAddressCounty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(lblCountyValidStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        pnlAddressCountry.setPreferredSize(new java.awt.Dimension(302, 22));
 
         jLabel15.setText("Country");
 
@@ -677,14 +760,19 @@ public class PersonFrame extends AbstractFrame {
                 .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(tfAddressCountry, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblCountryValidStatus)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlAddressCountryLayout.setVerticalGroup(
             pnlAddressCountryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlAddressCountryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel15)
                 .addComponent(tfAddressCountry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(lblCountryValidStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        pnlAddressEircode.setPreferredSize(new java.awt.Dimension(302, 22));
 
         jLabel17.setText("Eircode");
 
@@ -703,13 +791,16 @@ public class PersonFrame extends AbstractFrame {
                 .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(tfAddressEircode, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblEircodeValidStatus)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlAddressEircodeLayout.setVerticalGroup(
             pnlAddressEircodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlAddressEircodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel17)
                 .addComponent(tfAddressEircode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(lblEircodeValidStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
@@ -717,35 +808,32 @@ public class PersonFrame extends AbstractFrame {
         pnlMainLayout.setHorizontalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlMainLayout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(pnlAddressLine2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlAddressLine1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(pnlMainLayout.createSequentialGroup()
+                            .addGap(20, 20, 20)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(pnlFirstName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(pnlLastName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(pnlDOB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(pnlPhoneNumber, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(pnlEmail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(pnlPpsn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(pnlUsername, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(pnlGender, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(pnlAddressCity, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlAddressCounty, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlAddressEircode, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+                    .addComponent(pnlAddressCountry, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(8, 8, 8))
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pnlAddressCountry, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(pnlAddressEircode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(pnlAddressLine2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(pnlAddressLine1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(pnlMainLayout.createSequentialGroup()
-                                        .addGap(20, 20, 20)
-                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(pnlFirstName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(pnlLastName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(pnlDOB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(pnlPhoneNumber, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(pnlEmail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(pnlPpsn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(pnlUsername, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(pnlGender, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addComponent(pnlAddressCity, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(pnlAddressCounty, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(21, 21, 21))
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29))
         );
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -755,7 +843,7 @@ public class PersonFrame extends AbstractFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pnlLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -944,9 +1032,9 @@ public class PersonFrame extends AbstractFrame {
                 FrameManager manager = context.getBean(FrameManager.class);
                 manager.setActiveUser(context.getBean(UserService.class).getByUsername("johnm").orElse(null));
                 PersonFrame personFrame = manager.getFrame(PERSON);
-                Person person = InstanceFactory.create(Person.class);
-                person.setId(6);
-                personFrame.setPerson(person);
+
+                context.getBean(PersonService.class).getById(6).ifPresent(personFrame::setPerson);
+
                 manager.showSub(PERSON);
             }
         });
@@ -974,8 +1062,18 @@ public class PersonFrame extends AbstractFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lblAddrLine1ValidStatus;
+    private javax.swing.JLabel lblAddrLine2ValidStatus;
+    private javax.swing.JLabel lblCityValidStatus;
+    private javax.swing.JLabel lblCountryValidStatus;
+    private javax.swing.JLabel lblCountyValidStatus;
+    private javax.swing.JLabel lblEircodeValidStatus;
+    private javax.swing.JLabel lblEmailValidStatus;
     private javax.swing.JLabel lblFNValidStatus;
+    private javax.swing.JLabel lblLNValidStatus;
     private javax.swing.JLabel lblLoggedInUsername;
+    private javax.swing.JLabel lblPhoneValidStatus;
+    private javax.swing.JLabel lblPpsnValidStatus;
     private javax.swing.JLabel lblUsername;
     private javax.swing.JPanel pnlAddressCity;
     private javax.swing.JPanel pnlAddressCountry;

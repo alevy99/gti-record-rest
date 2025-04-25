@@ -178,15 +178,15 @@ public class StudentReportFrame extends AbstractTableDataFrame<Module> {
 
                         stats.addGradeTotal(sa.getGrade() == null ? 0 : sa.getGrade());
                         stats.addMaxGradeTotal(assignment.getMaxGrade() == null ? 0 : assignment.getMaxGrade());
-                        stats.addWeightingTotalPercent(weighting == null ? 0 : weighting);
-                        stats.addMaxWeightingTotalPercent(assignment.getWeighting() == null ? 0 : assignment.getWeighting());
+                        stats.addWeightingTotal(weighting == null ? 0 : weighting);
+                        stats.addMaxWeightingTotal(assignment.getWeighting() == null ? 0 : assignment.getWeighting());
                     });
 
 //            double totalGradePercent = stats.getMaxGradeTotal() == 0 ? 0 : 100.0 * stats.getGradeTotal() / stats.getMaxGradeTotal();
             getStudentAssignmentTableModel().addRow(InstanceFactory.create(StudentAssignment.class), new Object[]{
                     "<html><b>STATISTICS</b></html>", false, false,
                     stats.getGradeTotal(), stats.getGradeTotalPercent(), stats.getMaxGradeTotal(),
-                    stats.getWeightingTotalPercent(), stats.getMaxWeightingTotalPercent() });
+                    stats.getWeightingTotal(), stats.getMaxWeightingTotal() });
         }, () -> {
             lblStudentResultTitle.setText("Students results for module");
         });
