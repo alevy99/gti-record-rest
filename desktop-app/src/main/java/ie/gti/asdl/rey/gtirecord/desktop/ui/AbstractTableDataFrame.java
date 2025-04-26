@@ -133,7 +133,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         });
 
         if (!errors.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Save failed for:\n" + String.join("\n", errors), "Not valid data", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Save failed for:\n" + String.join("\n", errors), "Error", JOptionPane.ERROR_MESSAGE);
         }
         onSaveDataCompleted();
         updateUI();
@@ -201,7 +201,7 @@ public abstract class AbstractTableDataFrame<T> extends AbstractFrame {
         });
 
         if (!errors.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Save failed for:\n" + String.join("\n", errors), "Not valid data", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Delete failed for:\n" + String.join("\n", errors), "Error", JOptionPane.ERROR_MESSAGE);
             reloadTableData();
         } else {
 
