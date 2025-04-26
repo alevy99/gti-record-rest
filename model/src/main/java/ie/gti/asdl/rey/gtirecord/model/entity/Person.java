@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
-public class Person implements Serializable {
+public class Person {
 
     @KeyField
     @EqualsAndHashCode.Include
