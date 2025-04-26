@@ -84,6 +84,15 @@ public class PersonFrame extends AbstractFrame {
         reInitForm();
     }
 
+    @Override
+    public void setVisible(boolean b) {
+        if (!b) {
+            // We should close the popup before our main window becomes invisible
+            dobDatePicker.closePopup();
+        }
+        super.setVisible(b);
+    }
+
     private void reInitForm() {
         validationManager.resetValidation();
         loadData();
@@ -126,7 +135,7 @@ public class PersonFrame extends AbstractFrame {
         lblFNValidStatus.setText("");
         tfLastName.setText("");
         cbGender.setSelectedItem(null);
-        dobDatePicker.setDate(null);
+        dobDatePicker.clear();
         tfEmail.setText("");
         tfPhoneNumber.setText("");
         tfPPSN.setText("");
@@ -332,6 +341,7 @@ public class PersonFrame extends AbstractFrame {
     private void initDOBDatePicker() {
         DatePickerSettings dateSettings = new DatePickerSettings();
         dobDatePicker = new DatePicker(dateSettings);
+
 
         URL dateImageURL = PersonFrame.class.getResource("/img/datepickerbutton.png");
         Image dateExampleImage = Toolkit.getDefaultToolkit().getImage(dateImageURL);
