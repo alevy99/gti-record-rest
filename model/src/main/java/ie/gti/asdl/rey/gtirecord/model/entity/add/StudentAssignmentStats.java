@@ -13,6 +13,13 @@ public class StudentAssignmentStats {
     private int gradeTotal = 0;
     private int maxGradeTotal = 0;
 
+    public void add(StudentAssignmentStats other) {
+        this.weightingTotal += other.weightingTotal;
+        this.maxWeightingTotal += other.maxWeightingTotal;
+        this.gradeTotal += other.gradeTotal;
+        this.maxGradeTotal += other.maxGradeTotal;
+    }
+
     public void addWeightingTotal(double weightingTotalPercent) {
         this.weightingTotal += weightingTotalPercent;
     }

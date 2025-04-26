@@ -6,20 +6,19 @@ import ie.gti.asdl.rey.gtirecord.model.annotation.ShortDescriptionFormat;
 import ie.gti.asdl.rey.gtirecord.model.validation.OnUpdate;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
 public class Person implements Serializable {
 
     @KeyField
+    @EqualsAndHashCode.Include
     @NotNull(groups = OnUpdate.class)
     private Integer id;
 

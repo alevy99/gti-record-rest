@@ -4,18 +4,17 @@ import ie.gti.asdl.rey.gtirecord.model.annotation.KeyField;
 import ie.gti.asdl.rey.gtirecord.model.annotation.ShortDescriptionField;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
 public class Student {
 
     @KeyField
     @ShortDescriptionField
+    @EqualsAndHashCode.Include
     @NotNull
     @Valid
     private Person person;

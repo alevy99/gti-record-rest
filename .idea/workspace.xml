@@ -8,11 +8,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ad40fddd-f25d-4f35-ad1a-7d595c2c4863" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/add/Reward.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/StudentAssignmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/StudentAssignmentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/StudentAssignmentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/StudentAssignmentServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/GroupFrame.form" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/GroupFrame.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/GroupFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop-app/src/main/java/ie/gti/asdl/rey/gtirecord/desktop/ui/frame/GroupFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/Assignment.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/Assignment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/Person.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/Student.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/StudentAssignment.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/StudentAssignment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/Teacher.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/Teacher.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/add/StudentAssignmentStats.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/ie/gti/asdl/rey/gtirecord/model/entity/add/StudentAssignmentStats.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -26,8 +32,8 @@
         <option value="Interface" />
         <option value="AnnotationType" />
         <option value="package-info" />
-        <option value="Class" />
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -108,7 +114,7 @@
       <recent name="ie.gti.asdl.rey.gtirecord.core.service.impl" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.GtiRecordDesktopGuiApp">
+  <component name="RunManager" selected="Application.GroupFrame">
     <configuration name="AssignmentFrame" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ie.gti.asdl.rey.gtirecord.desktop.ui.frame.AssignmentFrame" />
       <module name="gti-record-desktop-app" />
@@ -194,10 +200,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.GroupFrame" />
         <item itemvalue="Spring Boot.GtiRecordDesktopGuiApp" />
         <item itemvalue="Application.UserFrame" />
         <item itemvalue="Application.PersonFrame" />
-        <item itemvalue="Application.GroupFrame" />
         <item itemvalue="Application.AssignmentFrame" />
       </list>
     </recent_temporary>
@@ -221,7 +227,7 @@
       <option name="presentableId" value="Default" />
       <updated>1745163200874</updated>
       <workItem from="1745163203114" duration="99000" />
-      <workItem from="1745163311929" duration="121010000" />
+      <workItem from="1745163311929" duration="126934000" />
     </task>
     <servers />
   </component>
@@ -266,11 +272,6 @@
           <url>file://$PROJECT_DIR$/backend/src/main/java/ie/gti/asdl/rey/gtirecord/backend/controller/TeacherController.java</url>
           <line>29</line>
           <option name="timeStamp" value="85" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/core/src/main/java/ie/gti/asdl/rey/gtirecord/core/service/impl/StudentAssignmentServiceImpl.java</url>
-          <line>68</line>
-          <option name="timeStamp" value="91" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -11,7 +11,9 @@ import ie.gti.asdl.rey.gtirecord.model.entity.add.StudentAssignmentStats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static ie.gti.asdl.rey.gtirecord.core.util.AssignmentUtils.calcWeightingTotalPercent;
 
@@ -56,12 +58,12 @@ public class StudentAssignmentServiceImpl implements StudentAssignmentService {
     }
 
     @Override
-    public StudentAssignmentStats getStudentAssignmentStats(Student student) {
-        return getStudentAssignmentStats(student.getPerson().getId(), moduleDao.getByGroupId(student.getGroup().getId()));
+    public StudentAssignmentStats getStudentAssignmentStatsTotal(Student student) {
+        return getStudentAssignmentStatsTotal(student.getPerson().getId(), moduleDao.getByGroupId(student.getGroup().getId()));
     }
 
     @Override
-    public StudentAssignmentStats getStudentAssignmentStats(Integer studentId, List<Module> modules) {
+    public StudentAssignmentStats getStudentAssignmentStatsTotal(Integer studentId, List<Module> modules) {
         StudentAssignmentStats stats = new StudentAssignmentStats();
         modules.forEach(module -> {
             getByStudentPersonIdAndModuleId(studentId, module.getId())
@@ -75,5 +77,33 @@ public class StudentAssignmentServiceImpl implements StudentAssignmentService {
                     });
         });
         return stats;
+    }
+
+    @Override
+    public Map<Module, StudentAssignmentStats> getStudentAssignmentStats(Integer studentId, List<Module> modules) {
+        Map<Module, StudentAssignmentStats> statsMap = new HashMap<>();
+        modules.forEach(module -> {
+            StudentAssignmentStats stats = new StudentAssignmentStats();
+            getByStudentPersonIdAndModuleId(studentId, module.getId())
+                    .forEach(sa -> {
+                        Assignment assignment = sa.getAssignment();
+                        Double weighting = calcWeightingTotalPercent(assignment, sa.getGrade());
+                        stats.addGradeTotal(sa.getGrade() == null ? 0 : sa.getGrade());
+                        stats.addMaxGradeTotal(assignment.getMaxGrade() == null ? 0 : assignment.getMaxGrade());
+                        stats.addWeightingTotal(weighting == null ? 0 : weighting);
+                        stats.addMaxWeightingTotal(assignment.getWeighting() == null ? 0 : assignment.getWeighting());
+                    });
+            statsMap.put(module, stats);
+        });
+        return statsMap;
+    }
+
+    @Override
+    public Map<Student, Map<Module, StudentAssignmentStats>> getStudentAssignmentStats(List<Student> students, List<Module> modules) {
+        Map<Student, Map<Module, StudentAssignmentStats>> studentModuleAssignmentMap = new HashMap<>();
+        students.forEach(student -> {
+            studentModuleAssignmentMap.put(student, getStudentAssignmentStats(student.getPerson().getId(), modules));
+        });
+        return studentModuleAssignmentMap;
     }
 }

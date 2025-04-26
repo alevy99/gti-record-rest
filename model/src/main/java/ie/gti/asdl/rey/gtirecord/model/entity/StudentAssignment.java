@@ -1,21 +1,21 @@
 package ie.gti.asdl.rey.gtirecord.model.entity;
 
 import jakarta.validation.Valid;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
 public class StudentAssignment {
 
+    @EqualsAndHashCode.Include
     @Valid
     private Student student;
 
+    @EqualsAndHashCode.Include
     @Valid
     private Assignment assignment;
 

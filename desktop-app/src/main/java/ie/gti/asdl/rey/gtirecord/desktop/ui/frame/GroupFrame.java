@@ -15,12 +15,14 @@ import ie.gti.asdl.rey.gtirecord.desktop.util.SwingUIUtils;
 import ie.gti.asdl.rey.gtirecord.model.annotation.InstanceFactory;
 import ie.gti.asdl.rey.gtirecord.model.entity.*;
 import ie.gti.asdl.rey.gtirecord.model.entity.Module;
+import ie.gti.asdl.rey.gtirecord.model.entity.add.StudentAssignmentStats;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -102,7 +104,15 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
     private List<Student> allStudents = new ArrayList<>();
     private List<Student> groupStudents = new ArrayList<>();
 
+    Map<Student, Map<Module, StudentAssignmentStats>> moduleStudentAssignmentStatsMap = new HashMap<>();
+
     private Integer highlightedRow;
+
+    private JComboBox<Module> cbModulesFilter;
+    private Module cbAllModulesItem;
+    private ActionListener cbModulesFilterActionListener = event -> {
+        updateGroupStudentTablesUI();
+    };
 
     /**
      * Creates new form CourseFrame
@@ -174,6 +184,19 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
                 groupStudents.clear();
             }
         });
+
+        // Reload modules into comboBox
+        cbModulesFilter.removeActionListener(cbModulesFilterActionListener);
+        cbModulesFilter.removeAllItems();
+        cbModulesFilter.addItem(cbAllModulesItem);
+        groupModules.stream().map(GroupModule::getModule).forEach(module -> {
+            cbModulesFilter.addItem(module);
+        });
+        cbModulesFilter.addActionListener(cbModulesFilterActionListener);
+
+        moduleStudentAssignmentStatsMap = studentAssignmentService.getStudentAssignmentStats(groupStudents,
+                groupModules.stream().map(GroupModule::getModule).collect(Collectors.toList()));
+
     }
 
     private void reloadAllStudentsAndModules() {
@@ -218,7 +241,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
 
                     },
                     new String[]{
-                            "ID", "First name", "Last name", "Grade, %", "Weighting, %"
+                            "ID", "First name", "Last name", "Grade, %", "Overall Reward"
                     }
             ) {
                 Class[] types = new Class[]{
@@ -249,6 +272,16 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
 
         tblGroupStudents.getSelectionModel().addListSelectionListener(createSafeListSelectionListener(listener -> onGroupStudentSelect()));
         tblAllStudents.getSelectionModel().addListSelectionListener(createSafeListSelectionListener(listener -> updateButtonsUI()));
+
+        cbAllModulesItem = InstanceFactory.create(Module.class);
+        cbAllModulesItem.setId(0);
+        cbAllModulesItem.setName("All Modules");
+
+        cbModulesFilter = (JComboBox) cbModulesFilterByString;
+
+        cbModulesFilter.setRenderer(new DataListCellRenderer());
+
+        cbModulesFilter.addActionListener(cbModulesFilterActionListener);
     }
 
     private void initAllStudentTable() {
@@ -426,29 +459,51 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
     }
 
     private void updateStudentTablesUI() {
+        updateGroupStudentTablesUI();
+        updateAllStudentTablesUI();
+    }
+
+    private void updateGroupStudentTablesUI() {
         lblGroupStudentsTitle.setText((selectedGroup == null || selectedGroup.getName() == null)
                 ? "Group Students" : selectedGroup.getName() + " Students");
 
         tblGroupStudents.clear();
+
+        groupStudents.forEach(student -> {
+//                    moduleStudentAssignmentStatsMap = studentAssignmentService.getStudentAssignmentStats(student.getPerson().getId(),
+//                            groupModules.stream().map(GroupModule::getModule).collect(Collectors.toList()));
+            Map<Module, StudentAssignmentStats> statsMap = moduleStudentAssignmentStatsMap.get(student);
+            Module module = (Module) cbModulesFilter.getSelectedItem();
+            StudentAssignmentStats stats;
+            if (statsMap != null) {
+                if (cbAllModulesItem.equals(module)) {
+                    stats = statsMap.values().stream()
+                            .reduce(new StudentAssignmentStats(), (acc, assignmentStats) -> {
+                                acc.add(assignmentStats);
+                                return acc;
+                            });
+                } else {
+                    stats = statsMap.get(module);
+                }
+            } else {
+                stats = new StudentAssignmentStats();
+            }
+            getGroupStudentsTableModel().addRow(student, new Object[] {student.getPerson().getId(),
+                    student.getPerson().getFirstName(), student.getPerson().getLastName(),
+                    stats.getGradeTotalPercent(), stats.getReward().getName()});
+        });
+    }
+
+    private void updateAllStudentTablesUI() {
         tblAllStudents.clear();
 
-        if (allStudents != null) {
-            List<Student> allExceptGroupStudents = new ArrayList<>(allStudents);
-            if (groupStudents != null) {
-                groupStudents.forEach(student -> {
-                    allExceptGroupStudents.remove(student);
-                    var stats = studentAssignmentService.getStudentAssignmentStats(student.getPerson().getId(),
-                            groupModules.stream().map(GroupModule::getModule).collect(Collectors.toList()));
-                    getGroupStudentsTableModel().addRow(student, new Object[] {student.getPerson().getId(),
-                            student.getPerson().getFirstName(), student.getPerson().getLastName(),
-                            stats.getGradeTotalPercent(), stats.getReward().getName()});
-                });
-            }
-            allExceptGroupStudents.forEach(student -> {
-                getAllStudentsTableModel().addRow(student, new Object[] {student.getPerson().getId(),
-                        student.getPerson().getFirstName(), student.getPerson().getLastName(), student.getGroup()});
-            });
-        }
+        List<Student> allExceptGroupStudents = new ArrayList<>(allStudents);
+        allExceptGroupStudents.removeAll(groupStudents);
+
+        allExceptGroupStudents.forEach(student -> {
+            getAllStudentsTableModel().addRow(student, new Object[] {student.getPerson().getId(),
+                    student.getPerson().getFirstName(), student.getPerson().getLastName(), student.getGroup()});
+        });
     }
 
     protected DataTableModel<GroupModule> getGroupModulesTableModel() {
@@ -506,8 +561,8 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
         jScrollPane6 = new javax.swing.JScrollPane();
         tblGroupStudents = new PaddedJTable();
         lblGroupStudentsTitle = new javax.swing.JLabel();
-        btnOpenAssignments = new javax.swing.JButton();
-        btnOpenReport = new javax.swing.JButton();
+        cbModulesFilterByString = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
         pnlAddRemoveStudents = new javax.swing.JPanel();
         pnlStudentFilter = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
@@ -521,6 +576,8 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
         tblAllStudents = new PaddedJTable();
         jLabel8 = new javax.swing.JLabel();
         btnOpenStudents = new javax.swing.JButton();
+        btnOpenAssignments = new javax.swing.JButton();
+        btnOpenReport = new javax.swing.JButton();
         pnlModules = new javax.swing.JPanel();
         pnlGroupModules = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -761,23 +818,11 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
         lblGroupStudentsTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblGroupStudentsTitle.setText("Group Students");
 
-        btnOpenAssignments.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnOpenAssignments.setForeground(new java.awt.Color(0, 51, 204));
-        btnOpenAssignments.setText("Assignments");
-        btnOpenAssignments.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnOpenAssignmentsActionPerformed(evt);
-            }
-        });
+        cbModulesFilterByString.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All modules" }));
 
-        btnOpenReport.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnOpenReport.setForeground(new java.awt.Color(0, 51, 204));
-        btnOpenReport.setText("Report");
-        btnOpenReport.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnOpenReportActionPerformed(evt);
-            }
-        });
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 51, 204));
+        jLabel1.setText("Module filter:");
 
         javax.swing.GroupLayout pnlGroupStudentsLayout = new javax.swing.GroupLayout(pnlGroupStudents);
         pnlGroupStudents.setLayout(pnlGroupStudentsLayout);
@@ -787,11 +832,11 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
                 .addGroup(pnlGroupStudentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE)
                     .addGroup(pnlGroupStudentsLayout.createSequentialGroup()
-                        .addComponent(lblGroupStudentsTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblGroupStudentsTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnOpenReport)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnOpenAssignments)))
+                        .addComponent(cbModulesFilterByString, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pnlGroupStudentsLayout.setVerticalGroup(
@@ -800,10 +845,10 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
                 .addGap(0, 0, 0)
                 .addGroup(pnlGroupStudentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblGroupStudentsTitle)
-                    .addComponent(btnOpenAssignments)
-                    .addComponent(btnOpenReport))
+                    .addComponent(cbModulesFilterByString, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -890,7 +935,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
         pnlAddRemoveStudentsLayout.setVerticalGroup(
             pnlAddRemoveStudentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlAddRemoveStudentsLayout.createSequentialGroup()
-                .addGap(27, 27, 27)
+                .addContainerGap()
                 .addComponent(pnlStudentFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnRemoveStudentFromGroup)
@@ -945,6 +990,15 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
             }
         });
 
+        btnOpenAssignments.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnOpenAssignments.setForeground(new java.awt.Color(0, 51, 204));
+        btnOpenAssignments.setText("Assignments");
+        btnOpenAssignments.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOpenAssignmentsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlAllStudentsLayout = new javax.swing.GroupLayout(pnlAllStudents);
         pnlAllStudents.setLayout(pnlAllStudentsLayout);
         pnlAllStudentsLayout.setHorizontalGroup(
@@ -953,11 +1007,13 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
                 .addContainerGap()
                 .addGroup(pnlAllStudentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlAllStudentsLayout.createSequentialGroup()
-                        .addComponent(jScrollPane7)
+                        .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(pnlAllStudentsLayout.createSequentialGroup()
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 468, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnOpenAssignments)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnOpenStudents, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18))))
         );
@@ -967,11 +1023,21 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
                 .addGap(0, 0, 0)
                 .addGroup(pnlAllStudentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(btnOpenStudents))
+                    .addComponent(btnOpenStudents)
+                    .addComponent(btnOpenAssignments))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
                 .addContainerGap())
         );
+
+        btnOpenReport.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnOpenReport.setForeground(new java.awt.Color(0, 51, 204));
+        btnOpenReport.setText("Report");
+        btnOpenReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOpenReportActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlStudentsLayout = new javax.swing.GroupLayout(pnlStudents);
         pnlStudents.setLayout(pnlStudentsLayout);
@@ -980,7 +1046,9 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlStudentsLayout.createSequentialGroup()
                 .addComponent(pnlGroupStudents, javax.swing.GroupLayout.PREFERRED_SIZE, 641, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlAddRemoveStudents, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnlStudentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pnlAddRemoveStudents, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnOpenReport, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlAllStudents, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29))
@@ -991,8 +1059,11 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
                 .addGap(6, 6, 6)
                 .addGroup(pnlStudentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pnlGroupStudents, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
-                    .addComponent(pnlAddRemoveStudents, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlAllStudents, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(pnlAllStudents, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlStudentsLayout.createSequentialGroup()
+                        .addComponent(btnOpenReport)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(pnlAddRemoveStudents, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1426,7 +1497,7 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
             student.setGroup(selectedGroup);
             studentService.updateStudentAndAssignments(student);
 
-            var stats = studentAssignmentService.getStudentAssignmentStats(student.getPerson().getId(),
+            var stats = studentAssignmentService.getStudentAssignmentStatsTotal(student.getPerson().getId(),
                     groupModules.stream().map(GroupModule::getModule).collect(Collectors.toList()));
             getGroupStudentsTableModel().addRow(student, new Object[] {student.getPerson().getId(),
                     student.getPerson().getFirstName(), student.getPerson().getLastName(),
@@ -1548,6 +1619,8 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
     private javax.swing.JButton btnRemoveModuleFromGroup;
     private javax.swing.JButton btnRemoveStudentFromGroup;
     private javax.swing.JButton btnSave;
+    private javax.swing.JComboBox<String> cbModulesFilterByString;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
