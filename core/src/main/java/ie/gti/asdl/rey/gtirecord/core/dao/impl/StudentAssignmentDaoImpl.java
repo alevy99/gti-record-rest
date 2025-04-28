@@ -6,12 +6,10 @@ import ie.gti.asdl.rey.gtirecord.core.service.ValidationService;
 import ie.gti.asdl.rey.gtirecord.model.entity.StudentAssignment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Andrei Levchenko

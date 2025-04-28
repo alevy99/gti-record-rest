@@ -1380,13 +1380,13 @@ public class GroupFrame extends AbstractTableDataFrame<Group> {
 
     private void btnGroupReportPdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGroupReportPdfActionPerformed
         if (selectedGroup != null) {
-            exportTableWordReport(tblGroupStudents, getReportTitle());
+            exportTablePdfReport(tblGroupStudents, getReportTitle());
         }
     }//GEN-LAST:event_btnGroupReportPdfActionPerformed
 
     private void btnGroupReportWordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGroupReportWordActionPerformed
         if (selectedGroup != null) {
-            exportTablePdfReport(tblGroupStudents, getReportTitle());
+            exportTableWordReport(tblGroupStudents, getReportTitle());
         }
     }//GEN-LAST:event_btnGroupReportWordActionPerformed
 
