@@ -1,6 +1,11 @@
 # GTI Record REST
 
-A multi-module Java application built with **Spring Boot 3** providing a REST backend, desktop client, and shared core/model libraries for the GTI Record system. Developed as part of an main course project at Galway Technological Institute.
+**GTI Record** is a student record management system developed as the final project of the Advanced Software Development course at Galway Technological Institute (GTI). It allows academic staff to manage and view information about students, teachers, groups, and modules.
+
+The system is built as a multi-module Java application:
+- The **desktop app** connects directly to a MySQL database and provides a graphical interface for staff to manage records
+- The **backend** exposes a Spring Boot REST API, designed to allow any external client (mobile app, Angular PWA, etc.) to integrate with the system
+- Shared **model** and **core** modules are reused across all components
 
 ---
 
@@ -11,12 +16,11 @@ gti-record-rest/
 ├── model/          # Shared data model / domain classes
 ├── core/           # Shared business logic and utilities
 ├── backend/        # Spring Boot REST API server
-├── desktop-app/    # Desktop client application
+├── desktop-app/    # Desktop client application (connects directly to MySQL)
 ├── android-app/    # Android client (currently excluded from build)
 ├── db/             # Database scripts / migrations
-├── src/            # Root-level resources
 ├── Dockerfile      # Docker image definition for the backend
-├── Procfile        # Process definition (e.g. for Heroku / cloud deployment)
+├── Procfile        # Process definition (e.g. for cloud deployment)
 └── pom.xml         # Root Maven POM (multi-module)
 ```
 
@@ -30,8 +34,8 @@ gti-record-rest/
 | Framework | Spring Boot 3.4.4 |
 | Build tool | Maven 3.9.4 |
 | Logging | Apache Log4j 2.24.3 (via SLF4J bridge) |
-| Database | MySQL (configurable via environment variables) |
-| Containerization | Docker (in development) |
+| Containerization | Docker (OpenJDK 21 slim base image) |
+| Database | MySQL |
 
 ---
 
@@ -39,8 +43,27 @@ gti-record-rest/
 
 - Java 21+
 - Maven 3.9.4+
-- MySQL database (for the backend)
+- MySQL database
 - Docker (optional, for containerised deployment)
+
+---
+
+## Modules
+
+### `model`
+Contains shared domain/entity classes (Student, Teacher, Group, Module, User) used across the backend and desktop application.
+
+### `core`
+Contains shared business logic, service interfaces, and utility classes.
+
+### `backend`
+Spring Boot application exposing the REST API. Entry point: `ie.gti.asdl.rey.gtirecord.backend.GtiRecordRestServer`.
+
+### `desktop-app`
+Desktop client application with a graphical UI for managing student records. Connects directly to the MySQL database.
+
+### `android-app`
+Android client (currently excluded from the Maven build — work in progress).
 
 ---
 
@@ -70,34 +93,46 @@ mvn clean install -P all
 
 ---
 
-## Modules
-
-### `model`
-Contains shared domain/entity classes used across the backend and client applications.
-
-### `core`
-Contains shared business logic, service interfaces, and utility classes.
-
-### `backend`
-Spring Boot application exposing the REST API. Entry point: `ie.gti.asdl.rey.gtirecord.backend.GtiRecordRestServer`.
-
-### `desktop-app`
-Desktop client application consuming the REST API.
-
-### `android-app`
-Android client (currently excluded from the Maven build — work in progress).
-
----
-
 ## Running the Backend
 
 After building, run the backend JAR directly:
 
 ```bash
-java -jar backend/target/gti-record-rest-1.0.jar
+java -jar backend/target/gti-record-backend-1.0.jar --spring.profiles.active=web
 ```
 
 The server will start on **port 8080** by default.
+
+---
+
+## Docker *(in development)*
+
+> ⚠️ **Note:** Docker support is an optional, experimental feature and has not been fully tested. The `Dockerfile` is provided as a starting point for containerised deployment but is not considered production-ready at this stage. Full instructions will be added once this functionality is stabilised.
+
+---
+
+## Usage
+
+**Desktop application:**
+1. Ensure MySQL is running and the database is set up (see `db/` folder for scripts)
+2. Configure the connection in `application.properties`
+3. Launch the desktop application — it connects directly to MySQL
+4. Use the UI to browse and manage students, teachers, groups, and modules
+
+To populate the database with test data, run the SQL scripts located in `db/sql_insert_scripts/` against your MySQL instance.
+
+> Screenshots of the desktop application will be added here.
+
+**REST API:**  
+Start the backend server and send requests to `http://localhost:8080` from any HTTP client (browser, Postman, mobile app, Angular PWA, etc.).
+
+To start the REST API server, run the following command from the project root after building:
+
+```bash
+java -jar backend/target/gti-record-backend-1.0.jar --spring.profiles.active=web
+```
+
+The API will be available at `http://localhost:8080`. See the [REST API](#rest-api) section for available endpoints.
 
 ---
 
@@ -108,8 +143,6 @@ The backend exposes a RESTful API on `http://localhost:8080`.
 > **Note:** The REST API is only active when the `web` Spring profile is enabled.  
 > Start the server with: `java -jar gti-record-backend-1.0.jar --spring.profiles.active=web`
 
----
-
 ### Users
 
 | Method | Endpoint | Description | Response |
@@ -117,13 +150,10 @@ The backend exposes a RESTful API on `http://localhost:8080`.
 | `GET` | `/users/id/{id}` | Get user by numeric ID | `User` object or `404` |
 | `GET` | `/users/name/{username}` | Get user by username | `User` object or `404` |
 
-**Example:**
 ```
 GET http://localhost:8080/users/id/1
 GET http://localhost:8080/users/name/john
 ```
-
----
 
 ### Students
 
@@ -131,23 +161,17 @@ GET http://localhost:8080/users/name/john
 |---|---|---|---|
 | `GET` | `/students` | Get all students | `List<Student>` |
 
----
-
 ### Teachers
 
 | Method | Endpoint | Description | Response |
 |---|---|---|---|
 | `GET` | `/teachers` | Get all teachers | `List<Teacher>` |
 
----
-
 ### Groups
 
 | Method | Endpoint | Description | Response |
 |---|---|---|---|
 | `GET` | `/groups` | Get all groups | `List<Group>` |
-
----
 
 ### Modules
 
@@ -156,39 +180,25 @@ GET http://localhost:8080/users/name/john
 | `GET` | `/modules` | Get all modules | `List<Module>` |
 | `GET` | `/modules/teacher/{teacherPersonId}` | Get modules assigned to a specific teacher | `List<Module>` |
 
-**Example:**
 ```
 GET http://localhost:8080/modules/teacher/5
 ```
 
-## Docker *(in development)*
+---
 
-> ⚠️ **Note:** Docker support is an optional, experimental feature and has not been fully tested. The `Dockerfile` is provided as a starting point for containerised deployment but is not considered production-ready at this stage.
+## AI Acknowledgment
 
-The backend is intended to run inside an OpenJDK 21 slim container, with MySQL connection details passed via environment variables at runtime:
+AI tools were used during the development of this project:
 
-| Variable | Description |
-|---|---|
-| `MYSQL_HOST` | MySQL server hostname |
-| `MYSQL_PORT` | MySQL server port |
-| `MYSQL_DB` | Database name |
-| `MYSQL_USER` | Database username |
-| `MYSQL_PASSWORD` | Database password |
+- **Claude (Anthropic)**: Used to generate and refine this README documentation, including project structure analysis, API endpoint documentation, and formatting
+- **ChatGPT (OpenAI)**: Assisted with implementing visual table styling in the desktop application (UI/UX code for table rendering)
+- **JetBrains AI Assistant** (IntelliJ IDEA): Used for in-editor code suggestions and completions during development
 
-Full Docker build and run instructions will be added once this functionality is stabilised.
+All AI-generated suggestions were reviewed and tested before being included in the project.
 
 ---
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m 'Add some feature'`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Open a Pull Request
-
----
 
 ## License
 
-This project is developed as part of an academic programme at ATU Galway (Galway Technological Institute). See `LICENSE` for details (if applicable).
+This project was developed as the final project of the Advanced Software Development course at Galway Technological Institute (GTI).
