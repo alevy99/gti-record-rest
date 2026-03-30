@@ -110,19 +110,7 @@ mvn clean install -P all
 
 ---
 
-## Running the Backend
-
-After building, run the backend JAR directly:
-
-```bash
-java -jar backend/target/gti-record-backend-1.0.jar --spring.profiles.active=web
-```
-
-The server will start on **port 8080** by default.
-
----
-
-## Docker *(in development)*
+### Docker *(in development)*
 
 > ⚠️ **Note:** Docker support is an optional, experimental feature and has not been fully tested. The `Dockerfile` is provided as a starting point for containerised deployment but is not considered production-ready at this stage. Full instructions will be added once this functionality is stabilised.
 
