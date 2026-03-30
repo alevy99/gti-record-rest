@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 /**
+ *  Factory to create model entity's instances in a controlled way
+ *
  * @author Andrei Levchenko
  */
 public class InstanceFactory {
@@ -22,7 +24,7 @@ public class InstanceFactory {
     public static <T> T create(Class<T> clazz) {
         try {
             Constructor<T> ctor = clazz.getDeclaredConstructor();
-            ctor.setAccessible(true);   // открыть private-конструктор
+            ctor.setAccessible(true);   // allow private-constructor
             T instance = ctor.newInstance();
 //            T instance = clazz.getDeclaredConstructor().newInstance();
 
