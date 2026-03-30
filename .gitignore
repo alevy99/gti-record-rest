@@ -6,3 +6,8 @@ target/
 notes.txt
 
 desktop-app/src/main/resources/application.properties
+
+application-local.properties
+application-local.yml
+*.env
+.env
