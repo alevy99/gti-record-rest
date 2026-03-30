@@ -121,7 +121,30 @@ The server will start on **port 8080** by default.
 
 To populate the database with test data, run the SQL scripts located in `db/sql_insert_scripts/` against your MySQL instance.
 
-> Screenshots of the desktop application will be added here.
+### Login window
+![Main Window](readme/img/login.png)
+### Main menu
+![Main Window](readme/img/main_menu.png)
+### Users window
+![Main Window](readme/img/users.png)
+### Person details window
+![Main Window](readme/img/person.png)
+### Students window
+![Main Window](readme/img/students.png)
+### Teachers window
+![Main Window](readme/img/teachers.png)
+### Courses window
+![Main Window](readme/img/courses.png)
+### Groups window
+![Main Window](readme/img/groups.png)
+### Groups window ('save pdf report' dialog)
+![Main Window](readme/img/groups_report.png)
+### Assignments window
+![Main Window](readme/img/assignments.png)
+### Departments window
+![Main Window](readme/img/departments.png)
+### Modules window
+![Main Window](readme/img/modules.png)
 
 **REST API:**  
 Start the backend server and send requests to `http://localhost:8080` from any HTTP client (browser, Postman, mobile app, Angular PWA, etc.).
