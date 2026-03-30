@@ -240,7 +240,7 @@ All AI-generated suggestions were reviewed and tested before being included in t
 
 ## Database Structure
 
-![Database Structure](readme/img/db_structure.png)
+![Database Structure](readme/img/db_structure2.png)
 
 ---
 
