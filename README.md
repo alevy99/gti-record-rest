@@ -16,8 +16,6 @@ The system is built as a multi-module Java application:
 - [Prerequisites](#prerequisites)
 - [Modules](#modules)
 - [Building](#building)
-- [Running the Backend](#running-the-backend)
-- [Docker](#docker-in-development)
 - [Usage](#usage)
 - [REST API](#rest-api)
 - [Database Structure](#database-structure)
