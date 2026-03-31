@@ -119,22 +119,29 @@ mvn clean install -P all
 **Desktop application:**
 1. Ensure MySQL is running and the database is set up (see `db/` folder for scripts)
 2. Configure the connection in `application.properties`
-3. Launch the desktop application — it connects directly to MySQL
-4. Use the UI to browse and manage students, teachers, groups, and modules
+3. Build the desktop module: `mvn clean install -P desktop`
+4. Run the application: `java -jar desktop-app/target/gti-record-desktop-app-1.0.jar`
+5. Log in with your credentials — available features depend on your role (Admin / Teacher / Student)
 
 To populate the database with test data, run the SQL scripts located in `db/sql_insert_scripts/` against your MySQL instance.
 
 ### Login window
+Users authenticate with a username and password. Access to features is role-based: **Admin**, **Teacher**, or **Student**.
 ![Login Window](readme/img/login.png)
 ### Main menu
+The main menu provides navigation to all available sections of the application.
 ![Main Menu](readme/img/main_menu.png)
 ### Users window
+Displays the list of system users. Admins can create, edit, and delete user accounts and assign roles. Other users can only change their user details.
 ![Users Window](readme/img/users.png)
 ### Person details window
+Shows detailed personal information for a selected person. Editable by users themselves or by admins.
 ![Person Details](readme/img/person.png)
 ### Students window
+Lists all enrolled students. Student can be assigned to a group, filtered by department and course. 
 ![Students Window](readme/img/students.png)
 ### Teachers window
+Displays all teachers registered in the system. 
 ![Teachers Window](readme/img/teachers.png)
 ### Courses window
 ![Courses Window](readme/img/courses.png)
