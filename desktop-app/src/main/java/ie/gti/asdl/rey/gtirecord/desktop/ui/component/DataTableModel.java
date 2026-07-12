@@ -47,8 +47,4 @@ public class DataTableModel<T> extends DefaultTableModel {
         dataList.clear();
     }
 
-
-//    public void setData(T data) {
-//        this.data = data;
-//    }
 }
