@@ -14,6 +14,7 @@ public class AssignmentUtils {
             double maxGrade = assignment.getMaxGrade();
             gradePercent = grade / maxGrade * 100.0;
         }
+        
         return gradePercent;
     }
 
