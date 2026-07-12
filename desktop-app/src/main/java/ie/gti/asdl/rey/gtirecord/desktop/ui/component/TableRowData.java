@@ -3,7 +3,7 @@ package ie.gti.asdl.rey.gtirecord.desktop.ui.component;
 public abstract class TableRowData<T> {
     private int row;
     private T data;
-//    private final String actionName; // Можно добавить дополнительные данные
+//    private final String actionName; // Additional fuields could be added
 
     public TableRowData(T data) {
         this.data = data;
