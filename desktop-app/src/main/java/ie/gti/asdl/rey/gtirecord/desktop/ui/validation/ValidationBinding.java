@@ -1,4 +1,4 @@
-package ie.gti.asdl.rey.gtirecord.core.validation;
+package ie.gti.asdl.rey.gtirecord.desktop.ui.validation;
 
 import javax.swing.*;
 import java.awt.*;

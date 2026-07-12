@@ -1,4 +1,4 @@
-package ie.gti.asdl.rey.gtirecord.core.validation;
+package ie.gti.asdl.rey.gtirecord.desktop.ui.validation;
 
 import java.util.regex.Pattern;
 

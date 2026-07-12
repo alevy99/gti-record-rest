@@ -1,20 +1,12 @@
 package ie.gti.asdl.rey.gtirecord.desktop.util;
 
-import ie.gti.asdl.rey.gtirecord.core.validation.OptionalValidator;
-import ie.gti.asdl.rey.gtirecord.core.validation.Validator;
-
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ItemListener;
 import java.util.Arrays;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
