@@ -79,6 +79,13 @@
             <version>1.18.36</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- JUnit 5 (version managed by spring-boot-dependencies BOM via the parent POM) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

@@ -63,6 +63,13 @@
             <artifactId>jackson-annotations</artifactId>
         </dependency>
 
+        <!-- JUnit 5 (version managed by spring-boot-dependencies BOM via the parent POM) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
