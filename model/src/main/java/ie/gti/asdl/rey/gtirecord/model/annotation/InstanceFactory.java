@@ -63,7 +63,6 @@ public class InstanceFactory {
             Constructor<T> ctor = clazz.getDeclaredConstructor();
             ctor.setAccessible(true);   // allow private-constructor
             T instance = ctor.newInstance();
-//            T instance = clazz.getDeclaredConstructor().newInstance();
 
             for (Field field : clazz.getDeclaredFields()) {
                 field.setAccessible(true);
