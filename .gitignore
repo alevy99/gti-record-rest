@@ -44,3 +44,5 @@ model/.settings/org.eclipse.jdt.core.prefs
 gti_record_system_rest.zip
 
 .idea/
+
+*.rar
