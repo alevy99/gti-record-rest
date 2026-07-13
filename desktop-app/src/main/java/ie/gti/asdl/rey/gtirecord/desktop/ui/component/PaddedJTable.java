@@ -27,7 +27,6 @@ public class PaddedJTable extends JTable {
 
     public PaddedJTable(Supplier<Integer> highlightedRowSupplier) {
         super();
-//        java.awt.EventQueue.invokeLater(() -> {
         listSelectionListener = new ListSelectionListenerCreator(() -> suppressSelectionEvents);
 
         setRowHeight(25); // Increase row height for better spacing
@@ -49,7 +48,6 @@ public class PaddedJTable extends JTable {
         header.setOpaque(true);
         header.setPreferredSize(new Dimension(header.getWidth(), 30));
         ((DefaultTableCellRenderer ) header.getDefaultRenderer()).setHorizontalAlignment(CENTER);
-//        });
     }
 
     public void setHighlightedRowSupplier(Supplier<Integer> highlightedRowSupplier) {
@@ -119,7 +117,7 @@ public class PaddedJTable extends JTable {
         }
 
         private void init() {
-            // Добавляем DocumentListener к полю ввода
+            // Adding DocumentListener to the input field
             textField.getDocument().addDocumentListener(new DocumentListener() {
                 public void insertUpdate(DocumentEvent e) { validateInput(); }
                 public void removeUpdate(DocumentEvent e) { validateInput(); }
@@ -140,7 +138,7 @@ public class PaddedJTable extends JTable {
                             }
                         }
 
-                        // Подсветка
+                        // Highlight
                         if (existing.contains(input)) {
                             textField.setBackground(new Color(255, 200, 200)); // красный
                             isValid = false;
@@ -164,11 +162,5 @@ public class PaddedJTable extends JTable {
             return value != null ? value.trim() : null;
         }
     }
-
-    // Method to check if a cell contains a String
-//    public boolean isCellStringType(int row, int column) {
-//        Object value = getValueAt(row, column);
-//        return value instanceof String;
-//    }
 
 }
